@@ -4,8 +4,17 @@ Capstone project for CSE 598 Agentic AI (Arizona State University, Fall 2026).
 
 DataSage is an agent that takes a messy CSV or Excel file and a question about it, finds data-quality problems, fixes or flags them (asking the user before any risky change), and then answers the question on the cleaned data with a report of every change it made.
 
-- **Stakeholder:** Vyshanth Buddani. Original proposal and baseline: https://github.com/VB914/DataSage
-- **Team (Group 25):** Shrey Bishnoi, other members to be added
+**Stakeholder:** Vyshanth Buddani ([@VB914](https://github.com/VB914)). Original proposal and baseline: https://github.com/VB914/DataSage
+
+## Team (Group 25)
+
+| Name | GitHub |
+|---|---|
+| Shrey Bishnoi | [@shrey-Bish](https://github.com/shrey-Bish) |
+| Ritik Agarwal | [@ritwiz06](https://github.com/ritwiz06) |
+| Arsha Jindal | [@Arshajindal](https://github.com/Arshajindal) |
+| Maulik Jadav | [@maulik-jadav](https://github.com/maulik-jadav) |
+| Vatsal | [@vatsal-prog](https://github.com/vatsal-prog) |
 
 ## Repository layout
 
