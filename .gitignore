@@ -1,0 +1,17 @@
+# Python
+.venv/
+venv/
+__pycache__/
+*.pyc
+
+# Secrets and local settings
+.env
+
+# Generated files
+baseline/outputs/
+outputs/
+
+# OS / editor
+.DS_Store
+.vscode/
+.idea/
