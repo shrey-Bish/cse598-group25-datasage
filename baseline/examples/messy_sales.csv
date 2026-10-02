@@ -1,0 +1,9 @@
+Order_ID,Date,Product,Category,Quantity,Price,Region,Revenue
+1001,2026-08-01,Laptop,Electronics,2,900,West,1800
+1002,2026-08-02,Mouse,electronics,5,25,East,125
+1003,2026-08-03,Keyboard,Accessories,3,50,West,150
+1004,2026-08-04,Monitor,Accessories,2,300,South,600
+1004,2026-08-04,Monitor,Accessories,2,300,South,600
+1005,not-a-date,Headset,Electronics,4,80,North,320
+1006,2026-08-06,Webcam,Electronics,-1,60,East,-60
+1007,2026-08-07,Hub,accessories,2,40,,80
