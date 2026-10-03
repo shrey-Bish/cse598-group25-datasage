@@ -14,7 +14,7 @@ DataSage is an agent that takes a messy CSV or Excel file and a question about i
 | Ritik Agarwal | [@ritwiz06](https://github.com/ritwiz06) |
 | Arsha Jindal | [@Arshajindal](https://github.com/Arshajindal) |
 | Maulik Jadav | [@maulik-jadav](https://github.com/maulik-jadav) |
-| Vatsal | [@vatsal-prog](https://github.com/vatsal-prog) |
+| Vatsal Nirmal | [@vatsal-prog](https://github.com/vatsal-prog) |
 
 ## Repository layout
 
