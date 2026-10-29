@@ -1,0 +1,77 @@
+{
+  "id_column": "penguin_id",
+  "errors": [
+    {
+      "type": "label_variant",
+      "subtype": "label_space",
+      "column": "species",
+      "id": "P8132701",
+      "resolution": "restore",
+      "clean_value": "Adelie",
+      "messy_value": " Adelie"
+    },
+    {
+      "type": "missing",
+      "subtype": "missing",
+      "column": "sex",
+      "id": "P8308807",
+      "resolution": "keep_missing",
+      "clean_value": null,
+      "messy_value": ""
+    },
+    {
+      "type": "label_variant",
+      "subtype": "label_typo",
+      "column": "species",
+      "id": "P7285545",
+      "resolution": "restore",
+      "clean_value": "Chinstrap",
+      "messy_value": "Chinstarp"
+    },
+    {
+      "type": "negative",
+      "subtype": "negative",
+      "column": "flipper_length_mm",
+      "id": "P5456938",
+      "resolution": "exclude",
+      "clean_value": 230.0,
+      "messy_value": -230.0
+    },
+    {
+      "type": "negative",
+      "subtype": "negative",
+      "column": "flipper_length_mm",
+      "id": "P3817100",
+      "resolution": "exclude",
+      "clean_value": 195.0,
+      "messy_value": -195.0
+    },
+    {
+      "type": "negative",
+      "subtype": "negative",
+      "column": "flipper_length_mm",
+      "id": "P5922129",
+      "resolution": "exclude",
+      "clean_value": 219.0,
+      "messy_value": -219.0
+    },
+    {
+      "type": "out_of_range",
+      "subtype": "out_of_range",
+      "column": "body_mass_g",
+      "id": "P3298817",
+      "resolution": "exclude",
+      "clean_value": 3500.0,
+      "messy_value": 3500000.0
+    },
+    {
+      "type": "duplicates",
+      "subtype": "duplicates",
+      "column": "*",
+      "id": "P1989227",
+      "resolution": "drop_copy",
+      "clean_value": null,
+      "messy_value": null
+    }
+  ]
+}

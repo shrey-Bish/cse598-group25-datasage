@@ -1,0 +1,95 @@
+{
+  "id_column": "Order_ID",
+  "errors": [
+    {
+      "type": "label_variant",
+      "subtype": "label_case",
+      "column": "Category",
+      "id": "2044",
+      "resolution": "restore",
+      "clean_value": "Office Supplies",
+      "messy_value": "office supplies"
+    },
+    {
+      "type": "label_variant",
+      "subtype": "label_case",
+      "column": "Category",
+      "id": "2010",
+      "resolution": "restore",
+      "clean_value": "Accessories",
+      "messy_value": "accessories"
+    },
+    {
+      "type": "label_variant",
+      "subtype": "label_case",
+      "column": "Category",
+      "id": "2050",
+      "resolution": "restore",
+      "clean_value": "Accessories",
+      "messy_value": "accessories"
+    },
+    {
+      "type": "missing",
+      "subtype": "missing",
+      "column": "Region",
+      "id": "2013",
+      "resolution": "keep_missing",
+      "clean_value": null,
+      "messy_value": ""
+    },
+    {
+      "type": "missing",
+      "subtype": "missing",
+      "column": "Region",
+      "id": "2060",
+      "resolution": "keep_missing",
+      "clean_value": null,
+      "messy_value": ""
+    },
+    {
+      "type": "missing",
+      "subtype": "missing",
+      "column": "Region",
+      "id": "2029",
+      "resolution": "keep_missing",
+      "clean_value": null,
+      "messy_value": ""
+    },
+    {
+      "type": "invalid_date",
+      "subtype": "invalid_date",
+      "column": "Date",
+      "id": "2035",
+      "resolution": "set_missing",
+      "clean_value": "2026-04-22",
+      "messy_value": "13/45/2026"
+    },
+    {
+      "type": "invalid_date",
+      "subtype": "invalid_date",
+      "column": "Date",
+      "id": "2031",
+      "resolution": "set_missing",
+      "clean_value": "2026-06-02",
+      "messy_value": "13/45/2026"
+    },
+    {
+      "type": "label_variant",
+      "subtype": "label_typo",
+      "column": "Category",
+      "id": "2008",
+      "resolution": "restore",
+      "clean_value": "Furniture",
+      "messy_value": "Furnture"
+    },
+    {
+      "type": "duplicates",
+      "subtype": "duplicates",
+      "column": "*",
+      "id": "2034",
+      "resolution": "drop_copy",
+      "clean_value": null,
+      "messy_value": null
+    }
+  ]
+}

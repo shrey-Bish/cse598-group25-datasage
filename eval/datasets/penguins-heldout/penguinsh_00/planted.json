@@ -1,0 +1,59 @@
+{
+  "id_column": "penguin_id",
+  "errors": [
+    {
+      "type": "label_variant",
+      "subtype": "label_case",
+      "column": "sex",
+      "id": "P5892028",
+      "resolution": "restore",
+      "clean_value": "female",
+      "messy_value": "FEMALE"
+    },
+    {
+      "type": "label_variant",
+      "subtype": "label_case",
+      "column": "sex",
+      "id": "P6248011",
+      "resolution": "restore",
+      "clean_value": "male",
+      "messy_value": "MALE"
+    },
+    {
+      "type": "text_number",
+      "subtype": "text_number",
+      "column": "body_mass_g",
+      "id": "P4588944",
+      "resolution": "restore",
+      "clean_value": 5500.0,
+      "messy_value": "5,500"
+    },
+    {
+      "type": "out_of_range",
+      "subtype": "out_of_range",
+      "column": "body_mass_g",
+      "id": "P1952010",
+      "resolution": "exclude",
+      "clean_value": 4000.0,
+      "messy_value": 4000000.0
+    },
+    {
+      "type": "label_variant",
+      "subtype": "label_typo",
+      "column": "island",
+      "id": "P6524938",
+      "resolution": "restore",
+      "clean_value": "Biscoe",
+      "messy_value": "Bisco"
+    },
+    {
+      "type": "label_variant",
+      "subtype": "label_typo",
+      "column": "island",
+      "id": "P2654512",
+      "resolution": "restore",
+      "clean_value": "Torgersen",
+      "messy_value": "Torgerson"
+    }
+  ]
+}

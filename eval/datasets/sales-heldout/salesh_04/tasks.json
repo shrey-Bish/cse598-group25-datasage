@@ -1,0 +1,36 @@
+[
+  {
+    "task_id": "salesh_04_q0",
+    "question": "What is the average unit price in each category?",
+    "spec": {
+      "group_by": [
+        "Category"
+      ],
+      "metric": "Price",
+      "agg": "mean"
+    },
+    "reference_answer": {
+      "Accessories": 33.1818,
+      "Electronics": 568.6667,
+      "Furniture": 203.0,
+      "Office Supplies": 12.0
+    }
+  },
+  {
+    "task_id": "salesh_04_q1",
+    "question": "How many orders are there in each category?",
+    "spec": {
+      "group_by": [
+        "Category"
+      ],
+      "metric": null,
+      "agg": "count"
+    },
+    "reference_answer": {
+      "Accessories": 11.0,
+      "Electronics": 15.0,
+      "Furniture": 15.0,
+      "Office Supplies": 20.0
+    }
+  }
+]

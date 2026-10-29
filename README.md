@@ -66,14 +66,18 @@ modes: `--approve auto`, `--approve reject`, and `--approve tools --allow drop_d
 ## Reproduce the evaluation
 
 ```bash
-python -m eval.generate --tables 10 --seed 7          # 20 sales + 20 penguin tasks
+python -m eval.generate --tables 10 --seed 7          # dev split: 20 sales + 20 penguin tasks
+python -m eval.generate --tables 10 --seed 101 --split heldout   # held-out split (sales-heldout, penguins-heldout)
 python -m eval.run_eval --system b0 --dataset sales   # repeat for each system and dataset
 python -m eval.run_eval --system datasage --dataset penguins --workers 4
 python -m eval.summarize                              # writes eval/results/summary.md
+python -m eval.failures --system datasage             # likely cause of each wrong task, from its trace
 ```
 
-Systems: `b0`, `b1`, `b2`, `datasage`, `datasage-small`, `datasage-reject`, `datasage-novalidator`.
-Results are cached per task, so an interrupted run can be restarted.
+Systems: `b0`, `b1`, `b2`, `datasage`, `datasage-small`, `datasage-reject`, `datasage-novalidator`, and the
+Milestone 2 fix variants `datasage-fix`, `datasage-small-fix`, `datasage-small-fix-strict` (exclusion rule in the
+prompt; `-strict` also uses a stricter approval oracle). Datasets: `sales`, `penguins`, `sales-heldout`,
+`penguins-heldout`. Results are cached per task, so an interrupted run can be restarted.
 
 ## Run the stakeholder baseline on its own
 

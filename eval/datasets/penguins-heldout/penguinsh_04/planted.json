@@ -1,0 +1,68 @@
+{
+  "id_column": "penguin_id",
+  "errors": [
+    {
+      "type": "label_variant",
+      "subtype": "label_case",
+      "column": "sex",
+      "id": "P4797042",
+      "resolution": "restore",
+      "clean_value": "female",
+      "messy_value": "FEMALE"
+    },
+    {
+      "type": "text_number",
+      "subtype": "text_number",
+      "column": "body_mass_g",
+      "id": "P5352651",
+      "resolution": "restore",
+      "clean_value": 4925.0,
+      "messy_value": "4,925"
+    },
+    {
+      "type": "out_of_range",
+      "subtype": "out_of_range",
+      "column": "body_mass_g",
+      "id": "P2370620",
+      "resolution": "exclude",
+      "clean_value": 3550.0,
+      "messy_value": 3550000.0
+    },
+    {
+      "type": "out_of_range",
+      "subtype": "out_of_range",
+      "column": "body_mass_g",
+      "id": "P9023109",
+      "resolution": "exclude",
+      "clean_value": 3700.0,
+      "messy_value": 3700000.0
+    },
+    {
+      "type": "out_of_range",
+      "subtype": "out_of_range",
+      "column": "body_mass_g",
+      "id": "P2917749",
+      "resolution": "exclude",
+      "clean_value": 5950.0,
+      "messy_value": 5950000.0
+    },
+    {
+      "type": "negative",
+      "subtype": "negative",
+      "column": "flipper_length_mm",
+      "id": "P6084901",
+      "resolution": "exclude",
+      "clean_value": 181.0,
+      "messy_value": -181.0
+    },
+    {
+      "type": "duplicates",
+      "subtype": "duplicates",
+      "column": "*",
+      "id": "P3386758",
+      "resolution": "drop_copy",
+      "clean_value": null,
+      "messy_value": null
+    }
+  ]
+}

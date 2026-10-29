@@ -1,0 +1,104 @@
+{
+  "id_column": "Order_ID",
+  "errors": [
+    {
+      "type": "label_variant",
+      "subtype": "label_typo",
+      "column": "Region",
+      "id": "2007",
+      "resolution": "restore",
+      "clean_value": "South",
+      "messy_value": "Suoth"
+    },
+    {
+      "type": "label_variant",
+      "subtype": "label_typo",
+      "column": "Region",
+      "id": "2010",
+      "resolution": "restore",
+      "clean_value": "East",
+      "messy_value": "Eats"
+    },
+    {
+      "type": "missing",
+      "subtype": "missing",
+      "column": "Region",
+      "id": "2056",
+      "resolution": "keep_missing",
+      "clean_value": null,
+      "messy_value": ""
+    },
+    {
+      "type": "missing",
+      "subtype": "missing",
+      "column": "Region",
+      "id": "2018",
+      "resolution": "keep_missing",
+      "clean_value": null,
+      "messy_value": ""
+    },
+    {
+      "type": "label_variant",
+      "subtype": "label_case",
+      "column": "Category",
+      "id": "2057",
+      "resolution": "restore",
+      "clean_value": "Office Supplies",
+      "messy_value": "office supplies"
+    },
+    {
+      "type": "invalid_date",
+      "subtype": "invalid_date",
+      "column": "Date",
+      "id": "2039",
+      "resolution": "set_missing",
+      "clean_value": "2026-06-18",
+      "messy_value": "2026-02-30"
+    },
+    {
+      "type": "invalid_date",
+      "subtype": "invalid_date",
+      "column": "Date",
+      "id": "2054",
+      "resolution": "set_missing",
+      "clean_value": "2026-06-27",
+      "messy_value": "2026-14-01"
+    },
+    {
+      "type": "invalid_date",
+      "subtype": "invalid_date",
+      "column": "Date",
+      "id": "2024",
+      "resolution": "set_missing",
+      "clean_value": "2026-06-14",
+      "messy_value": "2026-14-01"
+    },
+    {
+      "type": "cross_column",
+      "subtype": "cross_column",
+      "column": "Revenue",
+      "id": "2028",
+      "resolution": "restore",
+      "clean_value": 105.0,
+      "messy_value": 1055.0
+    },
+    {
+      "type": "duplicates",
+      "subtype": "duplicates",
+      "column": "*",
+      "id": "2012",
+      "resolution": "drop_copy",
+      "clean_value": null,
+      "messy_value": null
+    },
+    {
+      "type": "duplicates",
+      "subtype": "duplicates",
+      "column": "*",
+      "id": "2050",
+      "resolution": "drop_copy",
+      "clean_value": null,
+      "messy_value": null
+    }
+  ]
+}

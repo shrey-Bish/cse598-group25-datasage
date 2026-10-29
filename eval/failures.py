@@ -23,6 +23,12 @@ CHECK_FOR = {
 }
 
 
+def _on_column(args, column: str) -> bool:
+    if column == "*" or not isinstance(args, dict) or "column" not in args:
+        return True
+    return args["column"] == column
+
+
 def diagnose(result: dict, trace: list[dict], planted: list[dict]) -> list[str]:
     calls = [e for e in trace if e.get("event") == "tool"]
     names = [e["name"] for e in calls]
@@ -38,6 +44,8 @@ def diagnose(result: dict, trace: list[dict], planted: list[dict]) -> list[str]:
         needed = CHECK_FOR[p["type"]]
         if not needed & set(names):
             reasons.append(f"never ran a check for {p['type']}")
+        elif not any(e["name"] in needed and _on_column(e["args"], p["column"]) for e in calls):
+            reasons.append(f"checked {p['type']} on other columns but not the one with the error")
     if "lookup_rules" not in names:
         reasons.append("did not read the rules file")
     if any(e["name"] == "fill_missing" for e in fixed):

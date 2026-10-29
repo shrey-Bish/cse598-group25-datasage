@@ -1,0 +1,113 @@
+{
+  "id_column": "Order_ID",
+  "errors": [
+    {
+      "type": "text_number",
+      "subtype": "text_number",
+      "column": "Price",
+      "id": "2008",
+      "resolution": "restore",
+      "clean_value": 350.0,
+      "messy_value": "$350.00"
+    },
+    {
+      "type": "text_number",
+      "subtype": "text_number",
+      "column": "Price",
+      "id": "2024",
+      "resolution": "restore",
+      "clean_value": 6.0,
+      "messy_value": "$6.00"
+    },
+    {
+      "type": "text_number",
+      "subtype": "text_number",
+      "column": "Price",
+      "id": "2018",
+      "resolution": "restore",
+      "clean_value": 6.0,
+      "messy_value": "$6.00"
+    },
+    {
+      "type": "label_variant",
+      "subtype": "label_typo",
+      "column": "Region",
+      "id": "2028",
+      "resolution": "restore",
+      "clean_value": "North",
+      "messy_value": "Nort"
+    },
+    {
+      "type": "label_variant",
+      "subtype": "label_typo",
+      "column": "Region",
+      "id": "2036",
+      "resolution": "restore",
+      "clean_value": "South",
+      "messy_value": "Suoth"
+    },
+    {
+      "type": "label_variant",
+      "subtype": "label_typo",
+      "column": "Region",
+      "id": "2042",
+      "resolution": "restore",
+      "clean_value": "West",
+      "messy_value": "Wst"
+    },
+    {
+      "type": "label_variant",
+      "subtype": "label_case",
+      "column": "Region",
+      "id": "2004",
+      "resolution": "restore",
+      "clean_value": "North",
+      "messy_value": "north"
+    },
+    {
+      "type": "label_variant",
+      "subtype": "label_case",
+      "column": "Region",
+      "id": "2031",
+      "resolution": "restore",
+      "clean_value": "East",
+      "messy_value": "east"
+    },
+    {
+      "type": "label_variant",
+      "subtype": "label_case",
+      "column": "Region",
+      "id": "2012",
+      "resolution": "restore",
+      "clean_value": "North",
+      "messy_value": "north"
+    },
+    {
+      "type": "invalid_date",
+      "subtype": "invalid_date",
+      "column": "Date",
+      "id": "2009",
+      "resolution": "set_missing",
+      "clean_value": "2026-06-09",
+      "messy_value": "2026-14-01"
+    },
+    {
+      "type": "invalid_date",
+      "subtype": "invalid_date",
+      "column": "Date",
+      "id": "2035",
+      "resolution": "set_missing",
+      "clean_value": "2026-05-04",
+      "messy_value": "2026-02-30"
+    },
+    {
+      "type": "invalid_date",
+      "subtype": "invalid_date",
+      "column": "Date",
+      "id": "2022",
+      "resolution": "set_missing",
+      "clean_value": "2026-04-02",
+      "messy_value": "13/45/2026"
+    }
+  ]
+}

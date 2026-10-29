@@ -12,11 +12,14 @@ from pathlib import Path
 
 ROOT = Path(__file__).resolve().parent
 RESULTS = ROOT / "results"
-ORDER = ["b0", "b1", "b2", "datasage", "datasage-small", "datasage-reject", "datasage-novalidator"]
+ORDER = ["b0", "b1", "b2", "datasage", "datasage-small", "datasage-reject", "datasage-novalidator",
+         "datasage-fix", "datasage-fix-strict", "datasage-small-fix", "datasage-small-fix-strict"]
 LABELS = {
     "b0": "B0 stakeholder baseline", "b1": "B1 fixed script", "b2": "B2 single LLM call",
     "datasage": "DataSage (235B)", "datasage-small": "DataSage (30B)",
     "datasage-reject": "DataSage, all risky fixes rejected", "datasage-novalidator": "DataSage, no validator",
+    "datasage-fix": "DataSage (235B) + exclusion rule", "datasage-fix-strict": "DataSage (235B) + rule, strict approver",
+    "datasage-small-fix": "DataSage (30B) + exclusion rule", "datasage-small-fix-strict": "DataSage (30B) + rule, strict approver",
 }
 
 
@@ -78,7 +81,9 @@ COLUMNS = [
 def main() -> None:
     table: dict = {}
     lines = []
-    for dataset in ("sales", "penguins"):
+    for dataset in ("sales", "penguins", "sales-heldout", "penguins-heldout"):
+        if not any((RESULTS / system / dataset).exists() for system in ORDER):
+            continue
         lines += [f"## {dataset}", "", "| System | n | " + " | ".join(c[1] for c in COLUMNS) + " |",
                   "|---|---:|" + "---:|" * len(COLUMNS)]
         for system in ORDER:

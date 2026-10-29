@@ -1,0 +1,95 @@
+{
+  "id_column": "Order_ID",
+  "errors": [
+    {
+      "type": "negative",
+      "subtype": "negative",
+      "column": "Quantity",
+      "id": "2033",
+      "resolution": "exclude",
+      "clean_value": 4.0,
+      "messy_value": -4.0
+    },
+    {
+      "type": "negative",
+      "subtype": "negative",
+      "column": "Quantity",
+      "id": "2019",
+      "resolution": "exclude",
+      "clean_value": 5.0,
+      "messy_value": -5.0
+    },
+    {
+      "type": "label_variant",
+      "subtype": "label_space",
+      "column": "Region",
+      "id": "2036",
+      "resolution": "restore",
+      "clean_value": "South",
+      "messy_value": "South "
+    },
+    {
+      "type": "label_variant",
+      "subtype": "label_space",
+      "column": "Region",
+      "id": "2005",
+      "resolution": "restore",
+      "clean_value": "West",
+      "messy_value": "West "
+    },
+    {
+      "type": "missing",
+      "subtype": "missing",
+      "column": "Region",
+      "id": "2043",
+      "resolution": "keep_missing",
+      "clean_value": null,
+      "messy_value": ""
+    },
+    {
+      "type": "missing",
+      "subtype": "missing",
+      "column": "Region",
+      "id": "2009",
+      "resolution": "keep_missing",
+      "clean_value": null,
+      "messy_value": ""
+    },
+    {
+      "type": "label_variant",
+      "subtype": "label_case",
+      "column": "Region",
+      "id": "2045",
+      "resolution": "restore",
+      "clean_value": "East",
+      "messy_value": "east"
+    },
+    {
+      "type": "cross_column",
+      "subtype": "cross_column",
+      "column": "Revenue",
+      "id": "2029",
+      "resolution": "restore",
+      "clean_value": 100.0,
+      "messy_value": 10000.0
+    },
+    {
+      "type": "duplicates",
+      "subtype": "duplicates",
+      "column": "*",
+      "id": "2017",
+      "resolution": "drop_copy",
+      "clean_value": null,
+      "messy_value": null
+    },
+    {
+      "type": "duplicates",
+      "subtype": "duplicates",
+      "column": "*",
+      "id": "2022",
+      "resolution": "drop_copy",
+      "clean_value": null,
+      "messy_value": null
+    }
+  ]
+}

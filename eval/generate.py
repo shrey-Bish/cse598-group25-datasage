@@ -223,8 +223,9 @@ def pick_tasks(rng: random.Random, kind: str, planted: list[dict]) -> list[tuple
     return (preferred + rest)[:2]
 
 
-def build(kind: str, tables: int, seed: int) -> int:
+def build(kind: str, tables: int, seed: int, split: str = "") -> int:
     rng = random.Random(f"{kind}-{seed}")
+    name = f"{kind}{split[:1]}" if split else kind  # held-out tables get ids like salesh_00
     id_col = "Order_ID" if kind == "sales" else "penguin_id"
     rules = SALES_RULES if kind == "sales" else PENGUIN_RULES
     count = 0
@@ -232,7 +233,7 @@ def build(kind: str, tables: int, seed: int) -> int:
         clean = clean_sales(rng, rng.randint(40, 70)) if kind == "sales" else clean_penguins(rng, rng.randint(40, 70))
         messy, planted = plant(rng, clean, kind)
         ref = reference_table(clean, planted, id_col)
-        folder = OUT / kind / f"{kind}_{t:02d}"
+        folder = OUT / (f"{kind}-{split}" if split else kind) / f"{name}_{t:02d}"
         folder.mkdir(parents=True, exist_ok=True)
         messy.to_csv(folder / "messy.csv", index=False)
         clean.to_csv(folder / "clean.csv", index=False)
@@ -242,7 +243,7 @@ def build(kind: str, tables: int, seed: int) -> int:
         tasks = []
         for j, (question, spec) in enumerate(pick_tasks(rng, kind, planted)):
             answer = run_analysis(ref, spec["group_by"], spec["metric"], spec["agg"], spec.get("filters"))["result"]
-            tasks.append({"task_id": f"{kind}_{t:02d}_q{j}", "question": question, "spec": spec, "reference_answer": answer})
+            tasks.append({"task_id": f"{name}_{t:02d}_q{j}", "question": question, "spec": spec, "reference_answer": answer})
             count += 1
         (folder / "tasks.json").write_text(json.dumps(tasks, indent=2))
     return count
@@ -252,10 +253,11 @@ def main() -> None:
     parser = argparse.ArgumentParser()
     parser.add_argument("--tables", type=int, default=10)
     parser.add_argument("--seed", type=int, default=7)
+    parser.add_argument("--split", default="", help="e.g. heldout: writes datasets/<kind>-heldout")
     args = parser.parse_args()
     for kind in ("sales", "penguins"):
-        n = build(kind, args.tables, args.seed)
-        print(f"{kind}: {args.tables} tables, {n} tasks -> {OUT / kind}")
+        n = build(kind, args.tables, args.seed, args.split)
+        print(f"{kind}: {args.tables} tables, {n} tasks -> {OUT / (f'{kind}-{args.split}' if args.split else kind)}")
 
 
 if __name__ == "__main__":

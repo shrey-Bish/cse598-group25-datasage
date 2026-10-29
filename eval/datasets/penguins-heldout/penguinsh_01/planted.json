@@ -1,0 +1,95 @@
+{
+  "id_column": "penguin_id",
+  "errors": [
+    {
+      "type": "label_variant",
+      "subtype": "label_typo",
+      "column": "island",
+      "id": "P8314136",
+      "resolution": "restore",
+      "clean_value": "Biscoe",
+      "messy_value": "Bisco"
+    },
+    {
+      "type": "label_variant",
+      "subtype": "label_typo",
+      "column": "island",
+      "id": "P9955553",
+      "resolution": "restore",
+      "clean_value": "Dream",
+      "messy_value": "Dram"
+    },
+    {
+      "type": "label_variant",
+      "subtype": "label_case",
+      "column": "species",
+      "id": "P4391501",
+      "resolution": "restore",
+      "clean_value": "Adelie",
+      "messy_value": "adelie"
+    },
+    {
+      "type": "label_variant",
+      "subtype": "label_case",
+      "column": "species",
+      "id": "P9907439",
+      "resolution": "restore",
+      "clean_value": "Gentoo",
+      "messy_value": "gentoo"
+    },
+    {
+      "type": "label_variant",
+      "subtype": "label_case",
+      "column": "species",
+      "id": "P8951538",
+      "resolution": "restore",
+      "clean_value": "Gentoo",
+      "messy_value": "gentoo"
+    },
+    {
+      "type": "negative",
+      "subtype": "negative",
+      "column": "flipper_length_mm",
+      "id": "P9487452",
+      "resolution": "exclude",
+      "clean_value": 197.0,
+      "messy_value": -197.0
+    },
+    {
+      "type": "negative",
+      "subtype": "negative",
+      "column": "flipper_length_mm",
+      "id": "P6704205",
+      "resolution": "exclude",
+      "clean_value": 184.0,
+      "messy_value": -184.0
+    },
+    {
+      "type": "negative",
+      "subtype": "negative",
+      "column": "flipper_length_mm",
+      "id": "P6255022",
+      "resolution": "exclude",
+      "clean_value": 211.0,
+      "messy_value": -211.0
+    },
+    {
+      "type": "duplicates",
+      "subtype": "duplicates",
+      "column": "*",
+      "id": "P7806017",
+      "resolution": "drop_copy",
+      "clean_value": null,
+      "messy_value": null
+    },
+    {
+      "type": "duplicates",
+      "subtype": "duplicates",
+      "column": "*",
+      "id": "P7918957",
+      "resolution": "drop_copy",
+      "clean_value": null,
+      "messy_value": null
+    }
+  ]
+}

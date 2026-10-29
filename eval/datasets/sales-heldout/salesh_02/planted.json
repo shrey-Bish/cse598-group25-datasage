@@ -1,0 +1,167 @@
+{
+  "id_column": "Order_ID",
+  "errors": [
+    {
+      "type": "invalid_date",
+      "subtype": "invalid_date",
+      "column": "Date",
+      "id": "2051",
+      "resolution": "set_missing",
+      "clean_value": "2026-06-09",
+      "messy_value": "2026-14-01"
+    },
+    {
+      "type": "invalid_date",
+      "subtype": "invalid_date",
+      "column": "Date",
+      "id": "2049",
+      "resolution": "set_missing",
+      "clean_value": "2026-05-03",
+      "messy_value": "TBD"
+    },
+    {
+      "type": "invalid_date",
+      "subtype": "invalid_date",
+      "column": "Date",
+      "id": "2065",
+      "resolution": "set_missing",
+      "clean_value": "2026-03-15",
+      "messy_value": "not-a-date"
+    },
+    {
+      "type": "missing",
+      "subtype": "missing",
+      "column": "Region",
+      "id": "2041",
+      "resolution": "keep_missing",
+      "clean_value": null,
+      "messy_value": ""
+    },
+    {
+      "type": "missing",
+      "subtype": "missing",
+      "column": "Region",
+      "id": "2037",
+      "resolution": "keep_missing",
+      "clean_value": null,
+      "messy_value": ""
+    },
+    {
+      "type": "missing",
+      "subtype": "missing",
+      "column": "Region",
+      "id": "2050",
+      "resolution": "keep_missing",
+      "clean_value": null,
+      "messy_value": ""
+    },
+    {
+      "type": "label_variant",
+      "subtype": "label_case",
+      "column": "Region",
+      "id": "2045",
+      "resolution": "restore",
+      "clean_value": "West",
+      "messy_value": "west"
+    },
+    {
+      "type": "label_variant",
+      "subtype": "label_case",
+      "column": "Region",
+      "id": "2052",
+      "resolution": "restore",
+      "clean_value": "East",
+      "messy_value": "east"
+    },
+    {
+      "type": "label_variant",
+      "subtype": "label_case",
+      "column": "Region",
+      "id": "2067",
+      "resolution": "restore",
+      "clean_value": "North",
+      "messy_value": "north"
+    },
+    {
+      "type": "label_variant",
+      "subtype": "label_space",
+      "column": "Region",
+      "id": "2012",
+      "resolution": "restore",
+      "clean_value": "South",
+      "messy_value": " South"
+    },
+    {
+      "type": "label_variant",
+      "subtype": "label_space",
+      "column": "Region",
+      "id": "2018",
+      "resolution": "restore",
+      "clean_value": "North",
+      "messy_value": "North "
+    },
+    {
+      "type": "label_variant",
+      "subtype": "label_space",
+      "column": "Region",
+      "id": "2032",
+      "resolution": "restore",
+      "clean_value": "South",
+      "messy_value": " South"
+    },
+    {
+      "type": "negative",
+      "subtype": "negative",
+      "column": "Quantity",
+      "id": "2006",
+      "resolution": "exclude",
+      "clean_value": 2.0,
+      "messy_value": -2.0
+    },
+    {
+      "type": "negative",
+      "subtype": "negative",
+      "column": "Quantity",
+      "id": "2015",
+      "resolution": "exclude",
+      "clean_value": 6.0,
+      "messy_value": -6.0
+    },
+    {
+      "type": "negative",
+      "subtype": "negative",
+      "column": "Quantity",
+      "id": "2066",
+      "resolution": "exclude",
+      "clean_value": 3.0,
+      "messy_value": -3.0
+    },
+    {
+      "type": "cross_column",
+      "subtype": "cross_column",
+      "column": "Revenue",
+      "id": "2011",
+      "resolution": "restore",
+      "clean_value": 240.0,
+      "messy_value": 2400.0
+    },
+    {
+      "type": "cross_column",
+      "subtype": "cross_column",
+      "column": "Revenue",
+      "id": "2062",
+      "resolution": "restore",
+      "clean_value": 48.0,
+      "messy_value": 480.0
+    },
+    {
+      "type": "cross_column",
+      "subtype": "cross_column",
+      "column": "Revenue",
+      "id": "2020",
+      "resolution": "restore",
+      "clean_value": 24.0,
+      "messy_value": 2405.0
+    }
+  ]
+}

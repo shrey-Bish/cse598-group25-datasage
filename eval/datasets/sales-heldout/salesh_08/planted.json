@@ -1,0 +1,68 @@
+{
+  "id_column": "Order_ID",
+  "errors": [
+    {
+      "type": "label_variant",
+      "subtype": "label_space",
+      "column": "Region",
+      "id": "2031",
+      "resolution": "restore",
+      "clean_value": "North",
+      "messy_value": " North"
+    },
+    {
+      "type": "label_variant",
+      "subtype": "label_space",
+      "column": "Region",
+      "id": "2028",
+      "resolution": "restore",
+      "clean_value": "West",
+      "messy_value": "West "
+    },
+    {
+      "type": "label_variant",
+      "subtype": "label_space",
+      "column": "Region",
+      "id": "2026",
+      "resolution": "restore",
+      "clean_value": "East",
+      "messy_value": "East "
+    },
+    {
+      "type": "missing",
+      "subtype": "missing",
+      "column": "Region",
+      "id": "2047",
+      "resolution": "keep_missing",
+      "clean_value": null,
+      "messy_value": ""
+    },
+    {
+      "type": "label_variant",
+      "subtype": "label_typo",
+      "column": "Category",
+      "id": "2038",
+      "resolution": "restore",
+      "clean_value": "Furniture",
+      "messy_value": "Furnture"
+    },
+    {
+      "type": "label_variant",
+      "subtype": "label_typo",
+      "column": "Category",
+      "id": "2036",
+      "resolution": "restore",
+      "clean_value": "Furniture",
+      "messy_value": "Furnture"
+    },
+    {
+      "type": "duplicates",
+      "subtype": "duplicates",
+      "column": "*",
+      "id": "2023",
+      "resolution": "drop_copy",
+      "clean_value": null,
+      "messy_value": null
+    }
+  ]
+}

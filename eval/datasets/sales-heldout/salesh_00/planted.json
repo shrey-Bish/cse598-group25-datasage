@@ -1,0 +1,86 @@
+{
+  "id_column": "Order_ID",
+  "errors": [
+    {
+      "type": "label_variant",
+      "subtype": "label_typo",
+      "column": "Category",
+      "id": "2025",
+      "resolution": "restore",
+      "clean_value": "Office Supplies",
+      "messy_value": "Office Suplies"
+    },
+    {
+      "type": "label_variant",
+      "subtype": "label_typo",
+      "column": "Category",
+      "id": "2005",
+      "resolution": "restore",
+      "clean_value": "Office Supplies",
+      "messy_value": "Office Suplies"
+    },
+    {
+      "type": "label_variant",
+      "subtype": "label_typo",
+      "column": "Category",
+      "id": "2055",
+      "resolution": "restore",
+      "clean_value": "Accessories",
+      "messy_value": "Accesories"
+    },
+    {
+      "type": "missing",
+      "subtype": "missing",
+      "column": "Region",
+      "id": "2037",
+      "resolution": "keep_missing",
+      "clean_value": null,
+      "messy_value": ""
+    },
+    {
+      "type": "missing",
+      "subtype": "missing",
+      "column": "Region",
+      "id": "2063",
+      "resolution": "keep_missing",
+      "clean_value": null,
+      "messy_value": ""
+    },
+    {
+      "type": "label_variant",
+      "subtype": "label_space",
+      "column": "Region",
+      "id": "2003",
+      "resolution": "restore",
+      "clean_value": "East",
+      "messy_value": " East"
+    },
+    {
+      "type": "invalid_date",
+      "subtype": "invalid_date",
+      "column": "Date",
+      "id": "2019",
+      "resolution": "set_missing",
+      "clean_value": "2026-04-15",
+      "messy_value": "2026-14-01"
+    },
+    {
+      "type": "invalid_date",
+      "subtype": "invalid_date",
+      "column": "Date",
+      "id": "2014",
+      "resolution": "set_missing",
+      "clean_value": "2026-02-04",
+      "messy_value": "2026-02-30"
+    },
+    {
+      "type": "duplicates",
+      "subtype": "duplicates",
+      "column": "*",
+      "id": "2004",
+      "resolution": "drop_copy",
+      "clean_value": null,
+      "messy_value": null
+    }
+  ]
+}

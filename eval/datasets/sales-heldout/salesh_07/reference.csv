@@ -1,0 +1,44 @@
+Order_ID,Date,Product,Category,Quantity,Price,Region,Revenue
+2001,2026-05-07,Mouse,Accessories,6,25,South,150
+2002,2026-01-26,Lamp,Furniture,6,45,North,270
+2003,2026-02-15,Hub,Accessories,3,40,East,120
+2004,2026-04-20,Chair,Furniture,8,180,East,1440
+2005,2026-05-12,Notebook,Office Supplies,3,6,West,18
+2006,2026-02-25,Lamp,Furniture,2,45,South,90
+2007,2026-02-07,Keyboard,Accessories,4,50,West,200
+2008,2026-04-03,Desk,Furniture,3,350,North,1050
+2009,2026-02-15,Cable,Accessories,2,15,,30
+2010,2026-05-10,Chair,Furniture,1,180,West,180
+2011,2026-06-17,Monitor,Electronics,4,300,East,1200
+2012,2026-04-17,Chair,Furniture,3,180,East,540
+2013,2026-02-16,Webcam,Electronics,7,60,East,420
+2014,2026-03-27,Laptop,Electronics,1,900,East,900
+2015,2026-05-23,Lamp,Furniture,4,45,East,180
+2016,2026-03-13,Mouse,Accessories,5,25,South,125
+2017,2026-03-16,Cable,Accessories,7,15,South,105
+2018,2026-02-13,Pen Pack,Office Supplies,5,12,North,60
+2020,2026-06-11,Hub,Accessories,3,40,East,120
+2021,2026-06-01,Desk,Furniture,7,350,East,2450
+2022,2026-04-28,Monitor,Electronics,7,300,East,2100
+2023,2026-02-16,Pen Pack,Office Supplies,3,12,East,36
+2024,2026-02-07,Cable,Accessories,5,15,East,75
+2025,2026-01-10,Hub,Accessories,6,40,North,240
+2026,2026-01-02,Desk,Furniture,4,350,West,1400
+2027,2026-04-18,Webcam,Electronics,1,60,North,60
+2028,2026-02-17,Cable,Accessories,4,15,South,60
+2029,2026-01-05,Mouse,Accessories,4,25,East,100
+2030,2026-05-26,Mouse,Accessories,2,25,North,50
+2031,2026-04-10,Hub,Accessories,2,40,South,80
+2032,2026-05-23,Notebook,Office Supplies,2,6,North,12
+2034,2026-01-03,Hub,Accessories,3,40,North,120
+2035,2026-04-07,Keyboard,Accessories,3,50,South,150
+2036,2026-06-19,Monitor,Electronics,8,300,South,2400
+2037,2026-06-10,Desk,Furniture,8,350,South,2800
+2038,2026-05-14,Notebook,Office Supplies,7,6,East,42
+2039,2026-05-09,Chair,Furniture,7,180,West,1260
+2040,2026-04-27,Laptop,Electronics,6,900,South,5400
+2041,2026-02-01,Stapler,Office Supplies,8,18,East,144
+2042,2026-05-03,Notebook,Office Supplies,2,6,South,12
+2043,2026-05-07,Pen Pack,Office Supplies,3,12,,36
+2044,2026-01-11,Stapler,Office Supplies,5,18,North,90
+2045,2026-02-22,Webcam,Electronics,4,60,East,240

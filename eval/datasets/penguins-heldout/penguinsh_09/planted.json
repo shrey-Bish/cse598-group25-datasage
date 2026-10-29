@@ -1,0 +1,95 @@
+{
+  "id_column": "penguin_id",
+  "errors": [
+    {
+      "type": "missing",
+      "subtype": "missing",
+      "column": "sex",
+      "id": "P3787251",
+      "resolution": "keep_missing",
+      "clean_value": null,
+      "messy_value": ""
+    },
+    {
+      "type": "missing",
+      "subtype": "missing",
+      "column": "sex",
+      "id": "P9651212",
+      "resolution": "keep_missing",
+      "clean_value": null,
+      "messy_value": ""
+    },
+    {
+      "type": "label_variant",
+      "subtype": "label_space",
+      "column": "sex",
+      "id": "P7826910",
+      "resolution": "restore",
+      "clean_value": "male",
+      "messy_value": "male "
+    },
+    {
+      "type": "label_variant",
+      "subtype": "label_space",
+      "column": "sex",
+      "id": "P8717346",
+      "resolution": "restore",
+      "clean_value": "male",
+      "messy_value": " male"
+    },
+    {
+      "type": "out_of_range",
+      "subtype": "out_of_range",
+      "column": "body_mass_g",
+      "id": "P2566749",
+      "resolution": "exclude",
+      "clean_value": 4050.0,
+      "messy_value": 4050000.0
+    },
+    {
+      "type": "out_of_range",
+      "subtype": "out_of_range",
+      "column": "body_mass_g",
+      "id": "P9970228",
+      "resolution": "exclude",
+      "clean_value": 5050.0,
+      "messy_value": 5050000.0
+    },
+    {
+      "type": "out_of_range",
+      "subtype": "out_of_range",
+      "column": "body_mass_g",
+      "id": "P4447322",
+      "resolution": "exclude",
+      "clean_value": 5050.0,
+      "messy_value": 5050000.0
+    },
+    {
+      "type": "negative",
+      "subtype": "negative",
+      "column": "flipper_length_mm",
+      "id": "P1349909",
+      "resolution": "exclude",
+      "clean_value": 192.0,
+      "messy_value": -192.0
+    },
+    {
+      "type": "negative",
+      "subtype": "negative",
+      "column": "flipper_length_mm",
+      "id": "P7530916",
+      "resolution": "exclude",
+      "clean_value": 198.0,
+      "messy_value": -198.0
+    },
+    {
+      "type": "negative",
+      "subtype": "negative",
+      "column": "flipper_length_mm",
+      "id": "P5207819",
+      "resolution": "exclude",
+      "clean_value": 188.0,
+      "messy_value": -188.0
+    }
+  ]
+}

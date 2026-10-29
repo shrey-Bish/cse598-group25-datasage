@@ -4,7 +4,8 @@ Usage:
   python -m eval.run_eval --system datasage --dataset sales --workers 4
   python -m eval.run_eval --system b2 --dataset penguins
 Systems: b0, b1, b2, datasage, datasage-small, datasage-reject, datasage-novalidator,
-         datasage-fix, datasage-fix-strict
+         datasage-fix, datasage-fix-strict, datasage-small-fix, datasage-small-fix-strict
+Datasets: sales, penguins (dev) and sales-heldout, penguins-heldout
 """
 
 from __future__ import annotations
@@ -74,7 +75,7 @@ def run(system: str, dataset: str, workers: int, limit: int | None, results_dir:
 def main() -> None:
     parser = argparse.ArgumentParser()
     parser.add_argument("--system", required=True, choices=list(SYSTEMS))
-    parser.add_argument("--dataset", required=True, choices=["sales", "penguins"])
+    parser.add_argument("--dataset", required=True, choices=["sales", "penguins", "sales-heldout", "penguins-heldout"])
     parser.add_argument("--workers", type=int, default=4)
     parser.add_argument("--limit", type=int)
     parser.add_argument("--only", default="", help="comma list of task ids to run")

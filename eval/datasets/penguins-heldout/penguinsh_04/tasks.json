@@ -1,0 +1,33 @@
+[
+  {
+    "task_id": "penguinsh_04_q0",
+    "question": "What is the average body mass for each sex?",
+    "spec": {
+      "group_by": [
+        "sex"
+      ],
+      "metric": "body_mass_g",
+      "agg": "mean"
+    },
+    "reference_answer": {
+      "female": 3792.8571,
+      "male": 4492.0
+    }
+  },
+  {
+    "task_id": "penguinsh_04_q1",
+    "question": "What is the total body mass for each species?",
+    "spec": {
+      "group_by": [
+        "species"
+      ],
+      "metric": "body_mass_g",
+      "agg": "sum"
+    },
+    "reference_answer": {
+      "Adelie": 108975.0,
+      "Chinstrap": 37725.0,
+      "Gentoo": 98350.0
+    }
+  }
+]

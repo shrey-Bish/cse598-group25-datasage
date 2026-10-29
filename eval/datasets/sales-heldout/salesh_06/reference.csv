@@ -1,0 +1,44 @@
+Order_ID,Date,Product,Category,Quantity,Price,Region,Revenue
+2001,2026-04-28,Mouse,Accessories,3,25,South,75
+2002,2026-02-06,Mouse,Accessories,3,25,East,75
+2003,2026-04-15,Mouse,Accessories,1,25,East,25
+2004,2026-03-04,Notebook,Office Supplies,4,6,North,24
+2005,2026-06-19,Notebook,Office Supplies,4,6,South,24
+2006,2026-03-07,Hub,Accessories,2,40,West,80
+2007,2026-01-11,Hub,Accessories,6,40,North,240
+2008,2026-03-26,Desk,Furniture,8,350,South,2800
+2009,,Pen Pack,Office Supplies,6,12,South,72
+2010,2026-04-03,Headset,Electronics,6,80,East,480
+2011,2026-03-18,Hub,Accessories,7,40,West,280
+2012,2026-03-13,Hub,Accessories,8,40,North,320
+2013,2026-05-10,Desk,Furniture,7,350,East,2450
+2014,2026-02-20,Notebook,Office Supplies,1,6,East,6
+2015,2026-06-08,Mouse,Accessories,1,25,North,25
+2016,2026-01-22,Pen Pack,Office Supplies,6,12,West,72
+2017,2026-06-08,Headset,Electronics,1,80,South,80
+2018,2026-01-22,Notebook,Office Supplies,8,6,West,48
+2019,2026-03-06,Monitor,Electronics,5,300,West,1500
+2020,2026-02-22,Cable,Accessories,3,15,North,45
+2021,2026-05-25,Webcam,Electronics,6,60,North,360
+2022,,Pen Pack,Office Supplies,5,12,South,60
+2023,2026-02-09,Desk,Furniture,5,350,South,1750
+2024,2026-05-14,Notebook,Office Supplies,3,6,North,18
+2025,2026-06-05,Laptop,Electronics,5,900,South,4500
+2026,2026-02-14,Keyboard,Accessories,7,50,West,350
+2027,2026-02-08,Hub,Accessories,2,40,South,80
+2028,2026-03-21,Monitor,Electronics,2,300,North,600
+2029,2026-04-28,Webcam,Electronics,1,60,South,60
+2030,2026-04-02,Lamp,Furniture,2,45,East,90
+2031,2026-02-28,Tablet,Electronics,8,450,East,3600
+2032,2026-06-19,Lamp,Furniture,5,45,North,225
+2033,2026-04-23,Lamp,Furniture,1,45,North,45
+2034,2026-02-01,Monitor,Electronics,3,300,South,900
+2035,,Mouse,Accessories,6,25,South,150
+2036,2026-05-26,Keyboard,Accessories,1,50,South,50
+2037,2026-05-01,Desk,Furniture,8,350,West,2800
+2038,2026-01-07,Notebook,Office Supplies,5,6,West,30
+2039,2026-02-04,Stapler,Office Supplies,1,18,North,18
+2040,2026-02-20,Keyboard,Accessories,8,50,West,400
+2041,2026-04-18,Hub,Accessories,3,40,South,120
+2042,2026-01-07,Tablet,Electronics,5,450,West,2250
+2043,2026-04-05,Mouse,Accessories,1,25,West,25

@@ -1,0 +1,122 @@
+{
+  "id_column": "penguin_id",
+  "errors": [
+    {
+      "type": "missing",
+      "subtype": "missing",
+      "column": "sex",
+      "id": "P6141331",
+      "resolution": "keep_missing",
+      "clean_value": null,
+      "messy_value": ""
+    },
+    {
+      "type": "missing",
+      "subtype": "missing",
+      "column": "sex",
+      "id": "P3566807",
+      "resolution": "keep_missing",
+      "clean_value": null,
+      "messy_value": ""
+    },
+    {
+      "type": "out_of_range",
+      "subtype": "out_of_range",
+      "column": "body_mass_g",
+      "id": "P7515814",
+      "resolution": "exclude",
+      "clean_value": 3550.0,
+      "messy_value": 3550000.0
+    },
+    {
+      "type": "label_variant",
+      "subtype": "label_case",
+      "column": "island",
+      "id": "P3497801",
+      "resolution": "restore",
+      "clean_value": "Torgersen",
+      "messy_value": "torgersen"
+    },
+    {
+      "type": "label_variant",
+      "subtype": "label_case",
+      "column": "island",
+      "id": "P7765022",
+      "resolution": "restore",
+      "clean_value": "Torgersen",
+      "messy_value": "torgersen"
+    },
+    {
+      "type": "text_number",
+      "subtype": "text_number",
+      "column": "body_mass_g",
+      "id": "P9061910",
+      "resolution": "restore",
+      "clean_value": 4100.0,
+      "messy_value": "4,100"
+    },
+    {
+      "type": "text_number",
+      "subtype": "text_number",
+      "column": "body_mass_g",
+      "id": "P6505415",
+      "resolution": "restore",
+      "clean_value": 3600.0,
+      "messy_value": "3,600"
+    },
+    {
+      "type": "text_number",
+      "subtype": "text_number",
+      "column": "body_mass_g",
+      "id": "P8678109",
+      "resolution": "restore",
+      "clean_value": 3150.0,
+      "messy_value": "3,150"
+    },
+    {
+      "type": "negative",
+      "subtype": "negative",
+      "column": "flipper_length_mm",
+      "id": "P6942663",
+      "resolution": "exclude",
+      "clean_value": 198.0,
+      "messy_value": -198.0
+    },
+    {
+      "type": "negative",
+      "subtype": "negative",
+      "column": "flipper_length_mm",
+      "id": "P4164346",
+      "resolution": "exclude",
+      "clean_value": 215.0,
+      "messy_value": -215.0
+    },
+    {
+      "type": "negative",
+      "subtype": "negative",
+      "column": "flipper_length_mm",
+      "id": "P3948947",
+      "resolution": "exclude",
+      "clean_value": 228.0,
+      "messy_value": -228.0
+    },
+    {
+      "type": "label_variant",
+      "subtype": "label_space",
+      "column": "island",
+      "id": "P2960460",
+      "resolution": "restore",
+      "clean_value": "Dream",
+      "messy_value": "Dream "
+    },
+    {
+      "type": "label_variant",
+      "subtype": "label_space",
+      "column": "island",
+      "id": "P8669453",
+      "resolution": "restore",
+      "clean_value": "Dream",
+      "messy_value": "Dream "
+    }
+  ]
+}

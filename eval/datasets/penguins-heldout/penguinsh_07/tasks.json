@@ -1,0 +1,34 @@
+[
+  {
+    "task_id": "penguinsh_07_q0",
+    "question": "What is the average flipper length for each species?",
+    "spec": {
+      "group_by": [
+        "species"
+      ],
+      "metric": "flipper_length_mm",
+      "agg": "mean"
+    },
+    "reference_answer": {
+      "Adelie": 190.2812,
+      "Chinstrap": 199.6429,
+      "Gentoo": 215.1429
+    }
+  },
+  {
+    "task_id": "penguinsh_07_q1",
+    "question": "What is the total body mass for each species?",
+    "spec": {
+      "group_by": [
+        "species"
+      ],
+      "metric": "body_mass_g",
+      "agg": "sum"
+    },
+    "reference_answer": {
+      "Adelie": 117250.0,
+      "Chinstrap": 55625.0,
+      "Gentoo": 70175.0
+    }
+  }
+]

@@ -96,7 +96,7 @@ class Session:
             self.issues[(issue_type, column)] = {"type": issue_type, "column": column, "count": count, **details}
 
     def summary(self) -> dict:
-        """Compact state given to the model at each step instead of the raw history."""
+        """Compact state summary. Not yet sent to the model, which currently sees the chat history."""
         df = self.current
         return {
             "version": self.version,

@@ -1,0 +1,37 @@
+{
+  "penguin_id": "unique id",
+  "species": {
+    "allowed": [
+      "Adelie",
+      "Chinstrap",
+      "Gentoo"
+    ]
+  },
+  "island": {
+    "allowed": [
+      "Biscoe",
+      "Dream",
+      "Torgersen"
+    ]
+  },
+  "sex": {
+    "allowed": [
+      "male",
+      "female"
+    ],
+    "note": "missing means unknown; do not guess"
+  },
+  "bill_length_mm": {
+    "min": 30,
+    "max": 60
+  },
+  "flipper_length_mm": {
+    "min": 170,
+    "max": 235
+  },
+  "body_mass_g": {
+    "min": 2500,
+    "max": 6500,
+    "unit": "grams"
+  }
+}

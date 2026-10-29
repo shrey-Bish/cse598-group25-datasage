@@ -1,0 +1,34 @@
+[
+  {
+    "task_id": "penguinsh_01_q0",
+    "question": "How many penguins were measured on each island?",
+    "spec": {
+      "group_by": [
+        "island"
+      ],
+      "metric": null,
+      "agg": "count"
+    },
+    "reference_answer": {
+      "Biscoe": 38.0,
+      "Dream": 12.0,
+      "Torgersen": 7.0
+    }
+  },
+  {
+    "task_id": "penguinsh_01_q1",
+    "question": "What is the total body mass for each species?",
+    "spec": {
+      "group_by": [
+        "species"
+      ],
+      "metric": "body_mass_g",
+      "agg": "sum"
+    },
+    "reference_answer": {
+      "Adelie": 74875.0,
+      "Chinstrap": 24675.0,
+      "Gentoo": 155250.0
+    }
+  }
+]
