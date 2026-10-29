@@ -1,0 +1,181 @@
+<!doctype html>
+<html><head><meta charset="utf-8"><title>DataSage architecture (Milestone 2)</title>
+<style>html,body{margin:0;background:#fff}svg{display:block}</style></head>
+<body>
+<svg width="1000" height="742" viewBox="0 0 1000 742" xmlns="http://www.w3.org/2000/svg" font-family="Arial, Helvetica, sans-serif">
+  <defs>
+    <marker id="ah" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse">
+      <path d="M0,0 L10,5 L0,10 z" fill="#222"/>
+    </marker>
+    <style>
+      .bx{fill:#fff;stroke:#222;stroke-width:1.3}
+      .ag{fill:#e8f0fb;stroke:#2b5797;stroke-width:1.8}
+      .gt{fill:#fff4e0;stroke:#b26b00;stroke-width:1.5}
+      .pl{fill:#f6f6f6;stroke:#999;stroke-width:1.2;stroke-dasharray:5 4}
+      .t{font-size:14px;font-weight:bold;fill:#111}
+      .tp{font-size:13px;font-weight:bold;fill:#777}
+      .s{font-size:11.5px;fill:#444}
+      .sp{font-size:11px;fill:#888}
+      .m{font-family:Menlo,Consolas,monospace;font-size:10.5px;fill:#333}
+      .mp{font-family:Menlo,Consolas,monospace;font-size:10.5px;fill:#999}
+      .h{font-size:12px;font-weight:bold;fill:#2b5797}
+      .lb{font-size:11px;font-style:italic;fill:#222}
+      .ln{stroke:#222;stroke-width:1.3;fill:none}
+      .dl{stroke:#666;stroke-width:1.2;fill:none;stroke-dasharray:5 4}
+      .new{fill:#c2185b}
+      .newt{font-size:9px;font-weight:bold;fill:#fff;letter-spacing:0.5px}
+    </style>
+  </defs>
+
+  <!-- left column -->
+  <rect class="bx" x="20" y="24" width="210" height="44" rx="6"/>
+  <text class="t" x="34" y="51">CSV / Excel file</text>
+  <rect class="bx" x="20" y="96" width="210" height="40" rx="6"/>
+  <text class="t" x="34" y="121">Analysis request</text>
+  <rect class="bx" x="20" y="146" width="210" height="40" rx="6"/>
+  <text class="t" x="34" y="171">Rules file (optional)</text>
+
+  <rect class="gt" x="20" y="206" width="210" height="72" rx="6"/>
+  <text class="t" x="34" y="228">Approver</text>
+  <text class="s" x="34" y="246">user at the terminal (default),</text>
+  <text class="s" x="34" y="261">fix-type policy (demo), oracle</text>
+  <text class="s" x="34" y="276" dy="-3">(evaluation)</text>
+  <rect class="new" x="186" y="212" width="36" height="14" rx="3"/><text class="newt" x="191" y="222">NEW</text>
+
+  <rect class="bx" x="20" y="300" width="210" height="146" rx="6"/>
+  <text class="t" x="34" y="323">Session state</text>
+  <text class="s" x="34" y="344">original table (read-only)</text>
+  <text class="s" x="34" y="362">versions v0, v1, ... vN</text>
+  <text class="s" x="34" y="380">issues found, rejected fixes</text>
+  <text class="s" x="34" y="398">change log with approvals</text>
+  <text class="s" x="34" y="416">analyses; tool-call budget (30)</text>
+  <text class="s" x="34" y="434">model sees chat history (clipped)</text>
+
+  <rect class="bx" x="20" y="470" width="210" height="88" rx="6"/>
+  <text class="t" x="34" y="493">Trace log (JSONL)</text>
+  <text class="s" x="34" y="513">every tool call, arguments,</text>
+  <text class="s" x="34" y="530">result, error and time; used by</text>
+  <text class="s" x="34" y="547">evaluation and failure analysis</text>
+
+  <!-- middle column -->
+  <rect class="bx" x="290" y="20" width="330" height="56" rx="6"/>
+  <text class="t" x="304" y="43">1. Load as text, then profile</text>
+  <text class="s" x="304" y="63">NA tokens to missing; only all-number columns converted</text>
+  <rect class="new" x="576" y="26" width="36" height="14" rx="3"/><text class="newt" x="581" y="36">NEW</text>
+
+  <rect class="ag" x="290" y="106" width="330" height="66" rx="6"/>
+  <text class="t" x="304" y="129">2. Planner agent (LLM, tool calling)</text>
+  <text class="s" x="304" y="148">qwen3-235b (default) or qwen3-30b on ASU RC;</text>
+  <text class="s" x="304" y="164">reads profile, rules, tool results; one fix per call</text>
+
+  <rect class="gt" x="290" y="202" width="330" height="56" rx="6"/>
+  <text class="t" x="304" y="225">3. Approval gate (code, not the model)</text>
+  <text class="s" x="304" y="245">low risk: apply · medium/high risk: ask the approver</text>
+
+  <rect class="bx" x="290" y="288" width="330" height="56" rx="6"/>
+  <text class="t" x="304" y="311">4. Apply fix to a working copy</text>
+  <text class="s" x="304" y="331">new version vN+1, entry in the change log</text>
+
+  <rect class="bx" x="290" y="374" width="330" height="56" rx="6"/>
+  <text class="t" x="304" y="397">5. Validator (Python)</text>
+  <text class="s" x="304" y="417">declared vs actual changes, totals, re-check</text>
+
+  <rect class="bx" x="290" y="500" width="330" height="58" rx="6"/>
+  <text class="t" x="304" y="523">6. Analyze, report, grounding check</text>
+  <text class="s" x="304" y="543">flags any summary number no tool produced</text>
+  <rect class="new" x="576" y="506" width="36" height="14" rx="3"/><text class="newt" x="581" y="516">NEW</text>
+
+  <line class="ln" x1="455" y1="76" x2="455" y2="106" marker-end="url(#ah)"/>
+  <line class="ln" x1="455" y1="172" x2="455" y2="202" marker-end="url(#ah)"/>
+  <text class="lb" x="463" y="192">fix proposal</text>
+  <line class="ln" x1="455" y1="258" x2="455" y2="288" marker-end="url(#ah)"/>
+  <text class="lb" x="463" y="278">approved</text>
+  <line class="ln" x1="455" y1="344" x2="455" y2="374" marker-end="url(#ah)"/>
+  <line class="ln" x1="455" y1="430" x2="455" y2="500" marker-end="url(#ah)"/>
+  <text class="lb" x="463" y="470">planner calls finish</text>
+  <text class="lb" x="463" y="485">(or budget runs out)</text>
+
+  <polyline class="ln" points="620,402 652,402 652,154 620,154" marker-end="url(#ah)"/>
+  <text class="lb" transform="translate(667,280) rotate(90)" text-anchor="middle">observation: pass, or fail + roll back</text>
+  <polyline class="ln" points="290,222 274,222 274,158 290,158" marker-end="url(#ah)"/>
+  <text class="lb" transform="translate(268,190) rotate(-90)" text-anchor="middle">rejected</text>
+
+  <line class="ln" x1="230" y1="46" x2="290" y2="46" marker-end="url(#ah)"/>
+  <line class="ln" x1="230" y1="116" x2="290" y2="116" marker-end="url(#ah)"/>
+  <polyline class="ln" points="230,166 252,166 252,132 290,132" marker-end="url(#ah)"/>
+  <line class="ln" x1="230" y1="246" x2="290" y2="246" marker-start="url(#ah)" marker-end="url(#ah)"/>
+  <line class="ln" x1="290" y1="316" x2="230" y2="316" marker-end="url(#ah)"/>
+  <text class="lb" x="236" y="309">writes</text>
+  <line class="dl" x1="230" y1="402" x2="290" y2="402" marker-end="url(#ah)"/>
+  <text class="lb" x="238" y="395">reads</text>
+
+  <!-- right column -->
+  <rect class="bx" x="700" y="20" width="280" height="370" rx="6"/>
+  <text class="t" x="714" y="43">Tool library (20 JSON schemas)</text>
+  <rect class="new" x="936" y="30" width="36" height="14" rx="3"/><text class="newt" x="941" y="40">NEW</text>
+  <text class="h" x="714" y="66">Check tools</text>
+  <text class="m" x="714" y="83">check_missing, check_duplicates,</text>
+  <text class="m" x="714" y="97">check_label_variants, check_dates,</text>
+  <text class="m" x="714" y="111">check_numeric, check_out_of_range,</text>
+  <text class="m" x="714" y="125">check_cross_column</text>
+  <text class="h" x="714" y="148">Fix tools (working copy only)</text>
+  <text class="m" x="714" y="165">trim_whitespace, normalize_labels,</text>
+  <text class="m" x="714" y="179">drop_duplicates, parse_dates,</text>
+  <text class="m" x="714" y="193">cast_numeric, exclude_rows,</text>
+  <text class="m" x="714" y="207">recompute_column, set_missing,</text>
+  <text class="m" x="714" y="221">fill_missing</text>
+  <text class="h" x="714" y="244">Analysis</text>
+  <text class="m" x="714" y="261">analyze(group_by, metric, agg,</text>
+  <text class="m" x="714" y="275">        filters)</text>
+  <text class="mp" x="714" y="292">run_pandas sandbox: planned</text>
+  <text class="h" x="714" y="315">Knowledge and control</text>
+  <text class="m" x="714" y="332">lookup_rules, profile_dataset,</text>
+  <text class="m" x="714" y="346">finish</text>
+  <text class="sp" x="714" y="366">dropped since M1: flag_rows and ask_user</text>
+  <text class="sp" x="714" y="380">(rejections become caveats; the gate asks)</text>
+
+  <line class="ln" x1="620" y1="122" x2="700" y2="122" marker-start="url(#ah)" marker-end="url(#ah)"/>
+  <text class="lb" x="626" y="114">tool calls</text>
+  <text class="lb" x="630" y="138">results</text>
+
+  <rect class="bx" x="700" y="420" width="280" height="138" rx="6"/>
+  <text class="t" x="714" y="443">Outputs (outputs/&lt;run&gt;/)</text>
+  <text class="s" x="714" y="465">report.md: issues, changes, approvals,</text>
+  <text class="s" x="714" y="482">answer, caveats, grounding note</text>
+  <text class="s" x="714" y="501">cleaned.csv (original never changed)</text>
+  <text class="s" x="714" y="520">replay.py (plain pandas, verified)</text>
+  <text class="s" x="714" y="539">trace.jsonl</text>
+  <line class="ln" x1="620" y1="529" x2="700" y2="529" marker-end="url(#ah)"/>
+
+  <!-- planned band -->
+  <text class="tp" x="20" y="596">Planned, not built yet</text>
+  <rect class="pl" x="20" y="606" width="225" height="62" rx="6"/>
+  <text class="tp" x="32" y="627">run_pandas sandbox</text>
+  <text class="sp" x="32" y="645">for requests analyze cannot</text>
+  <text class="sp" x="32" y="660">express (time limit, no network)</text>
+  <rect class="pl" x="263" y="606" width="225" height="62" rx="6"/>
+  <text class="tp" x="275" y="627">Streamlit page</text>
+  <text class="sp" x="275" y="645">approvals and report in a browser</text>
+  <text class="sp" x="275" y="660">for the stakeholder demo</text>
+  <rect class="pl" x="506" y="606" width="225" height="62" rx="6"/>
+  <text class="tp" x="518" y="627">Cleaning recipes (Phase 4)</text>
+  <text class="sp" x="518" y="645">save an approved plan and replay</text>
+  <text class="sp" x="518" y="660">it on next month's file</text>
+  <rect class="pl" x="749" y="606" width="231" height="62" rx="6"/>
+  <text class="tp" x="761" y="627">Trusted-doc retrieval (later)</text>
+  <text class="sp" x="761" y="645">stakeholder: rules file first,</text>
+  <text class="sp" x="761" y="660">retrieval only if time allows</text>
+
+  <!-- legend -->
+  <rect class="bx" x="20" y="690" width="22" height="14" rx="3"/>
+  <text class="s" x="50" y="702">implemented and evaluated</text>
+  <rect class="pl" x="230" y="690" width="22" height="14" rx="3"/>
+  <text class="s" x="260" y="702">planned</text>
+  <rect class="new" x="330" y="690" width="36" height="14" rx="3"/><text class="newt" x="335" y="700">NEW</text>
+  <text class="s" x="374" y="702">added or changed since Milestone 1</text>
+  <rect class="ag" x="620" y="690" width="22" height="14" rx="3"/>
+  <text class="s" x="650" y="702">uses a language model</text>
+  <rect class="gt" x="800" y="690" width="22" height="14" rx="3"/>
+  <text class="s" x="830" y="702">approval decisions</text>
+</svg>
+</body></html>

@@ -1,0 +1,8 @@
+row,Order_ID,Date,Product,Category,Quantity,Price,Region,Revenue
+0,1001,2026-08-01,Laptop,Electronics,2,900,West,1800
+1,1002,2026-08-02,Mouse,Electronics,5,25,East,125
+2,1003,2026-08-03,Keyboard,Accessories,3,50,West,150
+3,1004,2026-08-04,Monitor,Accessories,2,300,South,600
+5,1005,,Headset,Electronics,4,80,North,320
+6,1006,2026-08-06,Webcam,Electronics,-1,60,East,-60
+7,1007,2026-08-07,Hub,Accessories,2,40,,80
