@@ -19,22 +19,66 @@ DataSage is an agent that takes a messy CSV or Excel file and a question about i
 ## Repository layout
 
 ```text
-baseline/   the stakeholder's rule-based baseline, copied unchanged from VB914/DataSage (commit 4b1df80)
-eval/       evaluation data and scripts; eval/probes/ holds small hand-made files with known issues
-docs/       milestone reports
+datasage/     the agent: session state, profiler, checks, fixes, approval gate, validator,
+              analysis, tool schemas and dispatcher, agent loop, report and replay script
+baselines/    B0 (stakeholder baseline wrapper), B1 (fixed cleaning script), B2 (single model call),
+              and the DataSage runner used by the evaluation
+baseline/     the stakeholder's rule-based baseline, copied unchanged from VB914/DataSage (commit 4b1df80)
+eval/         benchmark generator, scoring, approval oracle, evaluation runner, results
+  sources/    public source data (Palmer Penguins, CC0) and its license note
+  datasets/   generated tables: messy.csv, clean.csv, reference.csv, planted.json, rules.json, tasks.json
+  results/    one JSON per task per system, traces, and summary.md / summary.csv
+examples/     rules file for the stakeholder's messy_sales.csv
+tests/        unit tests for the deterministic parts (no model calls)
+docs/         milestone reports; docs/milestone2/demo/ holds the recorded demo run
 ```
 
-The agent code will live in a `datasage/` package once Phase 2 starts.
+## Setup
 
-## Run the baseline
-
-The baseline needs Python 3.11 or newer, because pandas 3 does not support older versions.
+Python 3.11 or newer is required (pandas 3 does not support older versions).
 
 ```bash
-cd baseline
 python3 -m venv .venv
 source .venv/bin/activate
 pip install -r requirements.txt
+cp .env.example .env    # then put your ASU RC LLM key in .env
+python -m pytest -q tests
+```
+
+The agent calls an OpenAI-compatible endpoint. We use ASU Research Computing
+(`RC_LLM_BASE_URL=https://openai.rc.asu.edu/v1`) with `qwen3-235b-a22b-instruct-2507` (default) and
+`qwen3-30b-a3b-instruct-2507` (small model). `.env` is ignored by git.
+
+## Run DataSage
+
+```bash
+python -m datasage --input baseline/examples/messy_sales.csv \
+  --rules examples/messy_sales_rules.json \
+  --request "What was total revenue by category?"
+```
+
+By default each medium or high risk fix is shown at the terminal and needs `y` to be applied. Other
+modes: `--approve auto`, `--approve reject`, and `--approve tools --allow drop_duplicates,parse_dates`
+(approve only those fix types, used for the recorded demo). Outputs go to `outputs/run/`:
+`report.md`, `cleaned.csv` (the original file is never changed), `replay.py` (plain pandas), and
+`trace.jsonl` (every tool call).
+
+## Reproduce the evaluation
+
+```bash
+python -m eval.generate --tables 10 --seed 7          # 20 sales + 20 penguin tasks
+python -m eval.run_eval --system b0 --dataset sales   # repeat for each system and dataset
+python -m eval.run_eval --system datasage --dataset penguins --workers 4
+python -m eval.summarize                              # writes eval/results/summary.md
+```
+
+Systems: `b0`, `b1`, `b2`, `datasage`, `datasage-small`, `datasage-reject`, `datasage-novalidator`.
+Results are cached per task, so an interrupted run can be restarted.
+
+## Run the stakeholder baseline on its own
+
+```bash
+cd baseline
 python run_baseline.py --input examples/messy_sales.csv --analysis revenue_by_category
 python smoke_test.py
 ```

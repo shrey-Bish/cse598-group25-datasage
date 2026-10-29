@@ -1,0 +1,8 @@
+{
+  "Order_ID": "unique order number",
+  "Date": {"format": "YYYY-MM-DD"},
+  "Category": {"allowed": ["Electronics", "Accessories"]},
+  "Region": {"allowed": ["North", "South", "East", "West"]},
+  "Quantity": {"min": 1, "note": "units sold; always a positive whole number"},
+  "Revenue": {"formula": "Revenue = Quantity * Price"}
+}
