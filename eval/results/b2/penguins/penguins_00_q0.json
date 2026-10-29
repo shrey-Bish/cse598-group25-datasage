@@ -1,0 +1,57 @@
+{
+  "task_id": "penguins_00_q0",
+  "analysis_correct": false,
+  "completed": true,
+  "detect_tp": 5,
+  "detect_fp": 0,
+  "detect_fn": 1,
+  "tool_calls": 0,
+  "tool_errors": 0,
+  "recovered_errors": 0,
+  "approvals_asked": 0,
+  "seconds": 19.87,
+  "tokens": 2594,
+  "stop_reason": "done",
+  "note": "",
+  "answer": {
+    "female": 3777.14,
+    "male": 4417.5
+  },
+  "extra": {
+    "code": "import pandas as pd\n\ndef clean(df):\n    # Remove exact duplicate rows\n    df = df.drop_duplicates().reset_index(drop=True)\n    \n    # Fix label variants in 'species' and 'island'\n    df['species'] = df['species'].str.strip()\n    df['island'] = df['island'].replace({'Bisco': 'Biscoe', 'Dram': 'Dream'})\n    \n    # Fix negative flipper_length_mm (assuming typo, make positive)\n    df['flipper_length_mm'] = df['flipper_length_mm'].abs()\n    \n    # Fix out-of-range body_mass_g (4750000 is way too high, likely a typo; cap at max 6500)\n    df.loc[df['body_mass_g'] > 6500, 'body_mass_g'] = 4750  # reasonable value based on context\n    \n    return df\n\ndef answer(df):\n    df_clean = clean(df)\n    # Drop rows where 'sex' is missing as per rules (do not guess)\n    df_clean = df_clean.dropna(subset=['sex'])\n    result = df_clean.groupby('sex')['body_mass_g'].mean().round(2).to_dict()\n    return result"
+  },
+  "corrections": 6,
+  "planted": 10,
+  "damaged_rows": 0,
+  "damaged_cells": 0,
+  "cleaned_available": true,
+  "system": "b2",
+  "dataset": "penguins",
+  "question": "What is the average body mass for each sex?",
+  "reference_answer": {
+    "female": 3700.0,
+    "male": 4417.5
+  },
+  "issues_reported": [
+    [
+      "duplicates",
+      "*"
+    ],
+    [
+      "label_variant",
+      "island"
+    ],
+    [
+      "label_variant",
+      "species"
+    ],
+    [
+      "negative",
+      "flipper_length_mm"
+    ],
+    [
+      "out_of_range",
+      "body_mass_g"
+    ]
+  ]
+}

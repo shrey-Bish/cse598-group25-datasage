@@ -1,0 +1,51 @@
+{
+  "task_id": "penguins_01_q1",
+  "analysis_correct": true,
+  "completed": true,
+  "detect_tp": 3,
+  "detect_fp": 0,
+  "detect_fn": 1,
+  "tool_calls": 0,
+  "tool_errors": 0,
+  "recovered_errors": 0,
+  "approvals_asked": 0,
+  "seconds": 19.38,
+  "tokens": 2432,
+  "stop_reason": "done",
+  "note": "",
+  "answer": {
+    "Biscoe": 25.0,
+    "Dream": 24.0,
+    "Torgersen": 10.0
+  },
+  "extra": {
+    "code": "import pandas as pd\n\ndef clean(df):\n    # Fix exact duplicate rows\n    df = df.drop_duplicates().reset_index(drop=True)\n    \n    # Fix island label variant: 'Bisco' -> 'Biscoe'\n    df['island'] = df['island'].replace({'Bisco': 'Biscoe'})\n    \n    # Fix sex label variants: standardize case\n    df['sex'] = df['sex'].str.lower() if 'sex' in df.columns else df['sex']\n    \n    return df\n\ndef answer(df):\n    # Count penguins by island\n    counts = df['island'].value_counts().sort_index()\n    return {island: int(count) for island, count in counts.items()}"
+  },
+  "corrections": 6,
+  "planted": 6,
+  "damaged_rows": 0,
+  "damaged_cells": 0,
+  "cleaned_available": true,
+  "system": "b2",
+  "dataset": "penguins",
+  "question": "How many penguins were measured on each island?",
+  "reference_answer": {
+    "Biscoe": 25.0,
+    "Dream": 24.0,
+    "Torgersen": 10.0
+  },
+  "issues_reported": [
+    [
+      "duplicates",
+      "*"
+    ],
+    [
+      "label_variant",
+      "island"
+    ],
+    [
+      "label_variant",
+      "sex"
+    ]
+  ]
+}

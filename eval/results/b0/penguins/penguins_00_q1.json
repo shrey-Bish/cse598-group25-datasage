@@ -1,0 +1,50 @@
+{
+  "task_id": "penguins_00_q1",
+  "analysis_correct": false,
+  "completed": true,
+  "detect_tp": 3,
+  "detect_fp": 0,
+  "detect_fn": 3,
+  "tool_calls": 0,
+  "tool_errors": 0,
+  "recovered_errors": 0,
+  "approvals_asked": 0,
+  "seconds": 0.002,
+  "tokens": 0,
+  "stop_reason": "done",
+  "note": "",
+  "answer": {
+    " Adelie": 3750.0,
+    "Adelie": 3672250.0,
+    "Chinstrap": 53500.0,
+    "Chinstrap ": 3400.0,
+    "Gentoo": 4829725.0
+  },
+  "corrections": 1,
+  "planted": 10,
+  "damaged_rows": 0,
+  "damaged_cells": 0,
+  "cleaned_available": true,
+  "system": "b0",
+  "dataset": "penguins",
+  "question": "What is the total body mass for each species?",
+  "reference_answer": {
+    "Adelie": 118450.0,
+    "Chinstrap": 56900.0,
+    "Gentoo": 75325.0
+  },
+  "issues_reported": [
+    [
+      "duplicates",
+      "*"
+    ],
+    [
+      "missing",
+      "sex"
+    ],
+    [
+      "negative",
+      "flipper_length_mm"
+    ]
+  ]
+}

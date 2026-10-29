@@ -1,0 +1,50 @@
+{
+  "task_id": "sales_02_q0",
+  "analysis_correct": false,
+  "completed": false,
+  "detect_tp": 3,
+  "detect_fp": 0,
+  "detect_fn": 1,
+  "tool_calls": 0,
+  "tool_errors": 0,
+  "recovered_errors": 0,
+  "approvals_asked": 0,
+  "seconds": 16.95,
+  "tokens": 2378,
+  "stop_reason": "code_error",
+  "note": "AttributeError: Can only use .str accessor with string values, not floating. Did you mean: 'std'?",
+  "answer": null,
+  "extra": {
+    "code": "import pandas as pd\n\ndef clean(df):\n    # Clean Category: strip whitespace\n    df = df.copy()\n    df['Category'] = df['Category'].str.strip()\n    \n    # Clean Price: remove non-numeric characters and convert to float\n    df['Price'] = df['Price'].str.replace(r'[^0-9.]', '', regex=True).astype(float)\n    \n    # Clean Region: convert to title case and strip whitespace\n    df['Region'] = df['Region'].str.strip().str.title()\n    \n    # Recalculate Revenue to ensure consistency\n    df['Revenue'] = df['Quantity'] * df['Price']\n    \n    # Convert Date to datetime\n    df['Date'] = pd.to_datetime(df['Date'])\n    \n    return df\n\ndef answer(df):\n    df = clean(df)\n    df['Month'] = df['Date'].dt.to_period('M').astype(str)\n    result = df.groupby('Month')['Revenue'].sum().round(2).to_dict()\n    return result"
+  },
+  "corrections": 0,
+  "planted": 10,
+  "damaged_rows": 0,
+  "damaged_cells": 0,
+  "cleaned_available": false,
+  "system": "b2",
+  "dataset": "sales",
+  "question": "What is the total revenue per month?",
+  "reference_answer": {
+    "2026-01": 4011.0,
+    "2026-02": 15032.0,
+    "2026-03": 12418.0,
+    "2026-04": 6944.0,
+    "2026-05": 4971.0,
+    "2026-06": 4586.0
+  },
+  "issues_reported": [
+    [
+      "label_variant",
+      "Category"
+    ],
+    [
+      "label_variant",
+      "Region"
+    ],
+    [
+      "text_number",
+      "Price"
+    ]
+  ]
+}

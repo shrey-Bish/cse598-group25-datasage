@@ -1,0 +1,52 @@
+{
+  "task_id": "salesh_06_q0",
+  "analysis_correct": false,
+  "completed": true,
+  "detect_tp": 2,
+  "detect_fp": 0,
+  "detect_fn": 1,
+  "tool_calls": 0,
+  "tool_errors": 0,
+  "recovered_errors": 0,
+  "approvals_asked": 0,
+  "seconds": 0.07,
+  "tokens": 0,
+  "stop_reason": "done",
+  "note": "",
+  "answer": {
+    "East": 20.0,
+    "Nort": 2.0,
+    "North": 26.0,
+    "South": 52.0,
+    "Suoth": 1.0,
+    "West": 57.0,
+    "Wst": 5.0,
+    "east": 8.0,
+    "north": 12.0
+  },
+  "extra": {},
+  "corrections": 3,
+  "planted": 12,
+  "damaged_rows": 0,
+  "damaged_cells": 0,
+  "cleaned_available": true,
+  "system": "b0",
+  "dataset": "sales-heldout",
+  "question": "How many units were sold in each region?",
+  "reference_answer": {
+    "East": 28.0,
+    "North": 40.0,
+    "South": 53.0,
+    "West": 62.0
+  },
+  "issues_reported": [
+    [
+      "invalid_date",
+      "Date"
+    ],
+    [
+      "label_variant",
+      "Region"
+    ]
+  ]
+}

@@ -1,0 +1,58 @@
+{
+  "task_id": "sales_03_q1",
+  "analysis_correct": true,
+  "completed": true,
+  "detect_tp": 4,
+  "detect_fp": 1,
+  "detect_fn": 0,
+  "tool_calls": 12,
+  "tool_errors": 0,
+  "recovered_errors": 0,
+  "approvals_asked": 3,
+  "seconds": 107.56,
+  "tokens": 55228,
+  "stop_reason": "finish",
+  "note": "",
+  "answer": {
+    "East": 53.0,
+    "North": 69.0,
+    "South": 34.0,
+    "West": 64.0
+  },
+  "corrections": 8,
+  "planted": 8,
+  "damaged_rows": 0,
+  "damaged_cells": 0,
+  "cleaned_available": true,
+  "system": "datasage",
+  "dataset": "sales",
+  "question": "How many units were sold in each region?",
+  "reference_answer": {
+    "East": 53.0,
+    "North": 69.0,
+    "South": 34.0,
+    "West": 64.0
+  },
+  "issues_reported": [
+    [
+      "cross_column",
+      "Revenue"
+    ],
+    [
+      "invalid_date",
+      "Date"
+    ],
+    [
+      "negative",
+      "Quantity"
+    ],
+    [
+      "out_of_range",
+      "Quantity"
+    ],
+    [
+      "text_number",
+      "Price"
+    ]
+  ]
+}

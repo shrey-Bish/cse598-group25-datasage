@@ -1,0 +1,132 @@
+{
+  "task_id": "sales_01_q0",
+  "analysis_correct": true,
+  "completed": true,
+  "detect_tp": 3,
+  "detect_fp": 1,
+  "detect_fn": 2,
+  "tool_calls": 11,
+  "tool_errors": 0,
+  "recovered_errors": 0,
+  "approvals_asked": 2,
+  "seconds": 19.55,
+  "tokens": 50541,
+  "stop_reason": "finish",
+  "note": "",
+  "answer": {
+    "Accessories": 13.0,
+    "Electronics": 10.0,
+    "Furniture": 7.0,
+    "Office Supplies": 30.0
+  },
+  "extra": {
+    "final_summary": "The data had three main issues affecting the question: (1) 2 exact duplicate rows (7 and 13) were removed; (2) the label 'office supplies' was normalized to 'Office Supplies' to match the allowed values; (3) 3 rows with negative Quantity values (32, 53, 54) were excluded as they violate the rule that Quantity must be at least 1. After these fixes, the analysis shows 30 orders in 'Office Supplies', 13 in 'Accessories', 10 in 'Electronics', and 7 in 'Furniture'.",
+    "changes": [
+      {
+        "version": 1,
+        "tool": "drop_duplicates",
+        "args": {
+          "reason": "Found 2 exact duplicate rows (row 7 and 13), likely data entry errors. Keeping only the first occurrence."
+        },
+        "reason": "Found 2 exact duplicate rows (row 7 and 13), likely data entry errors. Keeping only the first occurrence.",
+        "risk": "medium",
+        "approval": "approved",
+        "rows_removed": [
+          7,
+          13
+        ],
+        "cells_changed": 0,
+        "summary": "removed 2 exact duplicate row(s)",
+        "code": "df = df.drop_duplicates(keep='first')"
+      },
+      {
+        "version": 2,
+        "tool": "normalize_labels",
+        "args": {
+          "column": "Category",
+          "mapping": {
+            "office supplies": "Office Supplies"
+          },
+          "reason": "Found case/space variant 'office supplies' which should be 'Office Supplies' to match the allowed values in the rules file."
+        },
+        "reason": "Found case/space variant 'office supplies' which should be 'Office Supplies' to match the allowed values in the rules file.",
+        "risk": "low",
+        "approval": "auto",
+        "rows_removed": [],
+        "cells_changed": 3,
+        "summary": "Category: merged 1 label variant(s), 3 cells",
+        "code": "df['Category'] = df['Category'].replace({'office supplies': 'Office Supplies'})"
+      },
+      {
+        "version": 3,
+        "tool": "exclude_rows",
+        "args": {
+          "rows": [
+            32,
+            53,
+            54
+          ],
+          "reason": "Quantity is negative (e.g. -5, -6, -4), but rules state Quantity must be at least 1. These rows likely represent returns or errors and should be excluded from order count."
+        },
+        "reason": "Quantity is negative (e.g. -5, -6, -4), but rules state Quantity must be at least 1. These rows likely represent returns or errors and should be excluded from order count.",
+        "risk": "high",
+        "approval": "approved",
+        "rows_removed": [
+          32,
+          53,
+          54
+        ],
+        "cells_changed": 0,
+        "summary": "excluded 3 row(s): [32, 53, 54]",
+        "code": "df = df.drop(index=[32, 53, 54])"
+      }
+    ],
+    "rejected": [],
+    "oracle_decisions": [
+      {
+        "tool": "drop_duplicates",
+        "risk": "medium",
+        "approved": true,
+        "why": "moves data toward the reference"
+      },
+      {
+        "tool": "exclude_rows",
+        "risk": "high",
+        "approved": true,
+        "why": "moves data toward the reference"
+      }
+    ]
+  },
+  "corrections": 10,
+  "planted": 12,
+  "damaged_rows": 0,
+  "damaged_cells": 0,
+  "cleaned_available": true,
+  "system": "datasage-small-fix",
+  "dataset": "sales",
+  "question": "How many orders are there in each category?",
+  "reference_answer": {
+    "Accessories": 13.0,
+    "Electronics": 10.0,
+    "Furniture": 7.0,
+    "Office Supplies": 30.0
+  },
+  "issues_reported": [
+    [
+      "duplicates",
+      "*"
+    ],
+    [
+      "label_variant",
+      "Category"
+    ],
+    [
+      "negative",
+      "Quantity"
+    ],
+    [
+      "out_of_range",
+      "Quantity"
+    ]
+  ]
+}

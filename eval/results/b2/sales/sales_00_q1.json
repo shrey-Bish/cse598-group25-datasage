@@ -1,0 +1,61 @@
+{
+  "task_id": "sales_00_q1",
+  "analysis_correct": true,
+  "completed": true,
+  "detect_tp": 3,
+  "detect_fp": 2,
+  "detect_fn": 1,
+  "tool_calls": 0,
+  "tool_errors": 0,
+  "recovered_errors": 0,
+  "approvals_asked": 0,
+  "seconds": 24.25,
+  "tokens": 2164,
+  "stop_reason": "done",
+  "note": "",
+  "answer": {
+    "East": 70.0,
+    "North": 44.0,
+    "South": 78.0,
+    "West": 65.0
+  },
+  "extra": {
+    "code": "import pandas as pd\n\ndef clean(df):\n    df = df.copy()\n    \n    # Fix category label variant\n    df['Category'] = df['Category'].replace({'Office Suplies': 'Office Supplies'})\n    \n    # Remove rows where Quantity is negative (invalid sales)\n    df = df[df['Quantity'] > 0]\n    \n    # Recompute Revenue based on Quantity and Price to fix any inconsistencies\n    df['Revenue'] = df['Quantity'] * df['Price']\n    \n    # Drop rows with missing Region since we are grouping by Region\n    df = df.dropna(subset=['Region'])\n    \n    return df\n\ndef answer(df):\n    df_clean = clean(df)\n    result = df_clean.groupby('Region')['Quantity'].sum().astype(int)\n    return result.to_dict()"
+  },
+  "corrections": 6,
+  "planted": 9,
+  "damaged_rows": 3,
+  "damaged_cells": 0,
+  "cleaned_available": true,
+  "system": "b2",
+  "dataset": "sales",
+  "question": "How many units were sold in each region?",
+  "reference_answer": {
+    "East": 70.0,
+    "North": 44.0,
+    "South": 78.0,
+    "West": 65.0
+  },
+  "issues_reported": [
+    [
+      "cross_column",
+      "*"
+    ],
+    [
+      "label_variant",
+      "Category"
+    ],
+    [
+      "missing",
+      "Region"
+    ],
+    [
+      "negative",
+      "Quantity"
+    ],
+    [
+      "negative",
+      "Revenue"
+    ]
+  ]
+}

@@ -1,0 +1,51 @@
+{
+  "task_id": "penguinsh_09_q1",
+  "analysis_correct": true,
+  "completed": true,
+  "detect_tp": 3,
+  "detect_fp": 0,
+  "detect_fn": 1,
+  "tool_calls": 0,
+  "tool_errors": 0,
+  "recovered_errors": 0,
+  "approvals_asked": 0,
+  "seconds": 35.48,
+  "tokens": 2477,
+  "stop_reason": "done",
+  "note": "",
+  "answer": {
+    "Adelie": 66500.0,
+    "Chinstrap": 53225.0,
+    "Gentoo": 77600.0
+  },
+  "extra": {
+    "code": "import pandas as pd\n\ndef clean(df):\n    # Fix label variants in 'sex' column by stripping whitespace\n    df = df.copy()\n    df['sex'] = df['sex'].astype(str).str.strip()\n    df.loc[df['sex'] == 'nan', 'sex'] = None\n    \n    # Remove rows with negative flipper_length_mm (invalid)\n    df = df[df['flipper_length_mm'] >= 0]\n    \n    # Cap body_mass_g to valid range [2500, 6500]\n    df.loc[df['body_mass_g'] > 6500, 'body_mass_g'] = None\n    df.loc[df['body_mass_g'] < 2500, 'body_mass_g'] = None\n    \n    return df\n\ndef answer(df):\n    df_clean = clean(df)\n    result = df_clean.groupby('species')['body_mass_g'].sum().dropna().to_dict()\n    return result"
+  },
+  "corrections": 7,
+  "planted": 10,
+  "damaged_rows": 0,
+  "damaged_cells": 0,
+  "cleaned_available": true,
+  "system": "b2",
+  "dataset": "penguins-heldout",
+  "question": "What is the total body mass for each species?",
+  "reference_answer": {
+    "Adelie": 66500.0,
+    "Chinstrap": 53225.0,
+    "Gentoo": 77600.0
+  },
+  "issues_reported": [
+    [
+      "label_variant",
+      "sex"
+    ],
+    [
+      "negative",
+      "flipper_length_mm"
+    ],
+    [
+      "out_of_range",
+      "body_mass_g"
+    ]
+  ]
+}

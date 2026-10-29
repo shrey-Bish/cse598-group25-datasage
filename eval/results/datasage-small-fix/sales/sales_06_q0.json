@@ -1,0 +1,161 @@
+{
+  "task_id": "sales_06_q0",
+  "analysis_correct": false,
+  "completed": true,
+  "detect_tp": 4,
+  "detect_fp": 1,
+  "detect_fn": 1,
+  "tool_calls": 14,
+  "tool_errors": 0,
+  "recovered_errors": 0,
+  "approvals_asked": 3,
+  "seconds": 15.99,
+  "tokens": 65574,
+  "stop_reason": "finish",
+  "note": "",
+  "answer": {
+    "East": 59.0,
+    "North": 56.0,
+    "South": 74.0,
+    "Suoth": 5.0,
+    "West": 72.0
+  },
+  "extra": {
+    "final_summary": "The data had several issues affecting the question: (1) One missing Region value (row 26) was set to missing; (2) ' East' (row 20) was normalized to 'East'; (3) 'Suoth' (row 10) was left as a possible misspelling of 'South' and not merged; (4) A negative Quantity (-4) in row 21 was excluded as it violates the rule that Quantity must be at least 1; (5) Two exact duplicate rows (40, 51) were excluded. After fixes, the analysis shows total units sold: East: 59, North: 56, South: 74, Suoth: 5, West: 72. Note: 'Suoth' may be a typo for 'South'; if confirmed, the total for South would be 79.",
+    "changes": [
+      {
+        "version": 1,
+        "tool": "set_missing",
+        "args": {
+          "column": "Region",
+          "rows": [
+            26
+          ],
+          "reason": "missing value in Region column"
+        },
+        "reason": "missing value in Region column",
+        "risk": "high",
+        "approval": "approved",
+        "rows_removed": [],
+        "cells_changed": 0,
+        "summary": "Region: set 1 value(s) to missing",
+        "code": "df.loc[[26], 'Region'] = pd.NA"
+      },
+      {
+        "version": 2,
+        "tool": "normalize_labels",
+        "args": {
+          "column": "Region",
+          "mapping": {
+            " East": "East"
+          },
+          "reason": "case/space variant: ' East' should be 'East'"
+        },
+        "reason": "case/space variant: ' East' should be 'East'",
+        "risk": "low",
+        "approval": "auto",
+        "rows_removed": [],
+        "cells_changed": 1,
+        "summary": "Region: merged 1 label variant(s), 1 cells",
+        "code": "df['Region'] = df['Region'].replace({' East': 'East'})"
+      },
+      {
+        "version": 3,
+        "tool": "exclude_rows",
+        "args": {
+          "rows": [
+            21
+          ],
+          "reason": "Quantity is -4, but rules say Quantity must be at least 1 (positive whole number)"
+        },
+        "reason": "Quantity is -4, but rules say Quantity must be at least 1 (positive whole number)",
+        "risk": "high",
+        "approval": "approved",
+        "rows_removed": [
+          21
+        ],
+        "cells_changed": 0,
+        "summary": "excluded 1 row(s): [21]",
+        "code": "df = df.drop(index=[21])"
+      },
+      {
+        "version": 4,
+        "tool": "exclude_rows",
+        "args": {
+          "rows": [
+            40,
+            51
+          ],
+          "reason": "exact duplicate rows; keeping only the first occurrence"
+        },
+        "reason": "exact duplicate rows; keeping only the first occurrence",
+        "risk": "high",
+        "approval": "approved",
+        "rows_removed": [
+          40,
+          51
+        ],
+        "cells_changed": 0,
+        "summary": "excluded 2 row(s): [40, 51]",
+        "code": "df = df.drop(index=[40, 51])"
+      }
+    ],
+    "rejected": [],
+    "oracle_decisions": [
+      {
+        "tool": "set_missing",
+        "risk": "high",
+        "approved": true,
+        "why": "moves data toward the reference"
+      },
+      {
+        "tool": "exclude_rows",
+        "risk": "high",
+        "approved": true,
+        "why": "moves data toward the reference"
+      },
+      {
+        "tool": "exclude_rows",
+        "risk": "high",
+        "approved": true,
+        "why": "moves data toward the reference"
+      }
+    ]
+  },
+  "corrections": 5,
+  "planted": 9,
+  "damaged_rows": 0,
+  "damaged_cells": 0,
+  "cleaned_available": true,
+  "system": "datasage-small-fix",
+  "dataset": "sales",
+  "question": "How many units were sold in each region?",
+  "reference_answer": {
+    "East": 59.0,
+    "North": 56.0,
+    "South": 79.0,
+    "West": 72.0
+  },
+  "issues_reported": [
+    [
+      "duplicates",
+      "*"
+    ],
+    [
+      "label_variant",
+      "Region"
+    ],
+    [
+      "missing",
+      "Region"
+    ],
+    [
+      "negative",
+      "Quantity"
+    ],
+    [
+      "out_of_range",
+      "Quantity"
+    ]
+  ]
+}

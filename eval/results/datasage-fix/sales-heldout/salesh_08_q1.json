@@ -1,0 +1,132 @@
+{
+  "task_id": "salesh_08_q1",
+  "analysis_correct": true,
+  "completed": true,
+  "detect_tp": 4,
+  "detect_fp": 0,
+  "detect_fn": 0,
+  "tool_calls": 13,
+  "tool_errors": 1,
+  "recovered_errors": 1,
+  "approvals_asked": 2,
+  "seconds": 136.6,
+  "tokens": 63288,
+  "stop_reason": "finish",
+  "note": "",
+  "answer": {
+    "2026-01": 6680.0,
+    "2026-02": 4424.0,
+    "2026-03": 7202.0,
+    "2026-04": 5260.0,
+    "2026-05": 14196.0,
+    "2026-06": 3640.0
+  },
+  "extra": {
+    "final_summary": "Found and fixed several data issues affecting the total revenue per month calculation. First, one exact duplicate row (row 23) was removed to prevent double-counting. Second, label variants in the 'Region' column (e.g., 'East ', ' North') were normalized to their correct forms ('East', 'North'). Third, the misspelling 'Furnture' in the 'Category' column was corrected to 'Furniture'. The cross-column check confirmed that Revenue = Quantity * Price holds for all rows. There is one missing value in the 'Region' column (row 47), but since the question does not involve grouping or filtering by Region, it does not affect the monthly revenue totals. The final analysis used 53 clean rows to compute the monthly revenue sums.",
+    "changes": [
+      {
+        "version": 1,
+        "tool": "drop_duplicates",
+        "args": {
+          "reason": "One exact duplicate row found (row 23), which would double-count revenue. Removing it."
+        },
+        "reason": "One exact duplicate row found (row 23), which would double-count revenue. Removing it.",
+        "risk": "medium",
+        "approval": "approved",
+        "rows_removed": [
+          23
+        ],
+        "cells_changed": 0,
+        "summary": "removed 1 exact duplicate row(s)",
+        "code": "df = df.drop_duplicates(keep='first')"
+      },
+      {
+        "version": 2,
+        "tool": "normalize_labels",
+        "args": {
+          "column": "Region",
+          "mapping": {
+            "East ": "East",
+            "West ": "West",
+            " North": "North"
+          },
+          "reason": "Fixing case and space variants in Region: 'East ', 'West ', ' North' -> 'East', 'West', 'North'. These are clearly formatting errors."
+        },
+        "reason": "Fixing case and space variants in Region: 'East ', 'West ', ' North' -> 'East', 'West', 'North'. These are clearly formatting errors.",
+        "risk": "low",
+        "approval": "auto",
+        "rows_removed": [],
+        "cells_changed": 3,
+        "summary": "Region: merged 3 label variant(s), 3 cells",
+        "code": "df['Region'] = df['Region'].replace({'East ': 'East', 'West ': 'West', ' North': 'North'})"
+      },
+      {
+        "version": 3,
+        "tool": "normalize_labels",
+        "args": {
+          "column": "Category",
+          "mapping": {
+            "Furnture": "Furniture"
+          },
+          "reason": "Correcting the misspelling 'Furnture' to 'Furniture' in Category. This is a clear typo as 'Furniture' is a valid category and 'Furnture' is not in the allowed list."
+        },
+        "reason": "Correcting the misspelling 'Furnture' to 'Furniture' in Category. This is a clear typo as 'Furniture' is a valid category and 'Furnture' is not in the allowed list.",
+        "risk": "high",
+        "approval": "approved",
+        "rows_removed": [],
+        "cells_changed": 2,
+        "summary": "Category: merged 1 label variant(s), 2 cells",
+        "code": "df['Category'] = df['Category'].replace({'Furnture': 'Furniture'})"
+      }
+    ],
+    "rejected": [],
+    "oracle_decisions": [
+      {
+        "tool": "drop_duplicates",
+        "risk": "medium",
+        "approved": true,
+        "why": "moves data toward the reference"
+      },
+      {
+        "tool": "normalize_labels",
+        "risk": "high",
+        "approved": true,
+        "why": "moves data toward the reference"
+      }
+    ]
+  },
+  "corrections": 7,
+  "planted": 7,
+  "damaged_rows": 0,
+  "damaged_cells": 0,
+  "cleaned_available": true,
+  "system": "datasage-fix",
+  "dataset": "sales-heldout",
+  "question": "What is the total revenue per month?",
+  "reference_answer": {
+    "2026-01": 6680.0,
+    "2026-02": 4424.0,
+    "2026-03": 7202.0,
+    "2026-04": 5260.0,
+    "2026-05": 14196.0,
+    "2026-06": 3640.0
+  },
+  "issues_reported": [
+    [
+      "duplicates",
+      "*"
+    ],
+    [
+      "label_variant",
+      "Category"
+    ],
+    [
+      "label_variant",
+      "Region"
+    ],
+    [
+      "missing",
+      "Region"
+    ]
+  ]
+}

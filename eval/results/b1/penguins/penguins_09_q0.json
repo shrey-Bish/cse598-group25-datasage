@@ -1,0 +1,52 @@
+{
+  "task_id": "penguins_09_q0",
+  "analysis_correct": true,
+  "completed": true,
+  "detect_tp": 4,
+  "detect_fp": 0,
+  "detect_fn": 0,
+  "tool_calls": 0,
+  "tool_errors": 0,
+  "recovered_errors": 0,
+  "approvals_asked": 0,
+  "seconds": 0.006,
+  "tokens": 0,
+  "stop_reason": "done",
+  "note": "",
+  "answer": {
+    "Adelie": 189.44,
+    "Chinstrap": 193.8462,
+    "Gentoo": 217.44
+  },
+  "corrections": 8,
+  "planted": 8,
+  "damaged_rows": 0,
+  "damaged_cells": 0,
+  "cleaned_available": true,
+  "system": "b1",
+  "dataset": "penguins",
+  "question": "What is the average flipper length for each species?",
+  "reference_answer": {
+    "Adelie": 189.44,
+    "Chinstrap": 193.8462,
+    "Gentoo": 217.44
+  },
+  "issues_reported": [
+    [
+      "duplicates",
+      "*"
+    ],
+    [
+      "label_variant",
+      "island"
+    ],
+    [
+      "label_variant",
+      "species"
+    ],
+    [
+      "negative",
+      "flipper_length_mm"
+    ]
+  ]
+}

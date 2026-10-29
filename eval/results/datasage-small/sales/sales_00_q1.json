@@ -1,0 +1,139 @@
+{
+  "task_id": "sales_00_q1",
+  "analysis_correct": true,
+  "completed": true,
+  "detect_tp": 3,
+  "detect_fp": 1,
+  "detect_fn": 1,
+  "tool_calls": 11,
+  "tool_errors": 0,
+  "recovered_errors": 0,
+  "approvals_asked": 3,
+  "seconds": 13.91,
+  "tokens": 50428,
+  "stop_reason": "finish",
+  "note": "",
+  "answer": {
+    "East": 70.0,
+    "North": 44.0,
+    "South": 78.0,
+    "West": 65.0
+  },
+  "extra": {
+    "final_summary": "The data had three main issues: (1) 3 missing Region values, which were set to missing as they could not be inferred; (2) 2 rows with negative Quantity values (invalid for units sold), which were excluded; (3) a misspelling in 'Category' ('Office Suplies' \u2192 'Office Supplies'), which was corrected. After fixes, the analysis shows total units sold: East: 70, North: 44, South: 78, West: 65.",
+    "changes": [
+      {
+        "version": 1,
+        "tool": "normalize_labels",
+        "args": {
+          "column": "Category",
+          "mapping": {
+            "Office Suplies": "Office Supplies"
+          },
+          "reason": "Misspelling detected: 'Office Suplies' should be 'Office Supplies'"
+        },
+        "reason": "Misspelling detected: 'Office Suplies' should be 'Office Supplies'",
+        "risk": "high",
+        "approval": "approved",
+        "rows_removed": [],
+        "cells_changed": 2,
+        "summary": "Category: merged 1 label variant(s), 2 cells",
+        "code": "df['Category'] = df['Category'].replace({'Office Suplies': 'Office Supplies'})"
+      },
+      {
+        "version": 2,
+        "tool": "set_missing",
+        "args": {
+          "column": "Region",
+          "rows": [
+            1,
+            17,
+            32
+          ],
+          "reason": "Missing region values for these rows; cannot infer from other data"
+        },
+        "reason": "Missing region values for these rows; cannot infer from other data",
+        "risk": "high",
+        "approval": "approved",
+        "rows_removed": [],
+        "cells_changed": 0,
+        "summary": "Region: set 3 value(s) to missing",
+        "code": "df.loc[[1, 17, 32], 'Region'] = pd.NA"
+      },
+      {
+        "version": 3,
+        "tool": "exclude_rows",
+        "args": {
+          "rows": [
+            25,
+            60
+          ],
+          "reason": "Negative Quantity values (invalid for units sold)"
+        },
+        "reason": "Negative Quantity values (invalid for units sold)",
+        "risk": "high",
+        "approval": "approved",
+        "rows_removed": [
+          25,
+          60
+        ],
+        "cells_changed": 0,
+        "summary": "excluded 2 row(s): [25, 60]",
+        "code": "df = df.drop(index=[25, 60])"
+      }
+    ],
+    "rejected": [],
+    "oracle_decisions": [
+      {
+        "tool": "normalize_labels",
+        "risk": "high",
+        "approved": true,
+        "why": "moves data toward the reference"
+      },
+      {
+        "tool": "set_missing",
+        "risk": "high",
+        "approved": true,
+        "why": "moves data toward the reference"
+      },
+      {
+        "tool": "exclude_rows",
+        "risk": "high",
+        "approved": true,
+        "why": "moves data toward the reference"
+      }
+    ]
+  },
+  "corrections": 7,
+  "planted": 9,
+  "damaged_rows": 0,
+  "damaged_cells": 0,
+  "cleaned_available": true,
+  "system": "datasage-small",
+  "dataset": "sales",
+  "question": "How many units were sold in each region?",
+  "reference_answer": {
+    "East": 70.0,
+    "North": 44.0,
+    "South": 78.0,
+    "West": 65.0
+  },
+  "issues_reported": [
+    [
+      "label_variant",
+      "Category"
+    ],
+    [
+      "missing",
+      "Region"
+    ],
+    [
+      "negative",
+      "Quantity"
+    ],
+    [
+      "out_of_range",
+      "Quantity"
+    ]
+  ]
+}

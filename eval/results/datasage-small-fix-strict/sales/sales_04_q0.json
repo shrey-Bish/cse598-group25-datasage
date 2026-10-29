@@ -1,0 +1,119 @@
+{
+  "task_id": "sales_04_q0",
+  "analysis_correct": true,
+  "completed": true,
+  "detect_tp": 3,
+  "detect_fp": 0,
+  "detect_fn": 1,
+  "tool_calls": 10,
+  "tool_errors": 0,
+  "recovered_errors": 0,
+  "approvals_asked": 1,
+  "seconds": 10.5,
+  "tokens": 45914,
+  "stop_reason": "finish",
+  "note": "",
+  "answer": {
+    "Accessories": 13.0,
+    "Electronics": 12.0,
+    "Furniture": 11.0,
+    "Office Supplies": 12.0
+  },
+  "extra": {
+    "final_summary": "The data had three main issues: (1) Category labels had extra spaces and inconsistent casing (e.g., 'Office Supplies ' and ' Furniture'), which were normalized to match the allowed values in the rules. (2) Region had misspellings ('Nort', 'Suoth', 'Wst') that were corrected to 'North', 'South', 'West'. (3) Price was stored as text with a dollar sign ('$40.00'), which was converted to a numeric value. No rows were excluded. The analysis shows 13 orders in Accessories, 12 in Electronics, 11 in Furniture, and 12 in Office Supplies.",
+    "changes": [
+      {
+        "version": 1,
+        "tool": "normalize_labels",
+        "args": {
+          "column": "Category",
+          "mapping": {
+            " Accessories": "Accessories",
+            "Office Supplies ": "Office Supplies",
+            " Furniture": "Furniture"
+          },
+          "reason": "Fix case and space variants in Category to match allowed values in rules"
+        },
+        "reason": "Fix case and space variants in Category to match allowed values in rules",
+        "risk": "low",
+        "approval": "auto",
+        "rows_removed": [],
+        "cells_changed": 3,
+        "summary": "Category: merged 3 label variant(s), 3 cells",
+        "code": "df['Category'] = df['Category'].replace({' Accessories': 'Accessories', 'Office Supplies ': 'Office Supplies', ' Furniture': 'Furniture'})"
+      },
+      {
+        "version": 2,
+        "tool": "normalize_labels",
+        "args": {
+          "column": "Region",
+          "mapping": {
+            "Nort": "North",
+            "Suoth": "South",
+            "Wst": "West"
+          },
+          "reason": "Fix misspellings in Region to match allowed values in rules"
+        },
+        "reason": "Fix misspellings in Region to match allowed values in rules",
+        "risk": "high",
+        "approval": "approved",
+        "rows_removed": [],
+        "cells_changed": 3,
+        "summary": "Region: merged 3 label variant(s), 3 cells",
+        "code": "df['Region'] = df['Region'].replace({'Nort': 'North', 'Suoth': 'South', 'Wst': 'West'})"
+      },
+      {
+        "version": 3,
+        "tool": "cast_numeric",
+        "args": {
+          "column": "Price",
+          "reason": "Price is stored as text with a dollar sign; convert to number"
+        },
+        "reason": "Price is stored as text with a dollar sign; convert to number",
+        "risk": "low",
+        "approval": "auto",
+        "rows_removed": [],
+        "cells_changed": 0,
+        "summary": "Price: converted to numbers (48 text values, 0 became missing)",
+        "code": "df['Price'] = pd.to_numeric(df['Price'].astype(str).str.replace(r'[$, ]', '', regex=True), errors='coerce')"
+      }
+    ],
+    "rejected": [],
+    "oracle_decisions": [
+      {
+        "tool": "normalize_labels",
+        "risk": "high",
+        "approved": true,
+        "why": "moves data toward the reference"
+      }
+    ]
+  },
+  "corrections": 8,
+  "planted": 8,
+  "damaged_rows": 0,
+  "damaged_cells": 0,
+  "cleaned_available": true,
+  "system": "datasage-small-fix-strict",
+  "dataset": "sales",
+  "question": "How many orders are there in each category?",
+  "reference_answer": {
+    "Accessories": 13.0,
+    "Electronics": 12.0,
+    "Furniture": 11.0,
+    "Office Supplies": 12.0
+  },
+  "issues_reported": [
+    [
+      "label_variant",
+      "Category"
+    ],
+    [
+      "label_variant",
+      "Region"
+    ],
+    [
+      "text_number",
+      "Price"
+    ]
+  ]
+}

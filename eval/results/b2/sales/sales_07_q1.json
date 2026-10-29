@@ -1,0 +1,61 @@
+{
+  "task_id": "sales_07_q1",
+  "analysis_correct": false,
+  "completed": true,
+  "detect_tp": 3,
+  "detect_fp": 2,
+  "detect_fn": 3,
+  "tool_calls": 0,
+  "tool_errors": 0,
+  "recovered_errors": 0,
+  "approvals_asked": 0,
+  "seconds": 23.75,
+  "tokens": 2166,
+  "stop_reason": "done",
+  "note": "",
+  "answer": {
+    "Accessories": 37.27,
+    "Electronics": 381.18,
+    "Furniture": 165.0,
+    "Office Supplies": 13.8
+  },
+  "extra": {
+    "code": "import pandas as pd\n\ndef clean(df):\n    # Remove exact duplicate rows\n    df = df.drop_duplicates()\n    \n    # Fix label variant in Category\n    df = df.replace({'Category': {'Furnture': 'Furniture'}})\n    \n    # Fix negative Quantity and Revenue\n    # Since Revenue = Quantity * Price, we can fix Quantity and recompute Revenue\n    # Only Quantity can be negative, Price is always non-negative\n    df['Quantity'] = df['Quantity'].abs()\n    \n    # Recompute Revenue to fix any inconsistencies\n    df['Revenue'] = df['Quantity'] * df['Price']\n    \n    return df\n\ndef answer(df):\n    df_clean = clean(df)\n    result = df_clean.groupby('Category')['Price'].mean().round(2).to_dict()\n    return result"
+  },
+  "corrections": 6,
+  "planted": 11,
+  "damaged_rows": 0,
+  "damaged_cells": 0,
+  "cleaned_available": true,
+  "system": "b2",
+  "dataset": "sales",
+  "question": "What is the average unit price in each category?",
+  "reference_answer": {
+    "Accessories": 38.3333,
+    "Electronics": 381.1765,
+    "Furniture": 165.0,
+    "Office Supplies": 14.6667
+  },
+  "issues_reported": [
+    [
+      "cross_column",
+      "*"
+    ],
+    [
+      "duplicates",
+      "*"
+    ],
+    [
+      "label_variant",
+      "Category"
+    ],
+    [
+      "negative",
+      "Quantity"
+    ],
+    [
+      "negative",
+      "Revenue"
+    ]
+  ]
+}

@@ -1,0 +1,73 @@
+{
+  "task_id": "sales_06_q0",
+  "analysis_correct": false,
+  "completed": true,
+  "detect_tp": 5,
+  "detect_fp": 3,
+  "detect_fn": 0,
+  "tool_calls": 0,
+  "tool_errors": 0,
+  "recovered_errors": 0,
+  "approvals_asked": 0,
+  "seconds": 23.75,
+  "tokens": 2339,
+  "stop_reason": "done",
+  "note": "",
+  "answer": {
+    "East": 63.0,
+    "North": 56.0,
+    "South": 79.0,
+    "West": 72.0
+  },
+  "extra": {
+    "code": "import pandas as pd\n\ndef clean(df):\n    # Remove exact duplicate rows\n    df = df.drop_duplicates()\n    \n    # Fix date: invalid future dates (e.g., 2026) -> assume typo, correct to 2023\n    df['Date'] = df['Date'].str.replace('2026', '2023', regex=False)\n    \n    # Convert Quantity and Revenue to numeric (they are already numbers but negatives exist)\n    # Fix negative Quantity and Revenue: since Quantity must be >=1, and Revenue = Quantity * Price,\n    # we take absolute value and ensure Quantity is positive\n    df['Quantity'] = df['Quantity'].abs()\n    # Ensure at least 1\n    df['Quantity'] = df['Quantity'].clip(lower=1)\n    \n    # Recompute Revenue to ensure consistency\n    df['Revenue'] = df['Quantity'] * df['Price']\n    \n    # Fix Region: strip whitespace and correct 'Suoth' to 'South'\n    df['Region'] = df['Region'].str.strip()\n    df['Region'] = df['Region'].replace({'Suoth': 'South'})\n    \n    # Drop rows where Region is missing\n    df = df.dropna(subset=['Region'])\n    \n    return df\n\ndef answer(df):\n    # Group by Region and sum Quantity (units sold)\n    result = df.groupby('Region')['Quantity'].sum().astype(int).to_dict()\n    return result"
+  },
+  "corrections": 4,
+  "planted": 9,
+  "damaged_rows": 1,
+  "damaged_cells": 49,
+  "cleaned_available": true,
+  "system": "b2",
+  "dataset": "sales",
+  "question": "How many units were sold in each region?",
+  "reference_answer": {
+    "East": 59.0,
+    "North": 56.0,
+    "South": 79.0,
+    "West": 72.0
+  },
+  "issues_reported": [
+    [
+      "duplicates",
+      "*"
+    ],
+    [
+      "invalid_date",
+      "Date"
+    ],
+    [
+      "label_variant",
+      "Region"
+    ],
+    [
+      "missing",
+      "Region"
+    ],
+    [
+      "negative",
+      "Quantity"
+    ],
+    [
+      "negative",
+      "Revenue"
+    ],
+    [
+      "text_number",
+      "Quantity"
+    ],
+    [
+      "text_number",
+      "Revenue"
+    ]
+  ]
+}

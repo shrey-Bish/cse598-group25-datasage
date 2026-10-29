@@ -1,0 +1,51 @@
+{
+  "task_id": "sales_00_q0",
+  "analysis_correct": false,
+  "completed": true,
+  "detect_tp": 2,
+  "detect_fp": 1,
+  "detect_fn": 2,
+  "tool_calls": 0,
+  "tool_errors": 0,
+  "recovered_errors": 0,
+  "approvals_asked": 0,
+  "seconds": 0.01,
+  "tokens": 0,
+  "stop_reason": "done",
+  "note": "",
+  "answer": {
+    "Accessories": 8.0,
+    "Electronics": 20.0,
+    "Furniture": 11.0,
+    "Office Suplies": 2.0,
+    "Office Supplies": 20.0
+  },
+  "corrections": 3,
+  "planted": 9,
+  "damaged_rows": 0,
+  "damaged_cells": 0,
+  "cleaned_available": true,
+  "system": "b0",
+  "dataset": "sales",
+  "question": "How many orders are there in each category?",
+  "reference_answer": {
+    "Accessories": 7.0,
+    "Electronics": 20.0,
+    "Furniture": 11.0,
+    "Office Supplies": 21.0
+  },
+  "issues_reported": [
+    [
+      "missing",
+      "Region"
+    ],
+    [
+      "negative",
+      "Quantity"
+    ],
+    [
+      "negative",
+      "Revenue"
+    ]
+  ]
+}

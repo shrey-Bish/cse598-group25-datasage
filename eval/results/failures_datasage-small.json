@@ -1,0 +1,222 @@
+{
+  "tasks": [
+    [
+      "penguins_00_q1",
+      [
+        "rule-violating rows blanked with set_missing instead of excluded",
+        "never ran a check for missing",
+        "checked label_variant on other columns but not the one with the error"
+      ]
+    ],
+    [
+      "penguins_02_q0",
+      [
+        "rule-violating rows blanked with set_missing instead of excluded"
+      ]
+    ],
+    [
+      "penguins_02_q1",
+      [
+        "rule-violating rows blanked with set_missing instead of excluded",
+        "never ran a check for missing"
+      ]
+    ],
+    [
+      "penguins_05_q1",
+      [
+        "rule-violating rows blanked with set_missing instead of excluded",
+        "checked out_of_range on other columns but not the one with the error",
+        "never ran a check for missing"
+      ]
+    ],
+    [
+      "penguins_06_q0",
+      [
+        "rule-violating rows blanked with set_missing instead of excluded",
+        "never ran a check for out_of_range"
+      ]
+    ],
+    [
+      "penguins_07_q0",
+      [
+        "rule-violating rows blanked with set_missing instead of excluded"
+      ]
+    ],
+    [
+      "penguinsh_01_q0",
+      [
+        "rule-violating rows blanked with set_missing instead of excluded"
+      ]
+    ],
+    [
+      "penguinsh_01_q1",
+      [
+        "rule-violating rows blanked with set_missing instead of excluded",
+        "checked label_variant on other columns but not the one with the error"
+      ]
+    ],
+    [
+      "penguinsh_02_q0",
+      [
+        "rule-violating rows blanked with set_missing instead of excluded"
+      ]
+    ],
+    [
+      "penguinsh_02_q1",
+      [
+        "rule-violating rows blanked with set_missing instead of excluded"
+      ]
+    ],
+    [
+      "penguinsh_03_q1",
+      [
+        "rule-violating rows left in the table",
+        "checked label_variant on other columns but not the one with the error",
+        "never ran a check for out_of_range"
+      ]
+    ],
+    [
+      "penguinsh_04_q1",
+      [
+        "rule-violating rows blanked with set_missing instead of excluded"
+      ]
+    ],
+    [
+      "penguinsh_05_q1",
+      [
+        "rule-violating rows blanked with set_missing instead of excluded",
+        "never ran a check for label_variant",
+        "never ran a check for missing"
+      ]
+    ],
+    [
+      "penguinsh_06_q0",
+      [
+        "rule-violating rows blanked with set_missing instead of excluded",
+        "checked out_of_range on other columns but not the one with the error"
+      ]
+    ],
+    [
+      "penguinsh_06_q1",
+      [
+        "rule-violating rows blanked with set_missing instead of excluded",
+        "checked out_of_range on other columns but not the one with the error"
+      ]
+    ],
+    [
+      "penguinsh_07_q1",
+      [
+        "rule-violating rows blanked with set_missing instead of excluded",
+        "never ran a check for missing",
+        "checked out_of_range on other columns but not the one with the error"
+      ]
+    ],
+    [
+      "penguinsh_09_q0",
+      [
+        "rule-violating rows blanked with set_missing instead of excluded",
+        "never ran a check for missing"
+      ]
+    ],
+    [
+      "penguinsh_09_q1",
+      [
+        "rule-violating rows blanked with set_missing instead of excluded",
+        "never ran a check for missing"
+      ]
+    ],
+    [
+      "sales_00_q0",
+      [
+        "rule-violating rows blanked with set_missing instead of excluded",
+        "never ran a check for missing"
+      ]
+    ],
+    [
+      "sales_01_q0",
+      [
+        "rule-violating rows blanked with set_missing instead of excluded",
+        "never ran a check for invalid_date"
+      ]
+    ],
+    [
+      "sales_05_q0",
+      [
+        "rule-violating rows blanked with set_missing instead of excluded"
+      ]
+    ],
+    [
+      "sales_05_q1",
+      [
+        "rule-violating rows blanked with set_missing instead of excluded"
+      ]
+    ],
+    [
+      "sales_06_q0",
+      [
+        "never ran a check for invalid_date",
+        "never ran a check for duplicates"
+      ]
+    ],
+    [
+      "sales_07_q0",
+      [
+        "rule-violating rows left in the table"
+      ]
+    ],
+    [
+      "sales_08_q1",
+      [
+        "rule-violating rows blanked with set_missing instead of excluded",
+        "never ran a check for invalid_date",
+        "never ran a check for missing"
+      ]
+    ],
+    [
+      "salesh_09_q0",
+      [
+        "rule-violating rows blanked with set_missing instead of excluded",
+        "never ran a check for missing",
+        "never ran a check for invalid_date"
+      ]
+    ]
+  ],
+  "counts": [
+    [
+      "rule-violating rows blanked with set_missing instead of excluded",
+      23
+    ],
+    [
+      "never ran a check for missing",
+      10
+    ],
+    [
+      "checked out_of_range on other columns but not the one with the error",
+      4
+    ],
+    [
+      "never ran a check for invalid_date",
+      4
+    ],
+    [
+      "checked label_variant on other columns but not the one with the error",
+      3
+    ],
+    [
+      "never ran a check for out_of_range",
+      2
+    ],
+    [
+      "rule-violating rows left in the table",
+      2
+    ],
+    [
+      "never ran a check for label_variant",
+      1
+    ],
+    [
+      "never ran a check for duplicates",
+      1
+    ]
+  ]
+}

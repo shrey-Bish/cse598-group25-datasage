@@ -1,0 +1,98 @@
+{
+  "task_id": "sales_09_q0",
+  "analysis_correct": true,
+  "completed": true,
+  "detect_tp": 2,
+  "detect_fp": 0,
+  "detect_fn": 2,
+  "tool_calls": 10,
+  "tool_errors": 0,
+  "recovered_errors": 0,
+  "approvals_asked": 1,
+  "seconds": 8.91,
+  "tokens": 45165,
+  "stop_reason": "finish",
+  "note": "",
+  "answer": {
+    "Accessories": 9.0,
+    "Electronics": 20.0,
+    "Furniture": 14.0,
+    "Office Supplies": 16.0
+  },
+  "extra": {
+    "final_summary": "The data had 2 exact duplicate rows (row ids 14, 28) and inconsistent label formatting in the 'Category' column (e.g., 'electronics', 'Office Supplies ', 'furniture'). I removed the duplicates and normalized the labels to 'Electronics', 'Accessories', 'Furniture', and 'Office Supplies'. All other checks (numeric ranges, cross-column formulas) passed. The final count of orders per category is: Accessories (9), Electronics (20), Furniture (14), Office Supplies (16).",
+    "changes": [
+      {
+        "version": 1,
+        "tool": "drop_duplicates",
+        "args": {
+          "reason": "Found 2 exact duplicate rows (row ids 14 and 28), likely data entry errors. Keeping only the first occurrence."
+        },
+        "reason": "Found 2 exact duplicate rows (row ids 14 and 28), likely data entry errors. Keeping only the first occurrence.",
+        "risk": "medium",
+        "approval": "approved",
+        "rows_removed": [
+          14,
+          28
+        ],
+        "cells_changed": 0,
+        "summary": "removed 2 exact duplicate row(s)",
+        "code": "df = df.drop_duplicates(keep='first')"
+      },
+      {
+        "version": 2,
+        "tool": "normalize_labels",
+        "args": {
+          "column": "Category",
+          "mapping": {
+            "electronics": "Electronics",
+            "Office Supplies ": "Office Supplies",
+            "furniture": "Furniture",
+            "Furniture ": "Furniture"
+          },
+          "reason": "Standardize case and space variants in Category to ensure consistent grouping."
+        },
+        "reason": "Standardize case and space variants in Category to ensure consistent grouping.",
+        "risk": "low",
+        "approval": "auto",
+        "rows_removed": [],
+        "cells_changed": 5,
+        "summary": "Category: merged 4 label variant(s), 5 cells",
+        "code": "df['Category'] = df['Category'].replace({'electronics': 'Electronics', 'Office Supplies ': 'Office Supplies', 'furniture': 'Furniture', 'Furniture ': 'Furniture'})"
+      }
+    ],
+    "rejected": [],
+    "oracle_decisions": [
+      {
+        "tool": "drop_duplicates",
+        "risk": "medium",
+        "approved": true,
+        "why": "moves data toward the reference"
+      }
+    ]
+  },
+  "corrections": 8,
+  "planted": 9,
+  "damaged_rows": 0,
+  "damaged_cells": 0,
+  "cleaned_available": true,
+  "system": "datasage-small-fix-strict",
+  "dataset": "sales",
+  "question": "How many orders are there in each category?",
+  "reference_answer": {
+    "Accessories": 9.0,
+    "Electronics": 20.0,
+    "Furniture": 14.0,
+    "Office Supplies": 16.0
+  },
+  "issues_reported": [
+    [
+      "duplicates",
+      "*"
+    ],
+    [
+      "label_variant",
+      "Category"
+    ]
+  ]
+}

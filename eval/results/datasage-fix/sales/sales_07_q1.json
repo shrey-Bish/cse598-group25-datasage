@@ -1,0 +1,170 @@
+{
+  "task_id": "sales_07_q1",
+  "analysis_correct": true,
+  "completed": true,
+  "detect_tp": 5,
+  "detect_fp": 1,
+  "detect_fn": 1,
+  "tool_calls": 13,
+  "tool_errors": 0,
+  "recovered_errors": 0,
+  "approvals_asked": 4,
+  "seconds": 175.75,
+  "tokens": 58294,
+  "stop_reason": "finish",
+  "note": "",
+  "answer": {
+    "Accessories": 38.3333,
+    "Electronics": 381.1765,
+    "Furniture": 165.0,
+    "Office Supplies": 14.6667
+  },
+  "extra": {
+    "final_summary": "Found and fixed several data issues affecting the average unit price by category. Excluded 3 rows with negative Quantity (violating the rule that Quantity must be at least 1). Corrected a misspelling 'Furnture' to 'Furniture'. Recomputed Revenue for 1 row where it did not match Quantity * Price. Removed 1 exact duplicate row. The average unit price per category is now calculated on clean data: Accessories: $38.33, Electronics: $381.18, Furniture: $165.00, Office Supplies: $14.67.",
+    "changes": [
+      {
+        "version": 1,
+        "tool": "exclude_rows",
+        "args": {
+          "rows": [
+            13,
+            25,
+            43
+          ],
+          "reason": "Quantity is negative, but rules state it must be at least 1"
+        },
+        "reason": "Quantity is negative, but rules state it must be at least 1",
+        "risk": "high",
+        "approval": "approved",
+        "rows_removed": [
+          13,
+          25,
+          43
+        ],
+        "cells_changed": 0,
+        "summary": "excluded 3 row(s): [13, 25, 43]",
+        "code": "df = df.drop(index=[13, 25, 43])"
+      },
+      {
+        "version": 2,
+        "tool": "normalize_labels",
+        "args": {
+          "column": "Category",
+          "mapping": {
+            "Furnture": "Furniture"
+          },
+          "reason": "Correcting likely misspelling of 'Furniture'"
+        },
+        "reason": "Correcting likely misspelling of 'Furniture'",
+        "risk": "high",
+        "approval": "approved",
+        "rows_removed": [],
+        "cells_changed": 1,
+        "summary": "Category: merged 1 label variant(s), 1 cells",
+        "code": "df['Category'] = df['Category'].replace({'Furnture': 'Furniture'})"
+      },
+      {
+        "version": 3,
+        "tool": "recompute_column",
+        "args": {
+          "column": "Revenue",
+          "expression": "Quantity * Price",
+          "rows": [
+            37
+          ],
+          "reason": "Revenue does not match Quantity * Price; recomputing"
+        },
+        "reason": "Revenue does not match Quantity * Price; recomputing",
+        "risk": "high",
+        "approval": "approved",
+        "rows_removed": [],
+        "cells_changed": 1,
+        "summary": "Revenue: recomputed as Quantity * Price on 1 row(s)",
+        "code": "df.loc[[37], 'Revenue'] = [480.0]  # Revenue = Quantity * Price"
+      },
+      {
+        "version": 4,
+        "tool": "drop_duplicates",
+        "args": {
+          "reason": "Exact duplicate row found; removing duplicate"
+        },
+        "reason": "Exact duplicate row found; removing duplicate",
+        "risk": "medium",
+        "approval": "approved",
+        "rows_removed": [
+          16
+        ],
+        "cells_changed": 0,
+        "summary": "removed 1 exact duplicate row(s)",
+        "code": "df = df.drop_duplicates(keep='first')"
+      }
+    ],
+    "rejected": [],
+    "oracle_decisions": [
+      {
+        "tool": "exclude_rows",
+        "risk": "high",
+        "approved": true,
+        "why": "moves data toward the reference"
+      },
+      {
+        "tool": "normalize_labels",
+        "risk": "high",
+        "approved": true,
+        "why": "moves data toward the reference"
+      },
+      {
+        "tool": "recompute_column",
+        "risk": "high",
+        "approved": true,
+        "why": "moves data toward the reference"
+      },
+      {
+        "tool": "drop_duplicates",
+        "risk": "medium",
+        "approved": true,
+        "why": "moves data toward the reference"
+      }
+    ]
+  },
+  "corrections": 9,
+  "planted": 11,
+  "damaged_rows": 0,
+  "damaged_cells": 0,
+  "cleaned_available": true,
+  "system": "datasage-fix",
+  "dataset": "sales",
+  "question": "What is the average unit price in each category?",
+  "reference_answer": {
+    "Accessories": 38.3333,
+    "Electronics": 381.1765,
+    "Furniture": 165.0,
+    "Office Supplies": 14.6667
+  },
+  "issues_reported": [
+    [
+      "cross_column",
+      "Revenue"
+    ],
+    [
+      "duplicates",
+      "*"
+    ],
+    [
+      "label_variant",
+      "Category"
+    ],
+    [
+      "missing",
+      "Region"
+    ],
+    [
+      "negative",
+      "Quantity"
+    ],
+    [
+      "out_of_range",
+      "Quantity"
+    ]
+  ]
+}

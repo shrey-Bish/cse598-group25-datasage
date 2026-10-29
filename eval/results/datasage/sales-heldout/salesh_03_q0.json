@@ -1,0 +1,51 @@
+{
+  "task_id": "salesh_03_q0",
+  "analysis_correct": false,
+  "completed": false,
+  "detect_tp": 3,
+  "detect_fp": 0,
+  "detect_fn": 3,
+  "tool_calls": 30,
+  "tool_errors": 0,
+  "recovered_errors": 0,
+  "approvals_asked": 0,
+  "seconds": 348.28,
+  "tokens": 156503,
+  "stop_reason": "tool_budget_exhausted",
+  "note": "",
+  "answer": null,
+  "extra": {
+    "final_summary": "",
+    "changes": [],
+    "rejected": [],
+    "oracle_decisions": []
+  },
+  "corrections": 2,
+  "planted": 11,
+  "damaged_rows": 0,
+  "damaged_cells": 0,
+  "cleaned_available": true,
+  "system": "datasage",
+  "dataset": "sales-heldout",
+  "question": "How many orders are there in each category?",
+  "reference_answer": {
+    "Accessories": 16.0,
+    "Electronics": 13.0,
+    "Furniture": 10.0,
+    "Office Supplies": 23.0
+  },
+  "issues_reported": [
+    [
+      "duplicates",
+      "*"
+    ],
+    [
+      "label_variant",
+      "Category"
+    ],
+    [
+      "label_variant",
+      "Region"
+    ]
+  ]
+}

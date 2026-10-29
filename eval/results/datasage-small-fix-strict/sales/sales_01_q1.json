@@ -1,0 +1,176 @@
+{
+  "task_id": "sales_01_q1",
+  "analysis_correct": true,
+  "completed": true,
+  "detect_tp": 4,
+  "detect_fp": 1,
+  "detect_fn": 1,
+  "tool_calls": 15,
+  "tool_errors": 0,
+  "recovered_errors": 0,
+  "approvals_asked": 3,
+  "seconds": 20.74,
+  "tokens": 72604,
+  "stop_reason": "finish",
+  "note": "",
+  "answer": {
+    "2026-01": 4944.0,
+    "2026-02": 1292.0,
+    "2026-03": 3391.0,
+    "2026-04": 1287.0,
+    "2026-05": 3070.0,
+    "2026-06": 3882.0
+  },
+  "extra": {
+    "final_summary": "The data had several issues affecting the revenue-per-month analysis: 2 duplicate rows were removed; 'office supplies' was normalized to 'Office Supplies'; 3 rows with negative Quantity values were excluded as they violate the rule that Quantity must be at least 1; 2 invalid dates were set to missing. After fixes, the total revenue per month was calculated. The results are: January 2026: $4,944, February 2026: $1,292, March 2026: $3,391, April 2026: $1,287, May 2026: $3,070, June 2026: $3,882.",
+    "changes": [
+      {
+        "version": 1,
+        "tool": "drop_duplicates",
+        "args": {
+          "reason": "Found 2 exact duplicate rows (row 7 and 13), likely data entry errors. Removing duplicates to avoid double-counting in analysis."
+        },
+        "reason": "Found 2 exact duplicate rows (row 7 and 13), likely data entry errors. Removing duplicates to avoid double-counting in analysis.",
+        "risk": "medium",
+        "approval": "approved",
+        "rows_removed": [
+          7,
+          13
+        ],
+        "cells_changed": 0,
+        "summary": "removed 2 exact duplicate row(s)",
+        "code": "df = df.drop_duplicates(keep='first')"
+      },
+      {
+        "version": 2,
+        "tool": "normalize_labels",
+        "args": {
+          "column": "Category",
+          "mapping": {
+            "office supplies": "Office Supplies"
+          },
+          "reason": "Found case/space variant 'office supplies' which should be standardized to 'Office Supplies' for consistency."
+        },
+        "reason": "Found case/space variant 'office supplies' which should be standardized to 'Office Supplies' for consistency.",
+        "risk": "low",
+        "approval": "auto",
+        "rows_removed": [],
+        "cells_changed": 3,
+        "summary": "Category: merged 1 label variant(s), 3 cells",
+        "code": "df['Category'] = df['Category'].replace({'office supplies': 'Office Supplies'})"
+      },
+      {
+        "version": 3,
+        "tool": "cast_numeric",
+        "args": {
+          "column": "Price",
+          "reason": "Price contains values like '$350.00' and '$18.00' that are valid numbers but stored as text. Converting to numeric for accurate calculation."
+        },
+        "reason": "Price contains values like '$350.00' and '$18.00' that are valid numbers but stored as text. Converting to numeric for accurate calculation.",
+        "risk": "low",
+        "approval": "auto",
+        "rows_removed": [],
+        "cells_changed": 0,
+        "summary": "Price: converted to numbers (63 text values, 0 became missing)",
+        "code": "df['Price'] = pd.to_numeric(df['Price'].astype(str).str.replace(r'[$, ]', '', regex=True), errors='coerce')"
+      },
+      {
+        "version": 4,
+        "tool": "exclude_rows",
+        "args": {
+          "rows": [
+            32,
+            53,
+            54
+          ],
+          "reason": "Quantity has negative values (-5, -6, -4), which violate the rule that Quantity must be at least 1. These likely represent returns or errors and should be excluded from revenue calculation."
+        },
+        "reason": "Quantity has negative values (-5, -6, -4), which violate the rule that Quantity must be at least 1. These likely represent returns or errors and should be excluded from revenue calculation.",
+        "risk": "high",
+        "approval": "approved",
+        "rows_removed": [
+          32,
+          53,
+          54
+        ],
+        "cells_changed": 0,
+        "summary": "excluded 3 row(s): [32, 53, 54]",
+        "code": "df = df.drop(index=[32, 53, 54])"
+      },
+      {
+        "version": 5,
+        "tool": "parse_dates",
+        "args": {
+          "column": "Date",
+          "reason": "Date column contains invalid dates (e.g., '13/45/2026', '2026-02-30') that are not valid ISO dates. Converting to missing to ensure correct month grouping."
+        },
+        "reason": "Date column contains invalid dates (e.g., '13/45/2026', '2026-02-30') that are not valid ISO dates. Converting to missing to ensure correct month grouping.",
+        "risk": "medium",
+        "approval": "approved",
+        "rows_removed": [],
+        "cells_changed": 2,
+        "summary": "Date: 2 invalid date(s) set to missing",
+        "code": "df['Date'] = pd.to_datetime(df['Date'], format='%Y-%m-%d', errors='coerce').dt.strftime('%Y-%m-%d')"
+      }
+    ],
+    "rejected": [],
+    "oracle_decisions": [
+      {
+        "tool": "drop_duplicates",
+        "risk": "medium",
+        "approved": true,
+        "why": "moves data toward the reference"
+      },
+      {
+        "tool": "exclude_rows",
+        "risk": "high",
+        "approved": true,
+        "why": "moves data toward the reference"
+      },
+      {
+        "tool": "parse_dates",
+        "risk": "medium",
+        "approved": true,
+        "why": "moves data toward the reference"
+      }
+    ]
+  },
+  "corrections": 12,
+  "planted": 12,
+  "damaged_rows": 0,
+  "damaged_cells": 0,
+  "cleaned_available": true,
+  "system": "datasage-small-fix-strict",
+  "dataset": "sales",
+  "question": "What is the total revenue per month?",
+  "reference_answer": {
+    "2026-01": 4944.0,
+    "2026-02": 1292.0,
+    "2026-03": 3391.0,
+    "2026-04": 1287.0,
+    "2026-05": 3070.0,
+    "2026-06": 3882.0
+  },
+  "issues_reported": [
+    [
+      "duplicates",
+      "*"
+    ],
+    [
+      "invalid_date",
+      "Date"
+    ],
+    [
+      "label_variant",
+      "Category"
+    ],
+    [
+      "out_of_range",
+      "Quantity"
+    ],
+    [
+      "text_number",
+      "Price"
+    ]
+  ]
+}

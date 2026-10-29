@@ -1,0 +1,53 @@
+{
+  "task_id": "salesh_04_q1",
+  "analysis_correct": true,
+  "completed": true,
+  "detect_tp": 3,
+  "detect_fp": 0,
+  "detect_fn": 1,
+  "tool_calls": 0,
+  "tool_errors": 0,
+  "recovered_errors": 0,
+  "approvals_asked": 0,
+  "seconds": 45.15,
+  "tokens": 2143,
+  "stop_reason": "done",
+  "note": "",
+  "answer": {
+    "Office Supplies": 20.0,
+    "Furniture": 15.0,
+    "Electronics": 15.0,
+    "Accessories": 11.0
+  },
+  "extra": {
+    "code": "import pandas as pd\n\ndef clean(df):\n    # Remove exact duplicate rows\n    df = df.drop_duplicates().reset_index(drop=True)\n    \n    # Fix label variants in Category\n    category_mapping = {\n        'accessories': 'Accessories',\n        'Furnture': 'Furniture',\n        'office supplies': 'Office Supplies'\n    }\n    df['Category'] = df['Category'].replace(category_mapping)\n    \n    # We do not drop rows with missing Region because the question does not involve Region\n    # Keep all rows for counting by Category\n    \n    return df\n\ndef answer(df):\n    # Count orders in each category\n    counts = df['Category'].value_counts()\n    result = {category: int(count) for category, count in counts.items()}\n    return result"
+  },
+  "corrections": 8,
+  "planted": 10,
+  "damaged_rows": 0,
+  "damaged_cells": 0,
+  "cleaned_available": true,
+  "system": "b2",
+  "dataset": "sales-heldout",
+  "question": "How many orders are there in each category?",
+  "reference_answer": {
+    "Accessories": 11.0,
+    "Electronics": 15.0,
+    "Furniture": 15.0,
+    "Office Supplies": 20.0
+  },
+  "issues_reported": [
+    [
+      "duplicates",
+      "*"
+    ],
+    [
+      "label_variant",
+      "Category"
+    ],
+    [
+      "missing",
+      "Region"
+    ]
+  ]
+}

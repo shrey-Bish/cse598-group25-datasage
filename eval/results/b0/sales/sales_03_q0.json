@@ -1,0 +1,50 @@
+{
+  "task_id": "sales_03_q0",
+  "analysis_correct": false,
+  "completed": true,
+  "detect_tp": 2,
+  "detect_fp": 1,
+  "detect_fn": 2,
+  "tool_calls": 0,
+  "tool_errors": 0,
+  "recovered_errors": 0,
+  "approvals_asked": 0,
+  "seconds": 0.003,
+  "tokens": 0,
+  "stop_reason": "done",
+  "note": "",
+  "answer": {
+    "East": 5100.0,
+    "North": 13920.0,
+    "South": 51765.0,
+    "West": 960.0
+  },
+  "corrections": 1,
+  "planted": 8,
+  "damaged_rows": 0,
+  "damaged_cells": 0,
+  "cleaned_available": true,
+  "system": "b0",
+  "dataset": "sales",
+  "question": "What is the total revenue by region for Electronics?",
+  "reference_answer": {
+    "East": 5100.0,
+    "North": 13920.0,
+    "South": 4240.0,
+    "West": 960.0
+  },
+  "issues_reported": [
+    [
+      "invalid_date",
+      "Date"
+    ],
+    [
+      "negative",
+      "Quantity"
+    ],
+    [
+      "negative",
+      "Revenue"
+    ]
+  ]
+}

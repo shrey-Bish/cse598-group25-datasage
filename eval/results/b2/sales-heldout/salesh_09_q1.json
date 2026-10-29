@@ -1,0 +1,65 @@
+{
+  "task_id": "salesh_09_q1",
+  "analysis_correct": false,
+  "completed": true,
+  "detect_tp": 4,
+  "detect_fp": 1,
+  "detect_fn": 1,
+  "tool_calls": 0,
+  "tool_errors": 0,
+  "recovered_errors": 0,
+  "approvals_asked": 0,
+  "seconds": 50.46,
+  "tokens": 2543,
+  "stop_reason": "done",
+  "note": "",
+  "answer": {
+    "2026-01": 2665.0,
+    "2026-02": 6096.0,
+    "2026-03": 5420.0,
+    "2026-04": 5575.0,
+    "2026-05": 3045.0,
+    "2026-06": 9941.0
+  },
+  "extra": {
+    "code": "import pandas as pd\n\ndef clean(df):\n    df = df.copy()\n    \n    # Fix Price: remove $ and .00, convert to numeric\n    df['Price'] = df['Price'].astype(str).str.replace('$', '', regex=False).str.replace('.00', '', regex=False)\n    df['Price'] = pd.to_numeric(df['Price'], errors='coerce')\n    \n    # Fix Quantity: ensure positive, recalculate if needed\n    df['Quantity'] = pd.to_numeric(df['Quantity'], errors='coerce')\n    # Use Revenue = Quantity * Price to fix inconsistencies\n    calculated_revenue = df['Quantity'].abs() * df['Price']\n    df['Quantity'] = df['Quantity'].abs()  # Make quantity positive\n    \n    # Recalculate Revenue correctly\n    df['Revenue'] = calculated_revenue\n    \n    # Fix Region: standardize variants\n    region_mapping = {\n        'Wst': 'West',\n        'Eats': 'East',\n        'East ': 'East',\n        ' West': 'West'\n    }\n    df['Region'] = df['Region'].map(region_mapping).fillna(df['Region'])\n    \n    # Ensure Date is datetime\n    df['Date'] = pd.to_datetime(df['Date'], errors='coerce')\n    \n    return df\n\ndef answer(df):\n    df = df.copy()\n    df['Date'] = pd.to_datetime(df['Date'], errors='coerce')\n    df['month'] = df['Date'].dt.to_period('M').astype(str)\n    result = df.groupby('month')['Revenue'].sum().round(2).to_dict()\n    return result"
+  },
+  "corrections": 11,
+  "planted": 12,
+  "damaged_rows": 0,
+  "damaged_cells": 0,
+  "cleaned_available": true,
+  "system": "b2",
+  "dataset": "sales-heldout",
+  "question": "What is the total revenue per month?",
+  "reference_answer": {
+    "2026-01": 2665.0,
+    "2026-02": 6096.0,
+    "2026-03": 4160.0,
+    "2026-04": 5575.0,
+    "2026-05": 3045.0,
+    "2026-06": 9941.0
+  },
+  "issues_reported": [
+    [
+      "label_variant",
+      "Region"
+    ],
+    [
+      "missing",
+      "Region"
+    ],
+    [
+      "negative",
+      "Quantity"
+    ],
+    [
+      "negative",
+      "Revenue"
+    ],
+    [
+      "text_number",
+      "Price"
+    ]
+  ]
+}

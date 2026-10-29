@@ -1,0 +1,150 @@
+{
+  "task_id": "salesh_01_q0",
+  "analysis_correct": true,
+  "completed": true,
+  "detect_tp": 3,
+  "detect_fp": 0,
+  "detect_fn": 0,
+  "tool_calls": 11,
+  "tool_errors": 0,
+  "recovered_errors": 0,
+  "approvals_asked": 3,
+  "seconds": 180.94,
+  "tokens": 48908,
+  "stop_reason": "finish",
+  "note": "",
+  "answer": {
+    "East": 60.0,
+    "North": 83.0,
+    "South": 64.0,
+    "West": 104.0
+  },
+  "extra": {
+    "final_summary": "Found and fixed: 2 duplicate rows (removed), 6 label variants in 'Category' (normalized to standard labels), and 1 missing value in 'Region' (set to missing). Cross-column check confirmed Revenue = Quantity * Price holds. After cleaning, total units sold by region: East: 60, North: 83, South: 64, West: 104.",
+    "changes": [
+      {
+        "version": 1,
+        "tool": "drop_duplicates",
+        "args": {
+          "reason": "2 exact duplicate rows found (row 6 and row 60 are duplicates of earlier rows); removing duplicates to avoid double-counting"
+        },
+        "reason": "2 exact duplicate rows found (row 6 and row 60 are duplicates of earlier rows); removing duplicates to avoid double-counting",
+        "risk": "medium",
+        "approval": "approved",
+        "rows_removed": [
+          6,
+          60
+        ],
+        "cells_changed": 0,
+        "summary": "removed 2 exact duplicate row(s)",
+        "code": "df = df.drop_duplicates(keep='first')"
+      },
+      {
+        "version": 2,
+        "tool": "normalize_labels",
+        "args": {
+          "column": "Category",
+          "mapping": {
+            " Furniture": "Furniture",
+            "Furniture ": "Furniture",
+            " Office Supplies": "Office Supplies"
+          },
+          "reason": "merging case and space variants in Category column: ' Furniture', 'Furniture ', and ' Office Supplies' normalized to standard labels"
+        },
+        "reason": "merging case and space variants in Category column: ' Furniture', 'Furniture ', and ' Office Supplies' normalized to standard labels",
+        "risk": "low",
+        "approval": "auto",
+        "rows_removed": [],
+        "cells_changed": 3,
+        "summary": "Category: merged 3 label variant(s), 3 cells",
+        "code": "df['Category'] = df['Category'].replace({' Furniture': 'Furniture', 'Furniture ': 'Furniture', ' Office Supplies': 'Office Supplies'})"
+      },
+      {
+        "version": 3,
+        "tool": "normalize_labels",
+        "args": {
+          "column": "Category",
+          "mapping": {
+            "Furnture": "Furniture",
+            "Accesories": "Accessories"
+          },
+          "reason": "merging likely misspellings in Category: 'Furnture' and 'Accesories' corrected to 'Furniture' and 'Accessories' based on rules file"
+        },
+        "reason": "merging likely misspellings in Category: 'Furnture' and 'Accesories' corrected to 'Furniture' and 'Accessories' based on rules file",
+        "risk": "high",
+        "approval": "approved",
+        "rows_removed": [],
+        "cells_changed": 3,
+        "summary": "Category: merged 2 label variant(s), 3 cells",
+        "code": "df['Category'] = df['Category'].replace({'Furnture': 'Furniture', 'Accesories': 'Accessories'})"
+      },
+      {
+        "version": 4,
+        "tool": "set_missing",
+        "args": {
+          "column": "Region",
+          "rows": [
+            39
+          ],
+          "reason": "Region is missing in row 39; setting to missing so it will be excluded from region-based grouping"
+        },
+        "reason": "Region is missing in row 39; setting to missing so it will be excluded from region-based grouping",
+        "risk": "high",
+        "approval": "approved",
+        "rows_removed": [],
+        "cells_changed": 0,
+        "summary": "Region: set 1 value(s) to missing",
+        "code": "df.loc[[39], 'Region'] = pd.NA"
+      }
+    ],
+    "rejected": [],
+    "oracle_decisions": [
+      {
+        "tool": "drop_duplicates",
+        "risk": "medium",
+        "approved": true,
+        "why": "moves data toward the reference"
+      },
+      {
+        "tool": "normalize_labels",
+        "risk": "high",
+        "approved": true,
+        "why": "moves data toward the reference"
+      },
+      {
+        "tool": "set_missing",
+        "risk": "high",
+        "approved": true,
+        "why": "moves data toward the reference"
+      }
+    ]
+  },
+  "corrections": 9,
+  "planted": 9,
+  "damaged_rows": 0,
+  "damaged_cells": 0,
+  "cleaned_available": true,
+  "system": "datasage-fix",
+  "dataset": "sales-heldout",
+  "question": "How many units were sold in each region?",
+  "reference_answer": {
+    "East": 60.0,
+    "North": 83.0,
+    "South": 64.0,
+    "West": 104.0
+  },
+  "issues_reported": [
+    [
+      "duplicates",
+      "*"
+    ],
+    [
+      "label_variant",
+      "Category"
+    ],
+    [
+      "missing",
+      "Region"
+    ]
+  ]
+}

@@ -1,0 +1,50 @@
+{
+  "task_id": "sales_04_q1",
+  "analysis_correct": true,
+  "completed": true,
+  "detect_tp": 3,
+  "detect_fp": 0,
+  "detect_fn": 1,
+  "tool_calls": 11,
+  "tool_errors": 0,
+  "recovered_errors": 0,
+  "approvals_asked": 1,
+  "seconds": 120.86,
+  "tokens": 50031,
+  "stop_reason": "finish",
+  "note": "",
+  "answer": {
+    "Accessories": 1785.0,
+    "Electronics": 25150.0,
+    "Furniture": 10045.0,
+    "Office Supplies": 456.0
+  },
+  "corrections": 8,
+  "planted": 8,
+  "damaged_rows": 0,
+  "damaged_cells": 0,
+  "cleaned_available": true,
+  "system": "datasage",
+  "dataset": "sales",
+  "question": "What is the total revenue by category?",
+  "reference_answer": {
+    "Accessories": 1785.0,
+    "Electronics": 25150.0,
+    "Furniture": 10045.0,
+    "Office Supplies": 456.0
+  },
+  "issues_reported": [
+    [
+      "label_variant",
+      "Category"
+    ],
+    [
+      "label_variant",
+      "Region"
+    ],
+    [
+      "text_number",
+      "Price"
+    ]
+  ]
+}

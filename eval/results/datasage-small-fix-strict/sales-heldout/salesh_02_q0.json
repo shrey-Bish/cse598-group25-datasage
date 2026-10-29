@@ -1,0 +1,151 @@
+{
+  "task_id": "salesh_02_q0",
+  "analysis_correct": false,
+  "completed": true,
+  "detect_tp": 4,
+  "detect_fp": 3,
+  "detect_fn": 1,
+  "tool_calls": 16,
+  "tool_errors": 0,
+  "recovered_errors": 0,
+  "approvals_asked": 2,
+  "seconds": 16.81,
+  "tokens": 76186,
+  "stop_reason": "finish",
+  "note": "",
+  "answer": {
+    "Accessories": 4610.0,
+    "Electronics": 29070.0,
+    "Furniture": 16505.0,
+    "Office Supplies": 3785.0
+  },
+  "extra": {
+    "final_summary": "The data had three main issues: (1) 3 rows with negative Quantity, Price, and Revenue values (rows 5, 14, 65) that violated the rules (Quantity must be >= 1, Price >= 0, Revenue >= 0); these were excluded. (2) Region labels had case and space variants (e.g., ' South', 'east', 'North ') which were normalized to standard forms. (3) 3 missing Region values were marked as missing. After fixes, the total revenue by category is: Accessories $4,610, Electronics $29,070, Furniture $16,505, Office Supplies $3,785.",
+    "changes": [
+      {
+        "version": 1,
+        "tool": "exclude_rows",
+        "args": {
+          "rows": [
+            5,
+            14,
+            65
+          ],
+          "reason": "Negative Quantity, Price, and Revenue values violate the rules (Quantity must be >= 1, Price >= 0, Revenue >= 0). These rows are invalid and should be excluded."
+        },
+        "reason": "Negative Quantity, Price, and Revenue values violate the rules (Quantity must be >= 1, Price >= 0, Revenue >= 0). These rows are invalid and should be excluded.",
+        "risk": "high",
+        "approval": "approved",
+        "rows_removed": [
+          5,
+          14,
+          65
+        ],
+        "cells_changed": 0,
+        "summary": "excluded 3 row(s): [5, 14, 65]",
+        "code": "df = df.drop(index=[5, 14, 65])"
+      },
+      {
+        "version": 2,
+        "tool": "normalize_labels",
+        "args": {
+          "column": "Region",
+          "mapping": {
+            " South": "South",
+            "east": "East",
+            "west": "West",
+            "North ": "North",
+            "north": "North"
+          },
+          "reason": "Case and space variants of region labels are common and low risk to merge; standardize to 'North', 'South', 'East', 'West'."
+        },
+        "reason": "Case and space variants of region labels are common and low risk to merge; standardize to 'North', 'South', 'East', 'West'.",
+        "risk": "low",
+        "approval": "auto",
+        "rows_removed": [],
+        "cells_changed": 6,
+        "summary": "Region: merged 5 label variant(s), 6 cells",
+        "code": "df['Region'] = df['Region'].replace({' South': 'South', 'east': 'East', 'west': 'West', 'North ': 'North', 'north': 'North'})"
+      },
+      {
+        "version": 3,
+        "tool": "set_missing",
+        "args": {
+          "column": "Region",
+          "rows": [
+            36,
+            40,
+            49
+          ],
+          "reason": "These rows have missing Region values; they are valid otherwise and will be handled by analysis as missing."
+        },
+        "reason": "These rows have missing Region values; they are valid otherwise and will be handled by analysis as missing.",
+        "risk": "high",
+        "approval": "approved",
+        "rows_removed": [],
+        "cells_changed": 0,
+        "summary": "Region: set 3 value(s) to missing",
+        "code": "df.loc[[36, 40, 49], 'Region'] = pd.NA"
+      }
+    ],
+    "rejected": [],
+    "oracle_decisions": [
+      {
+        "tool": "exclude_rows",
+        "risk": "high",
+        "approved": true,
+        "why": "moves data toward the reference"
+      },
+      {
+        "tool": "set_missing",
+        "risk": "high",
+        "approved": true,
+        "why": "moves data toward the reference"
+      }
+    ]
+  },
+  "corrections": 12,
+  "planted": 18,
+  "damaged_rows": 0,
+  "damaged_cells": 0,
+  "cleaned_available": true,
+  "system": "datasage-small-fix-strict",
+  "dataset": "sales-heldout",
+  "question": "What is the total revenue by category?",
+  "reference_answer": {
+    "Accessories": 2450.0,
+    "Electronics": 29070.0,
+    "Furniture": 16505.0,
+    "Office Supplies": 972.0
+  },
+  "issues_reported": [
+    [
+      "cross_column",
+      "Revenue"
+    ],
+    [
+      "label_variant",
+      "Region"
+    ],
+    [
+      "missing",
+      "Region"
+    ],
+    [
+      "negative",
+      "Quantity"
+    ],
+    [
+      "negative",
+      "Revenue"
+    ],
+    [
+      "out_of_range",
+      "Quantity"
+    ],
+    [
+      "out_of_range",
+      "Revenue"
+    ]
+  ]
+}

@@ -1,0 +1,190 @@
+{
+  "task_id": "sales_05_q0",
+  "analysis_correct": true,
+  "completed": true,
+  "detect_tp": 5,
+  "detect_fp": 1,
+  "detect_fn": 0,
+  "tool_calls": 14,
+  "tool_errors": 0,
+  "recovered_errors": 0,
+  "approvals_asked": 4,
+  "seconds": 366.17,
+  "tokens": 65027,
+  "stop_reason": "finish",
+  "note": "",
+  "answer": {
+    "Accessories": 20.0,
+    "Electronics": 13.0,
+    "Furniture": 11.0,
+    "Office Supplies": 11.0
+  },
+  "extra": {
+    "final_summary": "Found and fixed several data issues affecting the order count by category. One exact duplicate row was removed. Category and Region labels were normalized to correct case and spelling variants. Two rows with negative Quantity (violating the rule that Quantity >= 1) were excluded. One row had Revenue corrected to match Quantity * Price. After these fixes, the analysis shows: Accessories: 20 orders, Electronics: 13 orders, Furniture: 11 orders, Office Supplies: 11 orders.",
+    "changes": [
+      {
+        "version": 1,
+        "tool": "drop_duplicates",
+        "args": {
+          "reason": "One exact duplicate row found (row 40), which may skew counts. Removing to avoid double-counting."
+        },
+        "reason": "One exact duplicate row found (row 40), which may skew counts. Removing to avoid double-counting.",
+        "risk": "medium",
+        "approval": "approved",
+        "rows_removed": [
+          40
+        ],
+        "cells_changed": 0,
+        "summary": "removed 1 exact duplicate row(s)",
+        "code": "df = df.drop_duplicates(keep='first')"
+      },
+      {
+        "version": 2,
+        "tool": "normalize_labels",
+        "args": {
+          "column": "Category",
+          "mapping": {
+            "furniture": "Furniture",
+            "Furniture ": "Furniture",
+            "office supplies": "Office Supplies",
+            "Office Supplies ": "Office Supplies"
+          },
+          "reason": "Standardizing category labels to match allowed values. These are only case and space differences, so low risk."
+        },
+        "reason": "Standardizing category labels to match allowed values. These are only case and space differences, so low risk.",
+        "risk": "low",
+        "approval": "auto",
+        "rows_removed": [],
+        "cells_changed": 5,
+        "summary": "Category: merged 4 label variant(s), 5 cells",
+        "code": "df['Category'] = df['Category'].replace({'furniture': 'Furniture', 'Furniture ': 'Furniture', 'office supplies': 'Office Supplies', 'Office Supplies ': 'Office Supplies'})"
+      },
+      {
+        "version": 3,
+        "tool": "normalize_labels",
+        "args": {
+          "column": "Region",
+          "mapping": {
+            "Wst": "West",
+            "Suoth": "South"
+          },
+          "reason": "Correcting likely misspellings in Region to match allowed values. 'Wst' is clearly 'West' and 'Suoth' is clearly 'South'."
+        },
+        "reason": "Correcting likely misspellings in Region to match allowed values. 'Wst' is clearly 'West' and 'Suoth' is clearly 'South'.",
+        "risk": "high",
+        "approval": "approved",
+        "rows_removed": [],
+        "cells_changed": 3,
+        "summary": "Region: merged 2 label variant(s), 3 cells",
+        "code": "df['Region'] = df['Region'].replace({'Wst': 'West', 'Suoth': 'South'})"
+      },
+      {
+        "version": 4,
+        "tool": "exclude_rows",
+        "args": {
+          "rows": [
+            28,
+            50
+          ],
+          "reason": "Quantity has negative values (-8 and -4) which violate the rule that Quantity must be at least 1. These rows are likely returns or errors and will distort order counts. Excluding them."
+        },
+        "reason": "Quantity has negative values (-8 and -4) which violate the rule that Quantity must be at least 1. These rows are likely returns or errors and will distort order counts. Excluding them.",
+        "risk": "high",
+        "approval": "approved",
+        "rows_removed": [
+          28,
+          50
+        ],
+        "cells_changed": 0,
+        "summary": "excluded 2 row(s): [28, 50]",
+        "code": "df = df.drop(index=[28, 50])"
+      },
+      {
+        "version": 5,
+        "tool": "recompute_column",
+        "args": {
+          "column": "Revenue",
+          "expression": "Quantity * Price",
+          "rows": [
+            31
+          ],
+          "reason": "Row 31 has Revenue = 800 but Quantity * Price = 8 * 10 = 80. Correcting Revenue to match the formula."
+        },
+        "reason": "Row 31 has Revenue = 800 but Quantity * Price = 8 * 10 = 80. Correcting Revenue to match the formula.",
+        "risk": "high",
+        "approval": "approved",
+        "rows_removed": [],
+        "cells_changed": 1,
+        "summary": "Revenue: recomputed as Quantity * Price on 1 row(s)",
+        "code": "df.loc[[31], 'Revenue'] = [80.0]  # Revenue = Quantity * Price"
+      }
+    ],
+    "rejected": [],
+    "oracle_decisions": [
+      {
+        "tool": "drop_duplicates",
+        "risk": "medium",
+        "approved": true,
+        "why": "moves data toward the reference"
+      },
+      {
+        "tool": "normalize_labels",
+        "risk": "high",
+        "approved": true,
+        "why": "moves data toward the reference"
+      },
+      {
+        "tool": "exclude_rows",
+        "risk": "high",
+        "approved": true,
+        "why": "moves data toward the reference"
+      },
+      {
+        "tool": "recompute_column",
+        "risk": "high",
+        "approved": true,
+        "why": "moves data toward the reference"
+      }
+    ]
+  },
+  "corrections": 12,
+  "planted": 12,
+  "damaged_rows": 0,
+  "damaged_cells": 0,
+  "cleaned_available": true,
+  "system": "datasage-fix",
+  "dataset": "sales",
+  "question": "How many orders are there in each category?",
+  "reference_answer": {
+    "Accessories": 20.0,
+    "Electronics": 13.0,
+    "Furniture": 11.0,
+    "Office Supplies": 11.0
+  },
+  "issues_reported": [
+    [
+      "cross_column",
+      "Revenue"
+    ],
+    [
+      "duplicates",
+      "*"
+    ],
+    [
+      "label_variant",
+      "Category"
+    ],
+    [
+      "label_variant",
+      "Region"
+    ],
+    [
+      "negative",
+      "Quantity"
+    ],
+    [
+      "out_of_range",
+      "Quantity"
+    ]
+  ]
+}

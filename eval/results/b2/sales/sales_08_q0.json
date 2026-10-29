@@ -1,0 +1,62 @@
+{
+  "task_id": "sales_08_q0",
+  "analysis_correct": false,
+  "completed": false,
+  "detect_tp": 4,
+  "detect_fp": 2,
+  "detect_fn": 1,
+  "tool_calls": 0,
+  "tool_errors": 0,
+  "recovered_errors": 0,
+  "approvals_asked": 0,
+  "seconds": 28.43,
+  "tokens": 2397,
+  "stop_reason": "code_error",
+  "note": "    - passing `format='mixed'`, and the format will be inferred for each element individually. You might want to use `dayfirst` alongside this.",
+  "answer": null,
+  "extra": {
+    "code": "import pandas as pd\n\ndef clean(df):\n    df = df.copy()\n    \n    # Fix Category label variant\n    df['Category'] = df['Category'].replace({'accessories': 'Accessories'})\n    \n    # Convert Price from text to numeric, removing non-numeric characters\n    df['Price'] = df['Price'].astype(str).str.replace(r'[^0-9.]', '', regex=True).astype(float)\n    \n    # Fix negative Quantity\n    df['Quantity'] = df['Quantity'].abs()\n    \n    # Fix negative Revenue\n    df['Revenue'] = df['Revenue'].abs()\n    \n    # Recompute Revenue to ensure consistency\n    df['Revenue'] = df['Quantity'] * df['Price']\n    \n    # Convert Date to datetime\n    df['Date'] = pd.to_datetime(df['Date'], format='%Y-%m-%d')\n    \n    return df\n\ndef answer(df):\n    df = clean(df)\n    df['Month'] = df['Date'].dt.strftime('%Y-%m')\n    result = df.groupby('Month')['Revenue'].sum().round(2).to_dict()\n    return result"
+  },
+  "corrections": 0,
+  "planted": 8,
+  "damaged_rows": 0,
+  "damaged_cells": 0,
+  "cleaned_available": false,
+  "system": "b2",
+  "dataset": "sales",
+  "question": "What is the total revenue per month?",
+  "reference_answer": {
+    "2026-01": 4356.0,
+    "2026-02": 9349.0,
+    "2026-03": 1254.0,
+    "2026-04": 1005.0,
+    "2026-05": 6566.0,
+    "2026-06": 3322.0
+  },
+  "issues_reported": [
+    [
+      "cross_column",
+      "*"
+    ],
+    [
+      "label_variant",
+      "Category"
+    ],
+    [
+      "missing",
+      "Region"
+    ],
+    [
+      "negative",
+      "Quantity"
+    ],
+    [
+      "negative",
+      "Revenue"
+    ],
+    [
+      "text_number",
+      "Price"
+    ]
+  ]
+}

@@ -1,0 +1,122 @@
+{
+  "task_id": "salesh_06_q1",
+  "analysis_correct": true,
+  "completed": true,
+  "detect_tp": 3,
+  "detect_fp": 0,
+  "detect_fn": 0,
+  "tool_calls": 12,
+  "tool_errors": 0,
+  "recovered_errors": 0,
+  "approvals_asked": 2,
+  "seconds": 269.84,
+  "tokens": 55118,
+  "stop_reason": "finish",
+  "note": "",
+  "answer": {
+    "East": 4080.0,
+    "North": 960.0,
+    "South": 5540.0,
+    "West": 3750.0
+  },
+  "extra": {
+    "final_summary": "Found and fixed: 3 invalid dates (set to missing), 3 prices stored as text with $ (converted to numbers), and 6 label variants in Region (normalized to standard names). Cross-check confirmed Revenue = Quantity * Price holds. Total revenue for Electronics by region: East $4,080, North $960, South $5,540, West $3,750.",
+    "changes": [
+      {
+        "version": 1,
+        "tool": "parse_dates",
+        "args": {
+          "column": "Date",
+          "reason": "3 invalid dates found: '2026-14-01', '13/45/2026', '2026-02-30'. These will be set to missing to allow date operations."
+        },
+        "reason": "3 invalid dates found: '2026-14-01', '13/45/2026', '2026-02-30'. These will be set to missing to allow date operations.",
+        "risk": "medium",
+        "approval": "approved",
+        "rows_removed": [],
+        "cells_changed": 3,
+        "summary": "Date: 3 invalid date(s) set to missing",
+        "code": "df['Date'] = pd.to_datetime(df['Date'], format='%Y-%m-%d', errors='coerce').dt.strftime('%Y-%m-%d')"
+      },
+      {
+        "version": 2,
+        "tool": "cast_numeric",
+        "args": {
+          "column": "Price",
+          "reason": "3 prices stored as text with dollar signs: '$350.00', '$6.00'. Convert to numbers for calculation."
+        },
+        "reason": "3 prices stored as text with dollar signs: '$350.00', '$6.00'. Convert to numbers for calculation.",
+        "risk": "low",
+        "approval": "auto",
+        "rows_removed": [],
+        "cells_changed": 0,
+        "summary": "Price: converted to numbers (43 text values, 0 became missing)",
+        "code": "df['Price'] = pd.to_numeric(df['Price'].astype(str).str.replace(r'[$, ]', '', regex=True), errors='coerce')"
+      },
+      {
+        "version": 3,
+        "tool": "normalize_labels",
+        "args": {
+          "column": "Region",
+          "mapping": {
+            "north": "North",
+            "east": "East",
+            "Nort": "North",
+            "Suoth": "South",
+            "Wst": "West"
+          },
+          "reason": "Fix case variants and likely misspellings in Region: 'north'->'North', 'east'->'East', 'Nort'->'North', 'Suoth'->'South', 'Wst'->'West'."
+        },
+        "reason": "Fix case variants and likely misspellings in Region: 'north'->'North', 'east'->'East', 'Nort'->'North', 'Suoth'->'South', 'Wst'->'West'.",
+        "risk": "high",
+        "approval": "approved",
+        "rows_removed": [],
+        "cells_changed": 6,
+        "summary": "Region: merged 5 label variant(s), 6 cells",
+        "code": "df['Region'] = df['Region'].replace({'north': 'North', 'east': 'East', 'Nort': 'North', 'Suoth': 'South', 'Wst': 'West'})"
+      }
+    ],
+    "rejected": [],
+    "oracle_decisions": [
+      {
+        "tool": "parse_dates",
+        "risk": "medium",
+        "approved": true,
+        "why": "moves data toward the reference"
+      },
+      {
+        "tool": "normalize_labels",
+        "risk": "high",
+        "approved": true,
+        "why": "moves data toward the reference"
+      }
+    ]
+  },
+  "corrections": 12,
+  "planted": 12,
+  "damaged_rows": 0,
+  "damaged_cells": 0,
+  "cleaned_available": true,
+  "system": "datasage",
+  "dataset": "sales-heldout",
+  "question": "What is the total revenue by region for Electronics?",
+  "reference_answer": {
+    "East": 4080.0,
+    "North": 960.0,
+    "South": 5540.0,
+    "West": 3750.0
+  },
+  "issues_reported": [
+    [
+      "invalid_date",
+      "Date"
+    ],
+    [
+      "label_variant",
+      "Region"
+    ],
+    [
+      "text_number",
+      "Price"
+    ]
+  ]
+}

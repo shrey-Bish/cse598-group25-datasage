@@ -1,0 +1,65 @@
+{
+  "task_id": "sales_01_q0",
+  "analysis_correct": false,
+  "completed": true,
+  "detect_tp": 4,
+  "detect_fp": 2,
+  "detect_fn": 1,
+  "tool_calls": 0,
+  "tool_errors": 0,
+  "recovered_errors": 0,
+  "approvals_asked": 0,
+  "seconds": 25.89,
+  "tokens": 2372,
+  "stop_reason": "done",
+  "note": "",
+  "answer": {
+    "Office Supplies": 31.0,
+    "Accessories": 13.0,
+    "Electronics": 12.0,
+    "Furniture": 7.0
+  },
+  "extra": {
+    "code": "import pandas as pd\n\ndef clean(df):\n    # Remove exact duplicate rows\n    df = df.drop_duplicates()\n    \n    # Fix case variant in Category\n    df = df.copy()\n    df['Category'] = df['Category'].str.strip().str.title()\n    \n    # Convert Price from text to numeric, removing non-numeric characters\n    df['Price'] = df['Price'].astype(str).str.replace(r'[^0-9.]', '', regex=True).astype(float)\n    \n    # Fix Quantity: ensure it's positive (set negatives to absolute value)\n    df['Quantity'] = df['Quantity'].abs()\n    \n    # Recompute Revenue = Quantity * Price\n    df['Revenue'] = df['Quantity'] * df['Price']\n    \n    return df\n\ndef answer(df):\n    df_clean = clean(df)\n    result = df_clean['Category'].value_counts().to_dict()\n    return result"
+  },
+  "corrections": 7,
+  "planted": 12,
+  "damaged_rows": 0,
+  "damaged_cells": 0,
+  "cleaned_available": true,
+  "system": "b2",
+  "dataset": "sales",
+  "question": "How many orders are there in each category?",
+  "reference_answer": {
+    "Accessories": 13.0,
+    "Electronics": 10.0,
+    "Furniture": 7.0,
+    "Office Supplies": 30.0
+  },
+  "issues_reported": [
+    [
+      "cross_column",
+      "*"
+    ],
+    [
+      "duplicates",
+      "*"
+    ],
+    [
+      "label_variant",
+      "Category"
+    ],
+    [
+      "negative",
+      "Quantity"
+    ],
+    [
+      "negative",
+      "Revenue"
+    ],
+    [
+      "text_number",
+      "Price"
+    ]
+  ]
+}

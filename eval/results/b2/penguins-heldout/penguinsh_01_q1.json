@@ -1,0 +1,55 @@
+{
+  "task_id": "penguinsh_01_q1",
+  "analysis_correct": false,
+  "completed": true,
+  "detect_tp": 3,
+  "detect_fp": 1,
+  "detect_fn": 1,
+  "tool_calls": 0,
+  "tool_errors": 0,
+  "recovered_errors": 0,
+  "approvals_asked": 0,
+  "seconds": 31.3,
+  "tokens": 2493,
+  "stop_reason": "done",
+  "note": "",
+  "answer": {
+    "Adelie": 78775.0,
+    "Chinstrap": 28400.0,
+    "Gentoo": 160050.0
+  },
+  "extra": {
+    "code": "import pandas as pd\n\ndef clean(df):\n    # Fix species label variants by standardizing to title case\n    df = df.copy()\n    df['species'] = df['species'].str.capitalize()\n    \n    # Convert flipper_length_mm to numeric, coercing errors (like quoted numbers) to NaN\n    df['flipper_length_mm'] = pd.to_numeric(df['flipper_length_mm'], errors='coerce')\n    \n    # Remove negative flipper lengths (invalid)\n    df.loc[df['flipper_length_mm'] < 0, 'flipper_length_mm'] = pd.NA\n    \n    # Drop exact duplicate rows\n    df = df.drop_duplicates().reset_index(drop=True)\n    \n    return df\n\ndef answer(df):\n    # Group by species and sum body_mass_g\n    result = df.groupby('species')['body_mass_g'].sum().round(0).astype(int)\n    return result.to_dict()"
+  },
+  "corrections": 5,
+  "planted": 10,
+  "damaged_rows": 0,
+  "damaged_cells": 0,
+  "cleaned_available": true,
+  "system": "b2",
+  "dataset": "penguins-heldout",
+  "question": "What is the total body mass for each species?",
+  "reference_answer": {
+    "Adelie": 74875.0,
+    "Chinstrap": 24675.0,
+    "Gentoo": 155250.0
+  },
+  "issues_reported": [
+    [
+      "duplicates",
+      "*"
+    ],
+    [
+      "label_variant",
+      "species"
+    ],
+    [
+      "negative",
+      "flipper_length_mm"
+    ],
+    [
+      "text_number",
+      "flipper_length_mm"
+    ]
+  ]
+}

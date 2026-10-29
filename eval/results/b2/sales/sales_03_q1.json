@@ -1,0 +1,53 @@
+{
+  "task_id": "sales_03_q1",
+  "analysis_correct": false,
+  "completed": true,
+  "detect_tp": 2,
+  "detect_fp": 1,
+  "detect_fn": 2,
+  "tool_calls": 0,
+  "tool_errors": 0,
+  "recovered_errors": 0,
+  "approvals_asked": 0,
+  "seconds": 16.97,
+  "tokens": 2346,
+  "stop_reason": "done",
+  "note": "",
+  "answer": {
+    "East": 53.0,
+    "North": 76.0,
+    "South": 35.0,
+    "West": 69.0
+  },
+  "extra": {
+    "code": "import pandas as pd\n\ndef clean(df):\n    df = df.copy()\n    \n    # Convert Price from text to numeric, removing non-numeric characters\n    df['Price'] = df['Price'].astype(str).str.replace(r'[^0-9.]', '', regex=True).astype(float)\n    \n    # Convert Quantity to numeric (it's currently string with negatives as strings)\n    df['Quantity'] = pd.to_numeric(df['Quantity'], errors='coerce')\n    \n    # Fix negative quantities: since Quantity must be >= 1, we take absolute value and ensure positivity\n    # But better: the negatives are likely data entry errors, so we take absolute value and treat as positive sales\n    df['Quantity'] = df['Quantity'].abs()\n    \n    # Recompute Revenue = Quantity * Price to fix incorrect Revenue values\n    df['Revenue'] = df['Quantity'] * df['Price']\n    \n    return df\n\ndef answer(df):\n    # Group by Region and sum Quantity\n    result = df.groupby('Region')['Quantity'].sum().astype(int).to_dict()\n    return result"
+  },
+  "corrections": 4,
+  "planted": 8,
+  "damaged_rows": 0,
+  "damaged_cells": 0,
+  "cleaned_available": true,
+  "system": "b2",
+  "dataset": "sales",
+  "question": "How many units were sold in each region?",
+  "reference_answer": {
+    "East": 53.0,
+    "North": 69.0,
+    "South": 34.0,
+    "West": 64.0
+  },
+  "issues_reported": [
+    [
+      "negative",
+      "Quantity"
+    ],
+    [
+      "negative",
+      "Revenue"
+    ],
+    [
+      "text_number",
+      "Price"
+    ]
+  ]
+}

@@ -1,0 +1,146 @@
+{
+  "task_id": "sales_09_q1",
+  "analysis_correct": true,
+  "completed": true,
+  "detect_tp": 4,
+  "detect_fp": 0,
+  "detect_fn": 0,
+  "tool_calls": 12,
+  "tool_errors": 0,
+  "recovered_errors": 0,
+  "approvals_asked": 2,
+  "seconds": 11.98,
+  "tokens": 56121,
+  "stop_reason": "finish",
+  "note": "",
+  "answer": {
+    "2026-01": 10646.0,
+    "2026-02": 7478.0,
+    "2026-03": 11050.0,
+    "2026-04": 645.0,
+    "2026-05": 5359.0,
+    "2026-06": 13371.0
+  },
+  "extra": {
+    "final_summary": "The data had several issues affecting the analysis: 2 duplicate rows (row ids 14, 28) were removed; case and space variants in the 'Category' column were normalized to standard labels; one invalid date (row 36) was set to missing; and the 'Price' column was converted from text to numeric to handle the '$6.00' format. The 'Revenue' column was validated against the formula 'Quantity * Price' and found to be consistent. The total revenue per month is: January 2026: $10,646, February 2026: $7,478, March 2026: $11,050, April 2026: $645, May 2026: $5,359, June 2026: $13,371.",
+    "changes": [
+      {
+        "version": 1,
+        "tool": "drop_duplicates",
+        "args": {
+          "reason": "Found 2 exact duplicate rows (row ids 14 and 28), likely data entry errors. Keeping only the first occurrence."
+        },
+        "reason": "Found 2 exact duplicate rows (row ids 14 and 28), likely data entry errors. Keeping only the first occurrence.",
+        "risk": "medium",
+        "approval": "approved",
+        "rows_removed": [
+          14,
+          28
+        ],
+        "cells_changed": 0,
+        "summary": "removed 2 exact duplicate row(s)",
+        "code": "df = df.drop_duplicates(keep='first')"
+      },
+      {
+        "version": 2,
+        "tool": "normalize_labels",
+        "args": {
+          "column": "Category",
+          "mapping": {
+            "electronics": "Electronics",
+            "Office Supplies ": "Office Supplies",
+            "furniture": "Furniture",
+            "Furniture ": "Furniture"
+          },
+          "reason": "Case and space variants in Category column are inconsistent but clearly refer to the same categories. Merging them for consistency."
+        },
+        "reason": "Case and space variants in Category column are inconsistent but clearly refer to the same categories. Merging them for consistency.",
+        "risk": "low",
+        "approval": "auto",
+        "rows_removed": [],
+        "cells_changed": 5,
+        "summary": "Category: merged 4 label variant(s), 5 cells",
+        "code": "df['Category'] = df['Category'].replace({'electronics': 'Electronics', 'Office Supplies ': 'Office Supplies', 'furniture': 'Furniture', 'Furniture ': 'Furniture'})"
+      },
+      {
+        "version": 3,
+        "tool": "parse_dates",
+        "args": {
+          "column": "Date",
+          "reason": "One row (row 36) has an invalid date format (13/45/2026), which cannot be parsed as a valid YYYY-MM-DD date. Setting it to missing."
+        },
+        "reason": "One row (row 36) has an invalid date format (13/45/2026), which cannot be parsed as a valid YYYY-MM-DD date. Setting it to missing.",
+        "risk": "medium",
+        "approval": "approved",
+        "rows_removed": [],
+        "cells_changed": 1,
+        "summary": "Date: 1 invalid date(s) set to missing",
+        "code": "df['Date'] = pd.to_datetime(df['Date'], format='%Y-%m-%d', errors='coerce').dt.strftime('%Y-%m-%d')"
+      },
+      {
+        "version": 4,
+        "tool": "cast_numeric",
+        "args": {
+          "column": "Price",
+          "reason": "Price contains one value written as text with a dollar sign ($6.00). Converting to numeric for consistency."
+        },
+        "reason": "Price contains one value written as text with a dollar sign ($6.00). Converting to numeric for consistency.",
+        "risk": "low",
+        "approval": "auto",
+        "rows_removed": [],
+        "cells_changed": 0,
+        "summary": "Price: converted to numbers (59 text values, 0 became missing)",
+        "code": "df['Price'] = pd.to_numeric(df['Price'].astype(str).str.replace(r'[$, ]', '', regex=True), errors='coerce')"
+      }
+    ],
+    "rejected": [],
+    "oracle_decisions": [
+      {
+        "tool": "drop_duplicates",
+        "risk": "medium",
+        "approved": true,
+        "why": "moves data toward the reference"
+      },
+      {
+        "tool": "parse_dates",
+        "risk": "medium",
+        "approved": true,
+        "why": "moves data toward the reference"
+      }
+    ]
+  },
+  "corrections": 9,
+  "planted": 9,
+  "damaged_rows": 0,
+  "damaged_cells": 0,
+  "cleaned_available": true,
+  "system": "datasage-small-fix-strict",
+  "dataset": "sales",
+  "question": "What is the total revenue per month?",
+  "reference_answer": {
+    "2026-01": 10646.0,
+    "2026-02": 7478.0,
+    "2026-03": 11050.0,
+    "2026-04": 645.0,
+    "2026-05": 5359.0,
+    "2026-06": 13371.0
+  },
+  "issues_reported": [
+    [
+      "duplicates",
+      "*"
+    ],
+    [
+      "invalid_date",
+      "Date"
+    ],
+    [
+      "label_variant",
+      "Category"
+    ],
+    [
+      "text_number",
+      "Price"
+    ]
+  ]
+}

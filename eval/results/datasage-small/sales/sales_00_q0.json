@@ -1,0 +1,156 @@
+{
+  "task_id": "sales_00_q0",
+  "analysis_correct": false,
+  "completed": true,
+  "detect_tp": 3,
+  "detect_fp": 3,
+  "detect_fn": 1,
+  "tool_calls": 14,
+  "tool_errors": 0,
+  "recovered_errors": 0,
+  "approvals_asked": 4,
+  "seconds": 17.22,
+  "tokens": 66779,
+  "stop_reason": "finish",
+  "note": "",
+  "answer": {
+    "Accessories": 8.0,
+    "Electronics": 20.0,
+    "Furniture": 11.0,
+    "Office Supplies": 22.0
+  },
+  "extra": {
+    "final_summary": "The data had two main issues affecting the question: (1) a misspelling 'Office Suplies' in the Category column was corrected to 'Office Supplies' to match the allowed values; (2) two rows with negative Quantity and Revenue values were set to missing, as they violated the rule that Quantity must be at least 1 and Revenue non-negative. The cross-column inconsistency (Revenue \u2260 Quantity \u00d7 Price) in two other rows was not fixed due to user rejection. After these fixes, the analysis shows 8 orders in Accessories, 20 in Electronics, 11 in Furniture, and 22 in Office Supplies.",
+    "changes": [
+      {
+        "version": 1,
+        "tool": "normalize_labels",
+        "args": {
+          "column": "Category",
+          "mapping": {
+            "Office Suplies": "Office Supplies"
+          },
+          "reason": "Corrected misspelling 'Office Suplies' to 'Office Supplies' to match the allowed values in the rules file."
+        },
+        "reason": "Corrected misspelling 'Office Suplies' to 'Office Supplies' to match the allowed values in the rules file.",
+        "risk": "high",
+        "approval": "approved",
+        "rows_removed": [],
+        "cells_changed": 2,
+        "summary": "Category: merged 1 label variant(s), 2 cells",
+        "code": "df['Category'] = df['Category'].replace({'Office Suplies': 'Office Supplies'})"
+      },
+      {
+        "version": 2,
+        "tool": "set_missing",
+        "args": {
+          "column": "Quantity",
+          "rows": [
+            25,
+            60
+          ],
+          "reason": "Quantity must be a positive whole number (min 1) per rules; negative values are invalid."
+        },
+        "reason": "Quantity must be a positive whole number (min 1) per rules; negative values are invalid.",
+        "risk": "high",
+        "approval": "approved",
+        "rows_removed": [],
+        "cells_changed": 2,
+        "summary": "Quantity: set 2 value(s) to missing",
+        "code": "df.loc[[25, 60], 'Quantity'] = pd.NA"
+      },
+      {
+        "version": 3,
+        "tool": "set_missing",
+        "args": {
+          "column": "Revenue",
+          "rows": [
+            25,
+            60
+          ],
+          "reason": "Revenue must be non-negative (min 0) per rules; negative values are invalid."
+        },
+        "reason": "Revenue must be non-negative (min 0) per rules; negative values are invalid.",
+        "risk": "high",
+        "approval": "approved",
+        "rows_removed": [],
+        "cells_changed": 2,
+        "summary": "Revenue: set 2 value(s) to missing",
+        "code": "df.loc[[25, 60], 'Revenue'] = pd.NA"
+      }
+    ],
+    "rejected": [
+      {
+        "tool": "set_missing",
+        "risk": "high",
+        "summary": "Revenue: set 2 value(s) to missing"
+      }
+    ],
+    "oracle_decisions": [
+      {
+        "tool": "normalize_labels",
+        "risk": "high",
+        "approved": true,
+        "why": "moves data toward the reference"
+      },
+      {
+        "tool": "set_missing",
+        "risk": "high",
+        "approved": true,
+        "why": "moves data toward the reference"
+      },
+      {
+        "tool": "set_missing",
+        "risk": "high",
+        "approved": true,
+        "why": "moves data toward the reference"
+      },
+      {
+        "tool": "set_missing",
+        "risk": "high",
+        "approved": false,
+        "why": "changes row 9 column Revenue to None, expected '18'"
+      }
+    ]
+  },
+  "corrections": 5,
+  "planted": 9,
+  "damaged_rows": 0,
+  "damaged_cells": 0,
+  "cleaned_available": true,
+  "system": "datasage-small",
+  "dataset": "sales",
+  "question": "How many orders are there in each category?",
+  "reference_answer": {
+    "Accessories": 7.0,
+    "Electronics": 20.0,
+    "Furniture": 11.0,
+    "Office Supplies": 21.0
+  },
+  "issues_reported": [
+    [
+      "cross_column",
+      "Revenue"
+    ],
+    [
+      "label_variant",
+      "Category"
+    ],
+    [
+      "negative",
+      "Quantity"
+    ],
+    [
+      "negative",
+      "Revenue"
+    ],
+    [
+      "out_of_range",
+      "Quantity"
+    ],
+    [
+      "out_of_range",
+      "Revenue"
+    ]
+  ]
+}

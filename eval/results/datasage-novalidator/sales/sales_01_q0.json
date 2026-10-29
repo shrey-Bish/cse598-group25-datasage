@@ -1,0 +1,151 @@
+{
+  "task_id": "sales_01_q0",
+  "analysis_correct": true,
+  "completed": true,
+  "detect_tp": 4,
+  "detect_fp": 1,
+  "detect_fn": 1,
+  "tool_calls": 13,
+  "tool_errors": 0,
+  "recovered_errors": 0,
+  "approvals_asked": 2,
+  "seconds": 185.15,
+  "tokens": 59726,
+  "stop_reason": "finish",
+  "note": "",
+  "answer": {
+    "Accessories": 13.0,
+    "Electronics": 10.0,
+    "Furniture": 7.0,
+    "Office Supplies": 30.0
+  },
+  "extra": {
+    "final_summary": "Found and fixed: 2 duplicate rows (dropped), 3 rows with 'office supplies' (normalized to 'Office Supplies'), 2 text-formatted prices (converted to numbers), and 3 invalid negative quantities (excluded). The analysis counts orders by category on the cleaned data. There are 30 in Office Supplies, 13 in Accessories, 10 in Electronics, and 7 in Furniture.",
+    "changes": [
+      {
+        "version": 1,
+        "tool": "drop_duplicates",
+        "args": {
+          "reason": "Remove 2 exact duplicate rows to avoid double-counting orders."
+        },
+        "reason": "Remove 2 exact duplicate rows to avoid double-counting orders.",
+        "risk": "medium",
+        "approval": "approved",
+        "rows_removed": [
+          7,
+          13
+        ],
+        "cells_changed": 0,
+        "summary": "removed 2 exact duplicate row(s)",
+        "code": "df = df.drop_duplicates(keep='first')"
+      },
+      {
+        "version": 2,
+        "tool": "normalize_labels",
+        "args": {
+          "column": "Category",
+          "mapping": {
+            "office supplies": "Office Supplies"
+          },
+          "reason": "Merge case variant 'office supplies' into 'Office Supplies' as per rules file."
+        },
+        "reason": "Merge case variant 'office supplies' into 'Office Supplies' as per rules file.",
+        "risk": "low",
+        "approval": "auto",
+        "rows_removed": [],
+        "cells_changed": 3,
+        "summary": "Category: merged 1 label variant(s), 3 cells",
+        "code": "df['Category'] = df['Category'].replace({'office supplies': 'Office Supplies'})"
+      },
+      {
+        "version": 3,
+        "tool": "cast_numeric",
+        "args": {
+          "column": "Price",
+          "reason": "Convert text-formatted prices like '$350.00' to numbers so they are consistent with the rest of the column."
+        },
+        "reason": "Convert text-formatted prices like '$350.00' to numbers so they are consistent with the rest of the column.",
+        "risk": "low",
+        "approval": "auto",
+        "rows_removed": [],
+        "cells_changed": 0,
+        "summary": "Price: converted to numbers (63 text values, 0 became missing)",
+        "code": "df['Price'] = pd.to_numeric(df['Price'].astype(str).str.replace(r'[$, ]', '', regex=True), errors='coerce')"
+      },
+      {
+        "version": 4,
+        "tool": "exclude_rows",
+        "args": {
+          "rows": [
+            32,
+            53,
+            54
+          ],
+          "reason": "Exclude 3 rows with negative Quantity (-5, -6, -4) because the rules file states Quantity must be at least 1."
+        },
+        "reason": "Exclude 3 rows with negative Quantity (-5, -6, -4) because the rules file states Quantity must be at least 1.",
+        "risk": "high",
+        "approval": "approved",
+        "rows_removed": [
+          32,
+          53,
+          54
+        ],
+        "cells_changed": 0,
+        "summary": "excluded 3 row(s): [32, 53, 54]",
+        "code": "df = df.drop(index=[32, 53, 54])"
+      }
+    ],
+    "rejected": [],
+    "oracle_decisions": [
+      {
+        "tool": "drop_duplicates",
+        "risk": "medium",
+        "approved": true,
+        "why": "moves data toward the reference"
+      },
+      {
+        "tool": "exclude_rows",
+        "risk": "high",
+        "approved": true,
+        "why": "moves data toward the reference"
+      }
+    ]
+  },
+  "corrections": 10,
+  "planted": 12,
+  "damaged_rows": 0,
+  "damaged_cells": 0,
+  "cleaned_available": true,
+  "system": "datasage-novalidator",
+  "dataset": "sales",
+  "question": "How many orders are there in each category?",
+  "reference_answer": {
+    "Accessories": 13.0,
+    "Electronics": 10.0,
+    "Furniture": 7.0,
+    "Office Supplies": 30.0
+  },
+  "issues_reported": [
+    [
+      "duplicates",
+      "*"
+    ],
+    [
+      "label_variant",
+      "Category"
+    ],
+    [
+      "negative",
+      "Quantity"
+    ],
+    [
+      "out_of_range",
+      "Quantity"
+    ],
+    [
+      "text_number",
+      "Price"
+    ]
+  ]
+}

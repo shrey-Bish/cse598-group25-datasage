@@ -1,0 +1,51 @@
+{
+  "task_id": "penguinsh_05_q0",
+  "analysis_correct": true,
+  "completed": true,
+  "detect_tp": 2,
+  "detect_fp": 1,
+  "detect_fn": 2,
+  "tool_calls": 0,
+  "tool_errors": 0,
+  "recovered_errors": 0,
+  "approvals_asked": 0,
+  "seconds": 40.97,
+  "tokens": 2557,
+  "stop_reason": "done",
+  "note": "",
+  "answer": {
+    "Adelie": 189.7058823529412,
+    "Chinstrap": 195.73333333333332,
+    "Gentoo": 217.8125
+  },
+  "extra": {
+    "code": "import pandas as pd\n\ndef clean(df):\n    df = df.copy()\n    \n    # Fix label variant in sex column: standardize 'FEMALE' to 'female'\n    df['sex'] = df['sex'].replace({'FEMALE': 'female'})\n    \n    # Convert body_mass_g to numeric, coercing errors (though it should already be numeric)\n    # This ensures any stray strings are handled\n    df['body_mass_g'] = pd.to_numeric(df['body_mass_g'], errors='coerce')\n    \n    # Convert flipper_length_mm to numeric, as sample shows it might be string\n    df['flipper_length_mm'] = pd.to_numeric(df['flipper_length_mm'], errors='coerce')\n    \n    # Remove negative flipper lengths (invalid per rules: min 170)\n    df.loc[df['flipper_length_mm'] < 170, 'flipper_length_mm'] = pd.NA\n    \n    # We do not drop rows with missing sex, as the question does not involve sex\n    # Keep all rows with valid flipper_length_mm and species\n    \n    return df\n\ndef answer(df):\n    # Group by species and compute mean flipper length\n    result = df.groupby('species')['flipper_length_mm'].mean().dropna().to_dict()\n    return result"
+  },
+  "corrections": 6,
+  "planted": 10,
+  "damaged_rows": 0,
+  "damaged_cells": 0,
+  "cleaned_available": true,
+  "system": "b2",
+  "dataset": "penguins-heldout",
+  "question": "What is the average flipper length for each species?",
+  "reference_answer": {
+    "Adelie": 189.7059,
+    "Chinstrap": 195.7333,
+    "Gentoo": 217.6429
+  },
+  "issues_reported": [
+    [
+      "label_variant",
+      "sex"
+    ],
+    [
+      "negative",
+      "flipper_length_mm"
+    ],
+    [
+      "text_number",
+      "body_mass_g"
+    ]
+  ]
+}

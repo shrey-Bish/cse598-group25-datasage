@@ -1,0 +1,51 @@
+{
+  "task_id": "penguinsh_00_q0",
+  "analysis_correct": false,
+  "completed": true,
+  "detect_tp": 3,
+  "detect_fp": 0,
+  "detect_fn": 1,
+  "tool_calls": 0,
+  "tool_errors": 0,
+  "recovered_errors": 0,
+  "approvals_asked": 0,
+  "seconds": 31.42,
+  "tokens": 2526,
+  "stop_reason": "done",
+  "note": "",
+  "answer": {
+    "Biscoe": 38.58,
+    "Dream": 39.49,
+    "Torgersen": 38.76
+  },
+  "extra": {
+    "code": "import pandas as pd\n\ndef clean(df):\n    df = df.copy()\n    \n    # Fix island label variants\n    island_mapping = {\n        'Torgerson': 'Torgersen',\n        'Bisco': 'Biscoe'\n    }\n    df['island'] = df['island'].replace(island_mapping)\n    \n    # Fix sex label variants (convert to lowercase)\n    df['sex'] = df['sex'].str.lower()\n    \n    # Convert body_mass_g from text to number (remove commas)\n    df['body_mass_g'] = df['body_mass_g'].str.replace(',', '').astype(float)\n    \n    # Filter to only Adelie penguins\n    df = df[df['species'] == 'Adelie']\n    \n    return df\n\ndef answer(df):\n    # Group by island and compute average bill length\n    result = df.groupby('island')['bill_length_mm'].mean().round(2).to_dict()\n    return result"
+  },
+  "corrections": 2,
+  "planted": 6,
+  "damaged_rows": 29,
+  "damaged_cells": 0,
+  "cleaned_available": true,
+  "system": "b2",
+  "dataset": "penguins-heldout",
+  "question": "What is the average bill length by island for Adelie penguins?",
+  "reference_answer": {
+    "Biscoe": 38.58,
+    "Dream": 39.49,
+    "Torgersen": 38.3375
+  },
+  "issues_reported": [
+    [
+      "label_variant",
+      "island"
+    ],
+    [
+      "label_variant",
+      "sex"
+    ],
+    [
+      "text_number",
+      "body_mass_g"
+    ]
+  ]
+}

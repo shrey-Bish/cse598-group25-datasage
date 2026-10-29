@@ -1,0 +1,159 @@
+{
+  "task_id": "salesh_07_q0",
+  "analysis_correct": false,
+  "completed": true,
+  "detect_tp": 4,
+  "detect_fp": 1,
+  "detect_fn": 1,
+  "tool_calls": 12,
+  "tool_errors": 0,
+  "recovered_errors": 0,
+  "approvals_asked": 3,
+  "seconds": 271.22,
+  "tokens": 52626,
+  "stop_reason": "finish",
+  "note": "",
+  "answer": {
+    "Accessories": 30.6667,
+    "Electronics": 360.0,
+    "Furniture": 191.6667,
+    "Office Supplies": 11.4
+  },
+  "extra": {
+    "final_summary": "Found and fixed: 2 duplicate rows (dropped), 3 label variants in Region (normalized), 2 negative Quantity values (-5, -4) set to missing (violated rule Quantity >= 1), and 1 Revenue error (10000 corrected to 100 via Quantity * Price). Average unit price by category: Accessories $30.67, Electronics $360.00, Furniture $191.67, Office Supplies $11.40.",
+    "changes": [
+      {
+        "version": 1,
+        "tool": "drop_duplicates",
+        "args": {
+          "reason": "2 exact duplicate rows found (rows 17 and 23), keeping first occurrence"
+        },
+        "reason": "2 exact duplicate rows found (rows 17 and 23), keeping first occurrence",
+        "risk": "medium",
+        "approval": "approved",
+        "rows_removed": [
+          17,
+          23
+        ],
+        "cells_changed": 0,
+        "summary": "removed 2 exact duplicate row(s)",
+        "code": "df = df.drop_duplicates(keep='first')"
+      },
+      {
+        "version": 2,
+        "tool": "normalize_labels",
+        "args": {
+          "column": "Region",
+          "mapping": {
+            "east": "East",
+            "South ": "South",
+            "West ": "West"
+          },
+          "reason": "fix case and trailing space variants in Region"
+        },
+        "reason": "fix case and trailing space variants in Region",
+        "risk": "low",
+        "approval": "auto",
+        "rows_removed": [],
+        "cells_changed": 3,
+        "summary": "Region: merged 3 label variant(s), 3 cells",
+        "code": "df['Region'] = df['Region'].replace({'east': 'East', 'South ': 'South', 'West ': 'West'})"
+      },
+      {
+        "version": 3,
+        "tool": "set_missing",
+        "args": {
+          "column": "Quantity",
+          "rows": [
+            19,
+            34
+          ],
+          "reason": "Quantity is negative (-5 and -4), which violates the rule that quantity must be >= 1"
+        },
+        "reason": "Quantity is negative (-5 and -4), which violates the rule that quantity must be >= 1",
+        "risk": "high",
+        "approval": "approved",
+        "rows_removed": [],
+        "cells_changed": 2,
+        "summary": "Quantity: set 2 value(s) to missing",
+        "code": "df.loc[[19, 34], 'Quantity'] = pd.NA"
+      },
+      {
+        "version": 4,
+        "tool": "recompute_column",
+        "args": {
+          "column": "Revenue",
+          "expression": "Quantity * Price",
+          "rows": [
+            30
+          ],
+          "reason": "Revenue is 10000 but should be 100 (1 * 100), correcting calculation error"
+        },
+        "reason": "Revenue is 10000 but should be 100 (1 * 100), correcting calculation error",
+        "risk": "high",
+        "approval": "approved",
+        "rows_removed": [],
+        "cells_changed": 1,
+        "summary": "Revenue: recomputed as Quantity * Price on 1 row(s)",
+        "code": "df.loc[[30], 'Revenue'] = [100.0]  # Revenue = Quantity * Price"
+      }
+    ],
+    "rejected": [],
+    "oracle_decisions": [
+      {
+        "tool": "drop_duplicates",
+        "risk": "medium",
+        "approved": true,
+        "why": "moves data toward the reference"
+      },
+      {
+        "tool": "set_missing",
+        "risk": "high",
+        "approved": true,
+        "why": "moves data toward the reference"
+      },
+      {
+        "tool": "recompute_column",
+        "risk": "high",
+        "approved": true,
+        "why": "moves data toward the reference"
+      }
+    ]
+  },
+  "corrections": 8,
+  "planted": 10,
+  "damaged_rows": 0,
+  "damaged_cells": 0,
+  "cleaned_available": true,
+  "system": "datasage",
+  "dataset": "sales-heldout",
+  "question": "What is the average unit price in each category?",
+  "reference_answer": {
+    "Accessories": 30.6667,
+    "Electronics": 360.0,
+    "Furniture": 205.0,
+    "Office Supplies": 10.6667
+  },
+  "issues_reported": [
+    [
+      "cross_column",
+      "Revenue"
+    ],
+    [
+      "duplicates",
+      "*"
+    ],
+    [
+      "label_variant",
+      "Region"
+    ],
+    [
+      "negative",
+      "Quantity"
+    ],
+    [
+      "out_of_range",
+      "Quantity"
+    ]
+  ]
+}

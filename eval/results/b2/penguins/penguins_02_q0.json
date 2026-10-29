@@ -1,0 +1,63 @@
+{
+  "task_id": "penguins_02_q0",
+  "analysis_correct": false,
+  "completed": true,
+  "detect_tp": 3,
+  "detect_fp": 3,
+  "detect_fn": 1,
+  "tool_calls": 0,
+  "tool_errors": 0,
+  "recovered_errors": 0,
+  "approvals_asked": 0,
+  "seconds": 29.46,
+  "tokens": 2545,
+  "stop_reason": "done",
+  "note": "",
+  "answer": {
+    "Adelie": 3788.3928571428573,
+    "Chinstrap": 3756.25,
+    "Gentoo": 5152.884615384615
+  },
+  "extra": {
+    "code": "import pandas as pd\n\ndef clean(df):\n    # Remove exact duplicate rows\n    df = df.drop_duplicates()\n    \n    # Convert text numbers to numeric for relevant columns\n    df['flipper_length_mm'] = pd.to_numeric(df['flipper_length_mm'], errors='coerce')\n    df['body_mass_g'] = pd.to_numeric(df['body_mass_g'], errors='coerce')\n    df['year'] = pd.to_numeric(df['year'], errors='coerce')\n    \n    # Fix island label variants by stripping whitespace\n    df['island'] = df['island'].str.strip()\n    \n    # Fix negative flipper length values (invalid)\n    df.loc[df['flipper_length_mm'] < 0, 'flipper_length_mm'] = None\n    \n    return df\n\ndef answer(df):\n    # Group by species and compute average body mass\n    result = df.groupby('species')['body_mass_g'].mean().dropna().to_dict()\n    return result"
+  },
+  "corrections": 8,
+  "planted": 13,
+  "damaged_rows": 0,
+  "damaged_cells": 0,
+  "cleaned_available": true,
+  "system": "b2",
+  "dataset": "penguins",
+  "question": "What is the average body mass for each species?",
+  "reference_answer": {
+    "Adelie": 3767.5926,
+    "Chinstrap": 3752.2727,
+    "Gentoo": 5152.8846
+  },
+  "issues_reported": [
+    [
+      "duplicates",
+      "*"
+    ],
+    [
+      "label_variant",
+      "island"
+    ],
+    [
+      "negative",
+      "flipper_length_mm"
+    ],
+    [
+      "text_number",
+      "body_mass_g"
+    ],
+    [
+      "text_number",
+      "flipper_length_mm"
+    ],
+    [
+      "text_number",
+      "year"
+    ]
+  ]
+}

@@ -1,0 +1,172 @@
+{
+  "tasks": [
+    [
+      "penguins_00_q1",
+      [
+        "rule-violating rows blanked with set_missing instead of excluded",
+        "never ran a check for missing"
+      ]
+    ],
+    [
+      "penguins_08_q0",
+      [
+        "rule-violating rows blanked with set_missing instead of excluded",
+        "never ran a check for missing"
+      ]
+    ],
+    [
+      "penguins_08_q1",
+      [
+        "rule-violating rows blanked with set_missing instead of excluded",
+        "never ran a check for missing"
+      ]
+    ],
+    [
+      "penguinsh_00_q0",
+      [
+        "rule-violating rows blanked with set_missing instead of excluded"
+      ]
+    ],
+    [
+      "penguinsh_01_q0",
+      [
+        "rule-violating rows blanked with set_missing instead of excluded"
+      ]
+    ],
+    [
+      "penguinsh_01_q1",
+      [
+        "rule-violating rows blanked with set_missing instead of excluded"
+      ]
+    ],
+    [
+      "penguinsh_02_q0",
+      [
+        "rule-violating rows blanked with set_missing instead of excluded"
+      ]
+    ],
+    [
+      "penguinsh_03_q1",
+      [
+        "rule-violating rows blanked with set_missing instead of excluded",
+        "never ran a check for missing"
+      ]
+    ],
+    [
+      "penguinsh_04_q1",
+      [
+        "other (see trace)"
+      ]
+    ],
+    [
+      "penguinsh_05_q1",
+      [
+        "rule-violating rows blanked with set_missing instead of excluded",
+        "never ran a check for missing"
+      ]
+    ],
+    [
+      "penguinsh_06_q0",
+      [
+        "rule-violating rows blanked with set_missing instead of excluded",
+        "never ran a check for missing"
+      ]
+    ],
+    [
+      "penguinsh_06_q1",
+      [
+        "never ran a check for missing"
+      ]
+    ],
+    [
+      "penguinsh_07_q1",
+      [
+        "rule-violating rows blanked with set_missing instead of excluded",
+        "never ran a check for missing"
+      ]
+    ],
+    [
+      "penguinsh_09_q0",
+      [
+        "rule-violating rows blanked with set_missing instead of excluded",
+        "never ran a check for missing"
+      ]
+    ],
+    [
+      "sales_05_q0",
+      [
+        "rule-violating rows blanked with set_missing instead of excluded"
+      ]
+    ],
+    [
+      "sales_06_q1",
+      [
+        "rule-violating rows blanked with set_missing instead of excluded",
+        "never ran a check for missing"
+      ]
+    ],
+    [
+      "sales_07_q0",
+      [
+        "rule-violating rows blanked with set_missing instead of excluded"
+      ]
+    ],
+    [
+      "salesh_03_q0",
+      [
+        "never ran a check for missing",
+        "never ran a check for invalid_date",
+        "never ran a check for cross_column",
+        "stopped early: tool_budget_exhausted"
+      ]
+    ],
+    [
+      "salesh_03_q1",
+      [
+        "never ran a check for missing",
+        "never ran a check for invalid_date",
+        "never ran a check for cross_column",
+        "stopped early: tool_budget_exhausted"
+      ]
+    ],
+    [
+      "salesh_06_q0",
+      [
+        "other (see trace)"
+      ]
+    ],
+    [
+      "salesh_07_q0",
+      [
+        "rule-violating rows blanked with set_missing instead of excluded",
+        "never ran a check for missing"
+      ]
+    ]
+  ],
+  "counts": [
+    [
+      "rule-violating rows blanked with set_missing instead of excluded",
+      16
+    ],
+    [
+      "never ran a check for missing",
+      13
+    ],
+    [
+      "other (see trace)",
+      2
+    ],
+    [
+      "never ran a check for invalid_date",
+      2
+    ],
+    [
+      "never ran a check for cross_column",
+      2
+    ],
+    [
+      "stopped early: tool_budget_exhausted",
+      2
+    ]
+  ]
+}

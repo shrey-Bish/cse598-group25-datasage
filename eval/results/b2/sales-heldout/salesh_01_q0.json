@@ -1,0 +1,53 @@
+{
+  "task_id": "salesh_01_q0",
+  "analysis_correct": true,
+  "completed": true,
+  "detect_tp": 3,
+  "detect_fp": 0,
+  "detect_fn": 0,
+  "tool_calls": 0,
+  "tool_errors": 0,
+  "recovered_errors": 0,
+  "approvals_asked": 0,
+  "seconds": 15.53,
+  "tokens": 2202,
+  "stop_reason": "done",
+  "note": "",
+  "answer": {
+    "East": 60.0,
+    "North": 83.0,
+    "South": 64.0,
+    "West": 104.0
+  },
+  "extra": {
+    "code": "import pandas as pd\n\ndef clean(df):\n    # Remove exact duplicate rows\n    df = df.drop_duplicates().reset_index(drop=True)\n    \n    # Fix label variants in Category by stripping whitespace and correcting known typos\n    category_mapping = {\n        ' Furniture': 'Furniture',\n        'Furniture ': 'Furniture',\n        'Furnture': 'Furniture',\n        ' Office Supplies': 'Office Supplies',\n        'Accesories': 'Accessories'\n    }\n    df['Category'] = df['Category'].replace(category_mapping)\n    \n    # Note: Region has one missing value; we keep it for now but it will be excluded in grouping if needed\n    return df\n\ndef answer(df):\n    df_clean = clean(df)\n    # Group by Region and sum Quantity; skip rows where Region is missing\n    result = df_clean.dropna(subset=['Region']).groupby('Region')['Quantity'].sum().astype(int)\n    return result.to_dict()"
+  },
+  "corrections": 9,
+  "planted": 9,
+  "damaged_rows": 0,
+  "damaged_cells": 0,
+  "cleaned_available": true,
+  "system": "b2",
+  "dataset": "sales-heldout",
+  "question": "How many units were sold in each region?",
+  "reference_answer": {
+    "East": 60.0,
+    "North": 83.0,
+    "South": 64.0,
+    "West": 104.0
+  },
+  "issues_reported": [
+    [
+      "duplicates",
+      "*"
+    ],
+    [
+      "label_variant",
+      "Category"
+    ],
+    [
+      "missing",
+      "Region"
+    ]
+  ]
+}

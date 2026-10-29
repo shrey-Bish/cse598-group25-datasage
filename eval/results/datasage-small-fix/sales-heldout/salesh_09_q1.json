@@ -1,0 +1,161 @@
+{
+  "task_id": "salesh_09_q1",
+  "analysis_correct": true,
+  "completed": true,
+  "detect_tp": 5,
+  "detect_fp": 1,
+  "detect_fn": 0,
+  "tool_calls": 14,
+  "tool_errors": 0,
+  "recovered_errors": 0,
+  "approvals_asked": 3,
+  "seconds": 14.83,
+  "tokens": 66444,
+  "stop_reason": "finish",
+  "note": "",
+  "answer": {
+    "2026-01": 2665.0,
+    "2026-02": 6096.0,
+    "2026-03": 4160.0,
+    "2026-04": 5575.0,
+    "2026-05": 3045.0,
+    "2026-06": 9941.0
+  },
+  "extra": {
+    "final_summary": "The data had several issues affecting the question: 3 invalid dates (TBD, not-a-date) were set to missing; one row with Quantity = -7 was excluded as it violates the rule that Quantity must be >= 1; Price values with currency symbols ($300.00) were converted to numeric; and Region labels had variants (East , West, Wst) that were normalized to 'East', 'West'. After fixes, the total revenue per month was calculated. The sum of revenue for each month in 2026 is: January: $2,665, February: $6,096, March: $4,160, April: $5,575, May: $3,045, June: $9,941.",
+    "changes": [
+      {
+        "version": 1,
+        "tool": "parse_dates",
+        "args": {
+          "column": "Date",
+          "reason": "3 rows have invalid dates (TBD, not-a-date); convert to missing to preserve valid dates"
+        },
+        "reason": "3 rows have invalid dates (TBD, not-a-date); convert to missing to preserve valid dates",
+        "risk": "medium",
+        "approval": "approved",
+        "rows_removed": [],
+        "cells_changed": 3,
+        "summary": "Date: 3 invalid date(s) set to missing",
+        "code": "df['Date'] = pd.to_datetime(df['Date'], format='%Y-%m-%d', errors='coerce').dt.strftime('%Y-%m-%d')"
+      },
+      {
+        "version": 2,
+        "tool": "exclude_rows",
+        "args": {
+          "rows": [
+            34
+          ],
+          "reason": "Quantity = -7 is invalid (must be >= 1 per rules); exclude this row"
+        },
+        "reason": "Quantity = -7 is invalid (must be >= 1 per rules); exclude this row",
+        "risk": "high",
+        "approval": "approved",
+        "rows_removed": [
+          34
+        ],
+        "cells_changed": 0,
+        "summary": "excluded 1 row(s): [34]",
+        "code": "df = df.drop(index=[34])"
+      },
+      {
+        "version": 3,
+        "tool": "cast_numeric",
+        "args": {
+          "column": "Price",
+          "reason": "Price contains currency symbols ($); convert to numeric values"
+        },
+        "reason": "Price contains currency symbols ($); convert to numeric values",
+        "risk": "low",
+        "approval": "auto",
+        "rows_removed": [],
+        "cells_changed": 0,
+        "summary": "Price: converted to numbers (57 text values, 0 became missing)",
+        "code": "df['Price'] = pd.to_numeric(df['Price'].astype(str).str.replace(r'[$, ]', '', regex=True), errors='coerce')"
+      },
+      {
+        "version": 4,
+        "tool": "normalize_labels",
+        "args": {
+          "column": "Region",
+          "mapping": {
+            "East ": "East",
+            " West": "West",
+            "Wst": "West"
+          },
+          "reason": "merge case/space variants and known misspelling (Wst -> West) for consistency"
+        },
+        "reason": "merge case/space variants and known misspelling (Wst -> West) for consistency",
+        "risk": "high",
+        "approval": "approved",
+        "rows_removed": [],
+        "cells_changed": 4,
+        "summary": "Region: merged 3 label variant(s), 4 cells",
+        "code": "df['Region'] = df['Region'].replace({'East ': 'East', ' West': 'West', 'Wst': 'West'})"
+      }
+    ],
+    "rejected": [],
+    "oracle_decisions": [
+      {
+        "tool": "parse_dates",
+        "risk": "medium",
+        "approved": true,
+        "why": "moves data toward the reference"
+      },
+      {
+        "tool": "exclude_rows",
+        "risk": "high",
+        "approved": true,
+        "why": "moves data toward the reference"
+      },
+      {
+        "tool": "normalize_labels",
+        "risk": "high",
+        "approved": true,
+        "why": "moves data toward the reference"
+      }
+    ]
+  },
+  "corrections": 11,
+  "planted": 12,
+  "damaged_rows": 0,
+  "damaged_cells": 0,
+  "cleaned_available": true,
+  "system": "datasage-small-fix",
+  "dataset": "sales-heldout",
+  "question": "What is the total revenue per month?",
+  "reference_answer": {
+    "2026-01": 2665.0,
+    "2026-02": 6096.0,
+    "2026-03": 4160.0,
+    "2026-04": 5575.0,
+    "2026-05": 3045.0,
+    "2026-06": 9941.0
+  },
+  "issues_reported": [
+    [
+      "invalid_date",
+      "Date"
+    ],
+    [
+      "label_variant",
+      "Region"
+    ],
+    [
+      "missing",
+      "Region"
+    ],
+    [
+      "negative",
+      "Quantity"
+    ],
+    [
+      "out_of_range",
+      "Quantity"
+    ],
+    [
+      "text_number",
+      "Price"
+    ]
+  ]
+}

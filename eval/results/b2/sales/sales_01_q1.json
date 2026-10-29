@@ -1,0 +1,69 @@
+{
+  "task_id": "sales_01_q1",
+  "analysis_correct": false,
+  "completed": true,
+  "detect_tp": 4,
+  "detect_fp": 2,
+  "detect_fn": 1,
+  "tool_calls": 0,
+  "tool_errors": 0,
+  "recovered_errors": 0,
+  "approvals_asked": 0,
+  "seconds": 29.78,
+  "tokens": 2453,
+  "stop_reason": "done",
+  "note": "",
+  "answer": {
+    "2026-01": 4944.0,
+    "2026-02": 2792.0,
+    "2026-03": 3463.0,
+    "2026-04": 6687.0,
+    "2026-05": 3070.0,
+    "2026-06": 3882.0
+  },
+  "extra": {
+    "code": "import pandas as pd\n\ndef clean(df):\n    # Remove exact duplicate rows\n    df = df.drop_duplicates().reset_index(drop=True)\n    \n    # Fix case variant in Category\n    df['Category'] = df['Category'].str.title()\n    \n    # Convert Price from text to numeric, removing $ and other non-numeric characters\n    df['Price'] = df['Price'].astype(str).str.replace(r'[^\\d.-]', '', regex=True).astype(float)\n    \n    # Convert Quantity to numeric (it's currently string)\n    df['Quantity'] = pd.to_numeric(df['Quantity'], errors='coerce')\n    \n    # Fix negative Quantity and recalculate Revenue\n    df['Quantity'] = df['Quantity'].abs()\n    \n    # Recalculate Revenue = Quantity * Price\n    df['Revenue'] = df['Quantity'] * df['Price']\n    \n    # Ensure Date is in proper datetime format\n    df['Date'] = pd.to_datetime(df['Date'], errors='coerce')\n    \n    return df\n\ndef answer(df):\n    df = clean(df)\n    df['Month'] = df['Date'].dt.to_period('M').astype(str)\n    result = df.groupby('Month')['Revenue'].sum().round(2).to_dict()\n    return result"
+  },
+  "corrections": 9,
+  "planted": 12,
+  "damaged_rows": 0,
+  "damaged_cells": 0,
+  "cleaned_available": true,
+  "system": "b2",
+  "dataset": "sales",
+  "question": "What is the total revenue per month?",
+  "reference_answer": {
+    "2026-01": 4944.0,
+    "2026-02": 1292.0,
+    "2026-03": 3391.0,
+    "2026-04": 1287.0,
+    "2026-05": 3070.0,
+    "2026-06": 3882.0
+  },
+  "issues_reported": [
+    [
+      "cross_column",
+      "*"
+    ],
+    [
+      "duplicates",
+      "*"
+    ],
+    [
+      "label_variant",
+      "Category"
+    ],
+    [
+      "negative",
+      "Quantity"
+    ],
+    [
+      "negative",
+      "Revenue"
+    ],
+    [
+      "text_number",
+      "Price"
+    ]
+  ]
+}

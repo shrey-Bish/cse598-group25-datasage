@@ -1,0 +1,58 @@
+{
+  "task_id": "sales_02_q0",
+  "analysis_correct": true,
+  "completed": true,
+  "detect_tp": 4,
+  "detect_fp": 0,
+  "detect_fn": 0,
+  "tool_calls": 11,
+  "tool_errors": 0,
+  "recovered_errors": 0,
+  "approvals_asked": 1,
+  "seconds": 84.09,
+  "tokens": 51017,
+  "stop_reason": "finish",
+  "note": "",
+  "answer": {
+    "2026-01": 4011.0,
+    "2026-02": 15032.0,
+    "2026-03": 12418.0,
+    "2026-04": 6944.0,
+    "2026-05": 4971.0,
+    "2026-06": 4586.0
+  },
+  "corrections": 10,
+  "planted": 10,
+  "damaged_rows": 0,
+  "damaged_cells": 0,
+  "cleaned_available": true,
+  "system": "datasage",
+  "dataset": "sales",
+  "question": "What is the total revenue per month?",
+  "reference_answer": {
+    "2026-01": 4011.0,
+    "2026-02": 15032.0,
+    "2026-03": 12418.0,
+    "2026-04": 6944.0,
+    "2026-05": 4971.0,
+    "2026-06": 4586.0
+  },
+  "issues_reported": [
+    [
+      "cross_column",
+      "Revenue"
+    ],
+    [
+      "label_variant",
+      "Category"
+    ],
+    [
+      "label_variant",
+      "Region"
+    ],
+    [
+      "text_number",
+      "Price"
+    ]
+  ]
+}

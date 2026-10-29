@@ -1,0 +1,147 @@
+{
+  "task_id": "sales_02_q0",
+  "analysis_correct": true,
+  "completed": true,
+  "detect_tp": 4,
+  "detect_fp": 0,
+  "detect_fn": 0,
+  "tool_calls": 12,
+  "tool_errors": 0,
+  "recovered_errors": 0,
+  "approvals_asked": 1,
+  "seconds": 14.26,
+  "tokens": 55752,
+  "stop_reason": "finish",
+  "note": "",
+  "answer": {
+    "2026-01": 4011.0,
+    "2026-02": 15032.0,
+    "2026-03": 12418.0,
+    "2026-04": 6944.0,
+    "2026-05": 4971.0,
+    "2026-06": 4586.0
+  },
+  "extra": {
+    "final_summary": "The data had three main issues: (1) 'Category' and 'Region' columns had case and space variants that were standardized; (2) 'Price' was stored as text with dollar signs and was converted to numeric; (3) two 'Revenue' values were incorrect and were fixed using the formula 'Quantity * Price'. After these fixes, the total revenue per month was calculated as: January 2026: $4,011, February 2026: $15,032, March 2026: $12,418, April 2026: $6,944, May 2026: $4,971, June 2026: $4,586.",
+    "changes": [
+      {
+        "version": 1,
+        "tool": "normalize_labels",
+        "args": {
+          "column": "Category",
+          "mapping": {
+            "Electronics ": "Electronics",
+            " Electronics": "Electronics",
+            "Accessories ": "Accessories"
+          },
+          "reason": "Case and space variants of valid labels should be standardized."
+        },
+        "reason": "Case and space variants of valid labels should be standardized.",
+        "risk": "low",
+        "approval": "auto",
+        "rows_removed": [],
+        "cells_changed": 3,
+        "summary": "Category: merged 3 label variant(s), 3 cells",
+        "code": "df['Category'] = df['Category'].replace({'Electronics ': 'Electronics', ' Electronics': 'Electronics', 'Accessories ': 'Accessories'})"
+      },
+      {
+        "version": 2,
+        "tool": "normalize_labels",
+        "args": {
+          "column": "Region",
+          "mapping": {
+            "west": "West",
+            "east": "East",
+            "north": "North"
+          },
+          "reason": "Case and space variants of valid region labels should be standardized."
+        },
+        "reason": "Case and space variants of valid region labels should be standardized.",
+        "risk": "low",
+        "approval": "auto",
+        "rows_removed": [],
+        "cells_changed": 3,
+        "summary": "Region: merged 3 label variant(s), 3 cells",
+        "code": "df['Region'] = df['Region'].replace({'west': 'West', 'east': 'East', 'north': 'North'})"
+      },
+      {
+        "version": 3,
+        "tool": "cast_numeric",
+        "args": {
+          "column": "Price",
+          "reason": "Price is stored as text with dollar signs; convert to numeric for accurate calculation."
+        },
+        "reason": "Price is stored as text with dollar signs; convert to numeric for accurate calculation.",
+        "risk": "low",
+        "approval": "auto",
+        "rows_removed": [],
+        "cells_changed": 0,
+        "summary": "Price: converted to numbers (47 text values, 0 became missing)",
+        "code": "df['Price'] = pd.to_numeric(df['Price'].astype(str).str.replace(r'[$, ]', '', regex=True), errors='coerce')"
+      },
+      {
+        "version": 4,
+        "tool": "recompute_column",
+        "args": {
+          "column": "Revenue",
+          "expression": "Quantity * Price",
+          "rows": [
+            30,
+            33
+          ],
+          "reason": "Revenue does not match Quantity * Price; correct the values using the formula."
+        },
+        "reason": "Revenue does not match Quantity * Price; correct the values using the formula.",
+        "risk": "high",
+        "approval": "approved",
+        "rows_removed": [],
+        "cells_changed": 2,
+        "summary": "Revenue: recomputed as Quantity * Price on 2 row(s)",
+        "code": "df.loc[[30, 33], 'Revenue'] = [150.0, 225.0]  # Revenue = Quantity * Price"
+      }
+    ],
+    "rejected": [],
+    "oracle_decisions": [
+      {
+        "tool": "recompute_column",
+        "risk": "high",
+        "approved": true,
+        "why": "moves data toward the reference"
+      }
+    ]
+  },
+  "corrections": 10,
+  "planted": 10,
+  "damaged_rows": 0,
+  "damaged_cells": 0,
+  "cleaned_available": true,
+  "system": "datasage-small",
+  "dataset": "sales",
+  "question": "What is the total revenue per month?",
+  "reference_answer": {
+    "2026-01": 4011.0,
+    "2026-02": 15032.0,
+    "2026-03": 12418.0,
+    "2026-04": 6944.0,
+    "2026-05": 4971.0,
+    "2026-06": 4586.0
+  },
+  "issues_reported": [
+    [
+      "cross_column",
+      "Revenue"
+    ],
+    [
+      "label_variant",
+      "Category"
+    ],
+    [
+      "label_variant",
+      "Region"
+    ],
+    [
+      "text_number",
+      "Price"
+    ]
+  ]
+}

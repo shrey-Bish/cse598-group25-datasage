@@ -1,0 +1,61 @@
+{
+  "task_id": "sales_04_q1",
+  "analysis_correct": true,
+  "completed": true,
+  "detect_tp": 4,
+  "detect_fp": 1,
+  "detect_fn": 0,
+  "tool_calls": 0,
+  "tool_errors": 0,
+  "recovered_errors": 0,
+  "approvals_asked": 0,
+  "seconds": 23.37,
+  "tokens": 2381,
+  "stop_reason": "done",
+  "note": "",
+  "answer": {
+    "Accessories": 1785.0,
+    "Electronics": 25150.0,
+    "Furniture": 10045.0,
+    "Office Supplies": 456.0
+  },
+  "extra": {
+    "code": "import pandas as pd\n\ndef clean(df):\n    df = df.copy()\n    \n    # Fix Price: remove non-numeric characters and convert to float\n    df['Price'] = df['Price'].astype(str).str.replace(r'[^0-9.]', '', regex=True).astype(float)\n    \n    # Fix Category: strip whitespace\n    df['Category'] = df['Category'].astype(str).str.strip()\n    \n    # Fix Region: strip whitespace and correct obvious typos\n    df['Region'] = df['Region'].astype(str).str.strip()\n    region_mapping = {'Nort': 'North', 'Suoth': 'South', 'Wst': 'West'}\n    df['Region'] = df['Region'].replace(region_mapping)\n    \n    # Recalculate Revenue to ensure consistency\n    df['Revenue'] = df['Quantity'] * df['Price']\n    \n    return df\n\ndef answer(df):\n    df_clean = clean(df)\n    result = df_clean.groupby('Category')['Revenue'].sum().round(2).to_dict()\n    return result"
+  },
+  "corrections": 8,
+  "planted": 8,
+  "damaged_rows": 0,
+  "damaged_cells": 0,
+  "cleaned_available": true,
+  "system": "b2",
+  "dataset": "sales",
+  "question": "What is the total revenue by category?",
+  "reference_answer": {
+    "Accessories": 1785.0,
+    "Electronics": 25150.0,
+    "Furniture": 10045.0,
+    "Office Supplies": 456.0
+  },
+  "issues_reported": [
+    [
+      "cross_column",
+      "*"
+    ],
+    [
+      "label_variant",
+      "Category"
+    ],
+    [
+      "label_variant",
+      "Region"
+    ],
+    [
+      "missing",
+      "Region"
+    ],
+    [
+      "text_number",
+      "Price"
+    ]
+  ]
+}

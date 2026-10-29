@@ -1,0 +1,65 @@
+{
+  "task_id": "sales_05_q1",
+  "analysis_correct": false,
+  "completed": true,
+  "detect_tp": 4,
+  "detect_fp": 2,
+  "detect_fn": 1,
+  "tool_calls": 0,
+  "tool_errors": 0,
+  "recovered_errors": 0,
+  "approvals_asked": 0,
+  "seconds": 19.91,
+  "tokens": 2212,
+  "stop_reason": "done",
+  "note": "",
+  "answer": {
+    "Accessories": 33.0,
+    "Electronics": 494.29,
+    "Furniture": 135.0,
+    "Office Supplies": 12.0
+  },
+  "extra": {
+    "code": "import pandas as pd\n\ndef clean(df):\n    # Remove exact duplicate rows\n    df = df.drop_duplicates().reset_index(drop=True)\n    \n    # Clean Category: strip whitespace and standardize case\n    df['Category'] = df['Category'].str.strip().str.title()\n    \n    # Clean Region: fix known typos\n    region_mapping = {'Wst': 'West', 'Suoth': 'South'}\n    df['Region'] = df['Region'].replace(region_mapping)\n    \n    # Fix negative Quantity and recalculate Revenue\n    df['Quantity'] = df['Quantity'].abs()\n    \n    # Recalculate Revenue to ensure consistency\n    df['Revenue'] = df['Quantity'] * df['Price']\n    \n    return df\n\ndef answer(df):\n    result = df.groupby('Category')['Price'].mean().round(2).to_dict()\n    return result"
+  },
+  "corrections": 10,
+  "planted": 12,
+  "damaged_rows": 0,
+  "damaged_cells": 0,
+  "cleaned_available": true,
+  "system": "b2",
+  "dataset": "sales",
+  "question": "What is the average unit price in each category?",
+  "reference_answer": {
+    "Accessories": 33.0,
+    "Electronics": 463.0769,
+    "Furniture": 130.9091,
+    "Office Supplies": 12.0
+  },
+  "issues_reported": [
+    [
+      "cross_column",
+      "*"
+    ],
+    [
+      "duplicates",
+      "*"
+    ],
+    [
+      "label_variant",
+      "Category"
+    ],
+    [
+      "label_variant",
+      "Region"
+    ],
+    [
+      "negative",
+      "Quantity"
+    ],
+    [
+      "negative",
+      "Revenue"
+    ]
+  ]
+}

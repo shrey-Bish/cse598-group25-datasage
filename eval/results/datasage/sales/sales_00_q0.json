@@ -1,0 +1,50 @@
+{
+  "task_id": "sales_00_q0",
+  "analysis_correct": true,
+  "completed": true,
+  "detect_tp": 2,
+  "detect_fp": 1,
+  "detect_fn": 2,
+  "tool_calls": 9,
+  "tool_errors": 0,
+  "recovered_errors": 0,
+  "approvals_asked": 3,
+  "seconds": 135.07,
+  "tokens": 38543,
+  "stop_reason": "finish",
+  "note": "",
+  "answer": {
+    "Accessories": 7.0,
+    "Electronics": 20.0,
+    "Furniture": 11.0,
+    "Office Supplies": 21.0
+  },
+  "corrections": 9,
+  "planted": 9,
+  "damaged_rows": 0,
+  "damaged_cells": 0,
+  "cleaned_available": true,
+  "system": "datasage",
+  "dataset": "sales",
+  "question": "How many orders are there in each category?",
+  "reference_answer": {
+    "Accessories": 7.0,
+    "Electronics": 20.0,
+    "Furniture": 11.0,
+    "Office Supplies": 21.0
+  },
+  "issues_reported": [
+    [
+      "cross_column",
+      "Revenue"
+    ],
+    [
+      "label_variant",
+      "Category"
+    ],
+    [
+      "out_of_range",
+      "Quantity"
+    ]
+  ]
+}

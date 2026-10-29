@@ -1,0 +1,57 @@
+{
+  "task_id": "sales_04_q0",
+  "analysis_correct": true,
+  "completed": true,
+  "detect_tp": 4,
+  "detect_fp": 0,
+  "detect_fn": 0,
+  "tool_calls": 0,
+  "tool_errors": 0,
+  "recovered_errors": 0,
+  "approvals_asked": 0,
+  "seconds": 19.22,
+  "tokens": 2316,
+  "stop_reason": "done",
+  "note": "",
+  "answer": {
+    "Accessories": 13.0,
+    "Office Supplies": 12.0,
+    "Electronics": 12.0,
+    "Furniture": 11.0
+  },
+  "extra": {
+    "code": "import pandas as pd\n\ndef clean(df):\n    # Fix Price: remove non-numeric characters and convert to float\n    df['Price'] = df['Price'].astype(str).str.replace(r'[^0-9.]', '', regex=True).astype(float)\n    \n    # Fix Category: strip whitespace and standardize\n    df['Category'] = df['Category'].astype(str).str.strip()\n    \n    # Fix Region: correct typos and standardize\n    region_mapping = {'Nort': 'North', 'Suoth': 'South', 'Wst': 'West'}\n    df['Region'] = df['Region'].map(region_mapping).fillna(df['Region'])\n    \n    return df\n\ndef answer(df):\n    df_clean = clean(df)\n    result = df_clean['Category'].value_counts().to_dict()\n    return result"
+  },
+  "corrections": 8,
+  "planted": 8,
+  "damaged_rows": 0,
+  "damaged_cells": 0,
+  "cleaned_available": true,
+  "system": "b2",
+  "dataset": "sales",
+  "question": "How many orders are there in each category?",
+  "reference_answer": {
+    "Accessories": 13.0,
+    "Electronics": 12.0,
+    "Furniture": 11.0,
+    "Office Supplies": 12.0
+  },
+  "issues_reported": [
+    [
+      "label_variant",
+      "Category"
+    ],
+    [
+      "label_variant",
+      "Region"
+    ],
+    [
+      "missing",
+      "Region"
+    ],
+    [
+      "text_number",
+      "Price"
+    ]
+  ]
+}

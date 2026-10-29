@@ -1,0 +1,104 @@
+{
+  "tasks": [
+    [
+      "penguins_00_q0",
+      [
+        "checked out_of_range on other columns but not the one with the error"
+      ]
+    ],
+    [
+      "penguins_05_q1",
+      [
+        "checked out_of_range on other columns but not the one with the error",
+        "never ran a check for missing"
+      ]
+    ],
+    [
+      "penguins_06_q0",
+      [
+        "never ran a check for out_of_range"
+      ]
+    ],
+    [
+      "penguinsh_03_q0",
+      [
+        "checked label_variant on other columns but not the one with the error",
+        "never ran a check for duplicates"
+      ]
+    ],
+    [
+      "penguinsh_03_q1",
+      [
+        "rule-violating rows left in the table",
+        "checked label_variant on other columns but not the one with the error",
+        "never ran a check for out_of_range"
+      ]
+    ],
+    [
+      "penguinsh_06_q0",
+      [
+        "never ran a check for missing",
+        "checked out_of_range on other columns but not the one with the error"
+      ]
+    ],
+    [
+      "penguinsh_07_q1",
+      [
+        "never ran a check for missing",
+        "checked out_of_range on other columns but not the one with the error"
+      ]
+    ],
+    [
+      "sales_06_q0",
+      [
+        "never ran a check for invalid_date"
+      ]
+    ],
+    [
+      "salesh_01_q0",
+      [
+        "other (see trace)"
+      ]
+    ],
+    [
+      "salesh_02_q0",
+      [
+        "never ran a check for invalid_date"
+      ]
+    ]
+  ],
+  "counts": [
+    [
+      "checked out_of_range on other columns but not the one with the error",
+      4
+    ],
+    [
+      "never ran a check for missing",
+      3
+    ],
+    [
+      "never ran a check for out_of_range",
+      2
+    ],
+    [
+      "checked label_variant on other columns but not the one with the error",
+      2
+    ],
+    [
+      "never ran a check for invalid_date",
+      2
+    ],
+    [
+      "never ran a check for duplicates",
+      1
+    ],
+    [
+      "rule-violating rows left in the table",
+      1
+    ],
+    [
+      "other (see trace)",
+      1
+    ]
+  ]
+}

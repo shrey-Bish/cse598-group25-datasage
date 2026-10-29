@@ -1,0 +1,143 @@
+{
+  "task_id": "sales_02_q1",
+  "analysis_correct": true,
+  "completed": true,
+  "detect_tp": 4,
+  "detect_fp": 0,
+  "detect_fn": 0,
+  "tool_calls": 11,
+  "tool_errors": 0,
+  "recovered_errors": 0,
+  "approvals_asked": 1,
+  "seconds": 161.17,
+  "tokens": 51695,
+  "stop_reason": "finish",
+  "note": "",
+  "answer": {
+    "Accessories": 7.0,
+    "Electronics": 18.0,
+    "Furniture": 12.0,
+    "Office Supplies": 10.0
+  },
+  "extra": {
+    "final_summary": "Found and fixed label variants in Category and Region (leading/trailing spaces and case differences). Converted Price from text (with $) to numeric. Found and corrected two Revenue values (rows 30 and 33) that were 100x too high; recomputed using Quantity * Price. Answer: Accessories: 7, Electronics: 18, Furniture: 12, Office Supplies: 10.",
+    "changes": [
+      {
+        "version": 1,
+        "tool": "normalize_labels",
+        "args": {
+          "column": "Category",
+          "mapping": {
+            "Electronics ": "Electronics",
+            " Electronics": "Electronics",
+            "Accessories ": "Accessories"
+          },
+          "reason": "Fix trailing/leading spaces in Category labels to match allowed values."
+        },
+        "reason": "Fix trailing/leading spaces in Category labels to match allowed values.",
+        "risk": "low",
+        "approval": "auto",
+        "rows_removed": [],
+        "cells_changed": 3,
+        "summary": "Category: merged 3 label variant(s), 3 cells",
+        "code": "df['Category'] = df['Category'].replace({'Electronics ': 'Electronics', ' Electronics': 'Electronics', 'Accessories ': 'Accessories'})"
+      },
+      {
+        "version": 2,
+        "tool": "normalize_labels",
+        "args": {
+          "column": "Region",
+          "mapping": {
+            "west": "West",
+            "east": "East",
+            "north": "North"
+          },
+          "reason": "Standardize region names to title case to match allowed values."
+        },
+        "reason": "Standardize region names to title case to match allowed values.",
+        "risk": "low",
+        "approval": "auto",
+        "rows_removed": [],
+        "cells_changed": 3,
+        "summary": "Region: merged 3 label variant(s), 3 cells",
+        "code": "df['Region'] = df['Region'].replace({'west': 'West', 'east': 'East', 'north': 'North'})"
+      },
+      {
+        "version": 3,
+        "tool": "cast_numeric",
+        "args": {
+          "column": "Price",
+          "reason": "Convert price values with dollar signs to numeric for correct calculation and validation."
+        },
+        "reason": "Convert price values with dollar signs to numeric for correct calculation and validation.",
+        "risk": "low",
+        "approval": "auto",
+        "rows_removed": [],
+        "cells_changed": 0,
+        "summary": "Price: converted to numbers (47 text values, 0 became missing)",
+        "code": "df['Price'] = pd.to_numeric(df['Price'].astype(str).str.replace(r'[$, ]', '', regex=True), errors='coerce')"
+      },
+      {
+        "version": 4,
+        "tool": "recompute_column",
+        "args": {
+          "column": "Revenue",
+          "expression": "Quantity * Price",
+          "rows": [
+            30,
+            33
+          ],
+          "reason": "Correct Revenue values that were incorrectly entered as 100x their correct amount (e.g., 15000 instead of 150)."
+        },
+        "reason": "Correct Revenue values that were incorrectly entered as 100x their correct amount (e.g., 15000 instead of 150).",
+        "risk": "high",
+        "approval": "approved",
+        "rows_removed": [],
+        "cells_changed": 2,
+        "summary": "Revenue: recomputed as Quantity * Price on 2 row(s)",
+        "code": "df.loc[[30, 33], 'Revenue'] = [150.0, 225.0]  # Revenue = Quantity * Price"
+      }
+    ],
+    "rejected": [],
+    "oracle_decisions": [
+      {
+        "tool": "recompute_column",
+        "risk": "high",
+        "approved": true,
+        "why": "moves data toward the reference"
+      }
+    ]
+  },
+  "corrections": 10,
+  "planted": 10,
+  "damaged_rows": 0,
+  "damaged_cells": 0,
+  "cleaned_available": true,
+  "system": "datasage-fix",
+  "dataset": "sales",
+  "question": "How many orders are there in each category?",
+  "reference_answer": {
+    "Accessories": 7.0,
+    "Electronics": 18.0,
+    "Furniture": 12.0,
+    "Office Supplies": 10.0
+  },
+  "issues_reported": [
+    [
+      "cross_column",
+      "Revenue"
+    ],
+    [
+      "label_variant",
+      "Category"
+    ],
+    [
+      "label_variant",
+      "Region"
+    ],
+    [
+      "text_number",
+      "Price"
+    ]
+  ]
+}

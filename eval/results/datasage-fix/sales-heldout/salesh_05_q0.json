@@ -1,0 +1,159 @@
+{
+  "task_id": "salesh_05_q0",
+  "analysis_correct": true,
+  "completed": true,
+  "detect_tp": 4,
+  "detect_fp": 1,
+  "detect_fn": 0,
+  "tool_calls": 13,
+  "tool_errors": 0,
+  "recovered_errors": 0,
+  "approvals_asked": 3,
+  "seconds": 163.54,
+  "tokens": 61153,
+  "stop_reason": "finish",
+  "note": "",
+  "answer": {
+    "East": 94.0,
+    "North": 37.0,
+    "South": 78.0,
+    "West": 72.0
+  },
+  "extra": {
+    "final_summary": "Found and fixed key data issues affecting the question. Excluded row 44 due to invalid negative Quantity (-5). Converted Price from text (e.g. '$900.00') to numeric. Normalized Region variants: 'south', 'Suoth' \u2192 'South'; 'west', 'Wst' \u2192 'West'. Set 3 missing Region values to missing. Answer: East sold 94 units, North 37, South 78, West 72.",
+    "changes": [
+      {
+        "version": 1,
+        "tool": "exclude_rows",
+        "args": {
+          "rows": [
+            44
+          ],
+          "reason": "Quantity is -5, which is invalid per rules (must be >= 1). This row is clearly an error and should be excluded."
+        },
+        "reason": "Quantity is -5, which is invalid per rules (must be >= 1). This row is clearly an error and should be excluded.",
+        "risk": "high",
+        "approval": "approved",
+        "rows_removed": [
+          44
+        ],
+        "cells_changed": 0,
+        "summary": "excluded 1 row(s): [44]",
+        "code": "df = df.drop(index=[44])"
+      },
+      {
+        "version": 2,
+        "tool": "cast_numeric",
+        "args": {
+          "column": "Price",
+          "reason": "Price is stored as text in some rows (e.g. '$900.00'). Convert to numeric to ensure correct calculations."
+        },
+        "reason": "Price is stored as text in some rows (e.g. '$900.00'). Convert to numeric to ensure correct calculations.",
+        "risk": "low",
+        "approval": "auto",
+        "rows_removed": [],
+        "cells_changed": 0,
+        "summary": "Price: converted to numbers (61 text values, 0 became missing)",
+        "code": "df['Price'] = pd.to_numeric(df['Price'].astype(str).str.replace(r'[$, ]', '', regex=True), errors='coerce')"
+      },
+      {
+        "version": 3,
+        "tool": "normalize_labels",
+        "args": {
+          "column": "Region",
+          "mapping": {
+            "south": "South",
+            "west": "West",
+            "Wst": "West",
+            "Suoth": "South"
+          },
+          "reason": "Fix case and spelling variants in Region: 'south' and 'Suoth' \u2192 'South', 'west' and 'Wst' \u2192 'West' per allowed values in rules."
+        },
+        "reason": "Fix case and spelling variants in Region: 'south' and 'Suoth' \u2192 'South', 'west' and 'Wst' \u2192 'West' per allowed values in rules.",
+        "risk": "high",
+        "approval": "approved",
+        "rows_removed": [],
+        "cells_changed": 4,
+        "summary": "Region: merged 4 label variant(s), 4 cells",
+        "code": "df['Region'] = df['Region'].replace({'south': 'South', 'west': 'West', 'Wst': 'West', 'Suoth': 'South'})"
+      },
+      {
+        "version": 4,
+        "tool": "set_missing",
+        "args": {
+          "column": "Region",
+          "rows": [
+            8,
+            48,
+            57
+          ],
+          "reason": "Region is missing in rows 8, 48, 57. These rows cannot be grouped by region, so set to missing for now."
+        },
+        "reason": "Region is missing in rows 8, 48, 57. These rows cannot be grouped by region, so set to missing for now.",
+        "risk": "high",
+        "approval": "approved",
+        "rows_removed": [],
+        "cells_changed": 0,
+        "summary": "Region: set 3 value(s) to missing",
+        "code": "df.loc[[8, 48, 57], 'Region'] = pd.NA"
+      }
+    ],
+    "rejected": [],
+    "oracle_decisions": [
+      {
+        "tool": "exclude_rows",
+        "risk": "high",
+        "approved": true,
+        "why": "moves data toward the reference"
+      },
+      {
+        "tool": "normalize_labels",
+        "risk": "high",
+        "approved": true,
+        "why": "moves data toward the reference"
+      },
+      {
+        "tool": "set_missing",
+        "risk": "high",
+        "approved": true,
+        "why": "moves data toward the reference"
+      }
+    ]
+  },
+  "corrections": 10,
+  "planted": 10,
+  "damaged_rows": 0,
+  "damaged_cells": 0,
+  "cleaned_available": true,
+  "system": "datasage-fix",
+  "dataset": "sales-heldout",
+  "question": "How many units were sold in each region?",
+  "reference_answer": {
+    "East": 94.0,
+    "North": 37.0,
+    "South": 78.0,
+    "West": 72.0
+  },
+  "issues_reported": [
+    [
+      "label_variant",
+      "Region"
+    ],
+    [
+      "missing",
+      "Region"
+    ],
+    [
+      "negative",
+      "Quantity"
+    ],
+    [
+      "out_of_range",
+      "Quantity"
+    ],
+    [
+      "text_number",
+      "Price"
+    ]
+  ]
+}

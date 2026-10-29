@@ -1,0 +1,53 @@
+{
+  "task_id": "salesh_06_q0",
+  "analysis_correct": true,
+  "completed": true,
+  "detect_tp": 3,
+  "detect_fp": 0,
+  "detect_fn": 0,
+  "tool_calls": 0,
+  "tool_errors": 0,
+  "recovered_errors": 0,
+  "approvals_asked": 0,
+  "seconds": 32.05,
+  "tokens": 2470,
+  "stop_reason": "done",
+  "note": "",
+  "answer": {
+    "East": 28.0,
+    "North": 40.0,
+    "South": 53.0,
+    "West": 62.0
+  },
+  "extra": {
+    "code": "import pandas as pd\n\ndef clean(df):\n    # Fix Price: remove $ and convert to numeric\n    df['Price'] = df['Price'].astype(str).str.replace('$', '', regex=False).astype(float)\n    \n    # Fix Region: standardize to title case and correct obvious typos\n    region_mapping = {\n        'north': 'North', 'Nort': 'North',\n        'east': 'East', 'Suoth': 'South',\n        'Wst': 'West'\n    }\n    df['Region'] = df['Region'].str.strip().str.title()\n    df['Region'] = df['Region'].replace(region_mapping)\n    \n    # Fix Date: correct invalid format (e.g., '2026-14-01' -> likely '2026-01-14' or similar)\n    # Since we can't be sure, parse with errors='coerce' and drop invalid dates\n    # But for aggregation by region, we don't need valid dates, so just leave as is for now\n    # However, ensure it's in proper format if possible\n    df['Date'] = pd.to_datetime(df['Date'], format='%Y-%m-%d', errors='coerce')\n    \n    # Recompute Revenue to ensure consistency\n    df['Revenue'] = df['Quantity'] * df['Price']\n    \n    return df\n\ndef answer(df):\n    df_clean = clean(df)\n    # Group by Region and sum Quantity\n    result = df_clean.groupby('Region')['Quantity'].sum().dropna()\n    return result.to_dict()"
+  },
+  "corrections": 12,
+  "planted": 12,
+  "damaged_rows": 0,
+  "damaged_cells": 0,
+  "cleaned_available": true,
+  "system": "b2",
+  "dataset": "sales-heldout",
+  "question": "How many units were sold in each region?",
+  "reference_answer": {
+    "East": 28.0,
+    "North": 40.0,
+    "South": 53.0,
+    "West": 62.0
+  },
+  "issues_reported": [
+    [
+      "invalid_date",
+      "Date"
+    ],
+    [
+      "label_variant",
+      "Region"
+    ],
+    [
+      "text_number",
+      "Price"
+    ]
+  ]
+}

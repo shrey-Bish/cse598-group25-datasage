@@ -1,0 +1,61 @@
+{
+  "task_id": "sales_03_q0",
+  "analysis_correct": true,
+  "completed": true,
+  "detect_tp": 3,
+  "detect_fp": 2,
+  "detect_fn": 1,
+  "tool_calls": 0,
+  "tool_errors": 0,
+  "recovered_errors": 0,
+  "approvals_asked": 0,
+  "seconds": 23.38,
+  "tokens": 2412,
+  "stop_reason": "done",
+  "note": "",
+  "answer": {
+    "East": 5100.0,
+    "North": 13920.0,
+    "South": 4240.0,
+    "West": 960.0
+  },
+  "extra": {
+    "code": "import pandas as pd\n\ndef clean(df):\n    df = df.copy()\n    \n    # Fix Price: remove non-numeric characters and convert to float\n    df['Price'] = df['Price'].astype(str).str.replace(r'[^0-9.]', '', regex=True).astype(float)\n    \n    # Fix Quantity: convert to integer, keep negative for now but will validate\n    df['Quantity'] = df['Quantity'].astype(int)\n    \n    # Fix Date: invalid future dates; assume typo in year, correct 2026 -> 2023\n    df['Date'] = df['Date'].str.replace('2026', '2023', regex=False)\n    \n    # Recompute Revenue = Quantity * Price\n    df['Revenue'] = df['Quantity'] * df['Price']\n    \n    # Ensure Quantity is positive as per rules\n    df.loc[df['Quantity'] < 1, 'Quantity'] = 1\n    df['Revenue'] = df['Quantity'] * df['Price']\n    \n    return df\n\ndef answer(df):\n    df = df[df['Category'] == 'Electronics']\n    result = df.groupby('Region')['Revenue'].sum().round(2)\n    return result.to_dict()"
+  },
+  "corrections": 4,
+  "planted": 8,
+  "damaged_rows": 0,
+  "damaged_cells": 50,
+  "cleaned_available": true,
+  "system": "b2",
+  "dataset": "sales",
+  "question": "What is the total revenue by region for Electronics?",
+  "reference_answer": {
+    "East": 5100.0,
+    "North": 13920.0,
+    "South": 4240.0,
+    "West": 960.0
+  },
+  "issues_reported": [
+    [
+      "cross_column",
+      "*"
+    ],
+    [
+      "invalid_date",
+      "Date"
+    ],
+    [
+      "negative",
+      "Quantity"
+    ],
+    [
+      "negative",
+      "Revenue"
+    ],
+    [
+      "text_number",
+      "Price"
+    ]
+  ]
+}

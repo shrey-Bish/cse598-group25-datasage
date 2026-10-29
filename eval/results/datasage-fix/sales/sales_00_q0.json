@@ -1,0 +1,139 @@
+{
+  "task_id": "sales_00_q0",
+  "analysis_correct": true,
+  "completed": true,
+  "detect_tp": 3,
+  "detect_fp": 1,
+  "detect_fn": 1,
+  "tool_calls": 10,
+  "tool_errors": 0,
+  "recovered_errors": 0,
+  "approvals_asked": 3,
+  "seconds": 136.48,
+  "tokens": 44012,
+  "stop_reason": "finish",
+  "note": "",
+  "answer": {
+    "Accessories": 7.0,
+    "Electronics": 20.0,
+    "Furniture": 11.0,
+    "Office Supplies": 21.0
+  },
+  "extra": {
+    "final_summary": "Found and fixed three data issues affecting the question. First, two rows (25 and 60) had negative Quantity and Revenue, which violates the rule that Quantity must be at least 1; these rows were excluded. Second, the category 'Office Suplies' was a misspelling of 'Office Supplies' and was corrected. Third, two rows (9 and 36) had Revenue values that did not match Quantity * Price; these were corrected using the formula. After these fixes, the analysis shows: Accessories: 7 orders, Electronics: 20 orders, Furniture: 11 orders, Office Supplies: 21 orders.",
+    "changes": [
+      {
+        "version": 1,
+        "tool": "exclude_rows",
+        "args": {
+          "rows": [
+            25,
+            60
+          ],
+          "reason": "Quantity and Revenue are negative, but rules state Quantity must be at least 1 and Revenue is derived from positive Quantity and Price."
+        },
+        "reason": "Quantity and Revenue are negative, but rules state Quantity must be at least 1 and Revenue is derived from positive Quantity and Price.",
+        "risk": "high",
+        "approval": "approved",
+        "rows_removed": [
+          25,
+          60
+        ],
+        "cells_changed": 0,
+        "summary": "excluded 2 row(s): [25, 60]",
+        "code": "df = df.drop(index=[25, 60])"
+      },
+      {
+        "version": 2,
+        "tool": "normalize_labels",
+        "args": {
+          "column": "Category",
+          "mapping": {
+            "Office Suplies": "Office Supplies"
+          },
+          "reason": "Correcting spelling of 'Office Supplies' based on rules and label variant check."
+        },
+        "reason": "Correcting spelling of 'Office Supplies' based on rules and label variant check.",
+        "risk": "high",
+        "approval": "approved",
+        "rows_removed": [],
+        "cells_changed": 2,
+        "summary": "Category: merged 1 label variant(s), 2 cells",
+        "code": "df['Category'] = df['Category'].replace({'Office Suplies': 'Office Supplies'})"
+      },
+      {
+        "version": 3,
+        "tool": "recompute_column",
+        "args": {
+          "column": "Revenue",
+          "expression": "Quantity * Price",
+          "rows": [
+            9,
+            36
+          ],
+          "reason": "Revenue does not match Quantity * Price for these rows; correcting based on formula rule."
+        },
+        "reason": "Revenue does not match Quantity * Price for these rows; correcting based on formula rule.",
+        "risk": "high",
+        "approval": "approved",
+        "rows_removed": [],
+        "cells_changed": 2,
+        "summary": "Revenue: recomputed as Quantity * Price on 2 row(s)",
+        "code": "df.loc[[9, 36], 'Revenue'] = [18.0, 18.0]  # Revenue = Quantity * Price"
+      }
+    ],
+    "rejected": [],
+    "oracle_decisions": [
+      {
+        "tool": "exclude_rows",
+        "risk": "high",
+        "approved": true,
+        "why": "moves data toward the reference"
+      },
+      {
+        "tool": "normalize_labels",
+        "risk": "high",
+        "approved": true,
+        "why": "moves data toward the reference"
+      },
+      {
+        "tool": "recompute_column",
+        "risk": "high",
+        "approved": true,
+        "why": "moves data toward the reference"
+      }
+    ]
+  },
+  "corrections": 9,
+  "planted": 9,
+  "damaged_rows": 0,
+  "damaged_cells": 0,
+  "cleaned_available": true,
+  "system": "datasage-fix",
+  "dataset": "sales",
+  "question": "How many orders are there in each category?",
+  "reference_answer": {
+    "Accessories": 7.0,
+    "Electronics": 20.0,
+    "Furniture": 11.0,
+    "Office Supplies": 21.0
+  },
+  "issues_reported": [
+    [
+      "cross_column",
+      "Revenue"
+    ],
+    [
+      "label_variant",
+      "Category"
+    ],
+    [
+      "negative",
+      "Quantity"
+    ],
+    [
+      "negative",
+      "Revenue"
+    ]
+  ]
+}

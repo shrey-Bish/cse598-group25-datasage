@@ -1,0 +1,69 @@
+{
+  "tasks": [
+    [
+      "penguinsh_07_q1",
+      [
+        "never ran a check for missing",
+        "checked out_of_range on other columns but not the one with the error"
+      ]
+    ],
+    [
+      "salesh_01_q1",
+      [
+        "other (see trace)"
+      ]
+    ],
+    [
+      "salesh_03_q0",
+      [
+        "never ran a check for missing",
+        "never ran a check for invalid_date",
+        "never ran a check for cross_column",
+        "never ran a check for duplicates",
+        "stopped early: tool_budget_exhausted"
+      ]
+    ],
+    [
+      "salesh_06_q0",
+      [
+        "other (see trace)"
+      ]
+    ],
+    [
+      "salesh_06_q1",
+      [
+        "other (see trace)"
+      ]
+    ]
+  ],
+  "counts": [
+    [
+      "other (see trace)",
+      3
+    ],
+    [
+      "never ran a check for missing",
+      2
+    ],
+    [
+      "checked out_of_range on other columns but not the one with the error",
+      1
+    ],
+    [
+      "never ran a check for invalid_date",
+      1
+    ],
+    [
+      "never ran a check for cross_column",
+      1
+    ],
+    [
+      "never ran a check for duplicates",
+      1
+    ],
+    [
+      "stopped early: tool_budget_exhausted",
+      1
+    ]
+  ]
+}

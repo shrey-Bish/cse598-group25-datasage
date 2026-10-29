@@ -1,0 +1,124 @@
+{
+  "task_id": "salesh_08_q0",
+  "analysis_correct": true,
+  "completed": true,
+  "detect_tp": 3,
+  "detect_fp": 0,
+  "detect_fn": 1,
+  "tool_calls": 11,
+  "tool_errors": 1,
+  "recovered_errors": 1,
+  "approvals_asked": 2,
+  "seconds": 168.65,
+  "tokens": 47644,
+  "stop_reason": "finish",
+  "note": "",
+  "answer": {
+    "Accessories": 33.3333,
+    "Electronics": 397.6923,
+    "Furniture": 207.8125,
+    "Office Supplies": 12.6667
+  },
+  "extra": {
+    "final_summary": "Found and fixed: 1 duplicate row (dropped), 3 Region values with extra spaces (normalized), and 2 'Furnture' entries (corrected to 'Furniture'). The Revenue column was verified to equal Quantity * Price. Average unit price by category: Accessories $33.33, Electronics $397.69, Furniture $207.81, Office Supplies $12.67.",
+    "changes": [
+      {
+        "version": 1,
+        "tool": "drop_duplicates",
+        "args": {
+          "reason": "One exact duplicate row found (row 23), keeping first occurrence."
+        },
+        "reason": "One exact duplicate row found (row 23), keeping first occurrence.",
+        "risk": "medium",
+        "approval": "approved",
+        "rows_removed": [
+          23
+        ],
+        "cells_changed": 0,
+        "summary": "removed 1 exact duplicate row(s)",
+        "code": "df = df.drop_duplicates(keep='first')"
+      },
+      {
+        "version": 2,
+        "tool": "normalize_labels",
+        "args": {
+          "column": "Region",
+          "mapping": {
+            "East ": "East",
+            "West ": "West",
+            " North": "North"
+          },
+          "reason": "Fix trailing/leading spaces in Region values: 'East ', 'West ', ' North' -> 'East', 'West', 'North'."
+        },
+        "reason": "Fix trailing/leading spaces in Region values: 'East ', 'West ', ' North' -> 'East', 'West', 'North'.",
+        "risk": "low",
+        "approval": "auto",
+        "rows_removed": [],
+        "cells_changed": 3,
+        "summary": "Region: merged 3 label variant(s), 3 cells",
+        "code": "df['Region'] = df['Region'].replace({'East ': 'East', 'West ': 'West', ' North': 'North'})"
+      },
+      {
+        "version": 3,
+        "tool": "normalize_labels",
+        "args": {
+          "column": "Category",
+          "mapping": {
+            "Furnture": "Furniture"
+          },
+          "reason": "Correct spelling of 'Furnture' to 'Furniture' based on rules and context."
+        },
+        "reason": "Correct spelling of 'Furnture' to 'Furniture' based on rules and context.",
+        "risk": "high",
+        "approval": "approved",
+        "rows_removed": [],
+        "cells_changed": 2,
+        "summary": "Category: merged 1 label variant(s), 2 cells",
+        "code": "df['Category'] = df['Category'].replace({'Furnture': 'Furniture'})"
+      }
+    ],
+    "rejected": [],
+    "oracle_decisions": [
+      {
+        "tool": "drop_duplicates",
+        "risk": "medium",
+        "approved": true,
+        "why": "moves data toward the reference"
+      },
+      {
+        "tool": "normalize_labels",
+        "risk": "high",
+        "approved": true,
+        "why": "moves data toward the reference"
+      }
+    ]
+  },
+  "corrections": 7,
+  "planted": 7,
+  "damaged_rows": 0,
+  "damaged_cells": 0,
+  "cleaned_available": true,
+  "system": "datasage",
+  "dataset": "sales-heldout",
+  "question": "What is the average unit price in each category?",
+  "reference_answer": {
+    "Accessories": 33.3333,
+    "Electronics": 397.6923,
+    "Furniture": 207.8125,
+    "Office Supplies": 12.6667
+  },
+  "issues_reported": [
+    [
+      "duplicates",
+      "*"
+    ],
+    [
+      "label_variant",
+      "Category"
+    ],
+    [
+      "label_variant",
+      "Region"
+    ]
+  ]
+}

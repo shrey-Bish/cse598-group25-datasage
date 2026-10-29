@@ -1,0 +1,125 @@
+{
+  "task_id": "salesh_02_q0",
+  "analysis_correct": false,
+  "completed": true,
+  "detect_tp": 4,
+  "detect_fp": 3,
+  "detect_fn": 1,
+  "tool_calls": 15,
+  "tool_errors": 0,
+  "recovered_errors": 0,
+  "approvals_asked": 1,
+  "seconds": 15.11,
+  "tokens": 73495,
+  "stop_reason": "finish",
+  "note": "",
+  "answer": {
+    "Accessories": 4610.0,
+    "Electronics": 29070.0,
+    "Furniture": 16505.0,
+    "Office Supplies": 3785.0
+  },
+  "extra": {
+    "final_summary": "The data had three main issues affecting the question: (1) Three rows with negative Quantity and Revenue values (rows 5, 14, 65) were excluded because they violate the rules: Quantity must be >= 1, Revenue must be >= 0, and Revenue must equal Quantity * Price. (2) Region labels had case and space variants (e.g., ' South', 'east') which were normalized to standard values. (3) Three missing Region values were present but did not affect the analysis since the question only depends on Category and Revenue. After fixes, the total revenue by category is: Accessories: $4,610, Electronics: $29,070, Furniture: $16,505, Office Supplies: $3,785.",
+    "changes": [
+      {
+        "version": 1,
+        "tool": "exclude_rows",
+        "args": {
+          "rows": [
+            5,
+            14,
+            65
+          ],
+          "reason": "Negative Quantity and Revenue values violate the rules: Quantity must be >= 1, Revenue must be >= 0, and Revenue = Quantity * Price. These rows have negative values and are inconsistent."
+        },
+        "reason": "Negative Quantity and Revenue values violate the rules: Quantity must be >= 1, Revenue must be >= 0, and Revenue = Quantity * Price. These rows have negative values and are inconsistent.",
+        "risk": "high",
+        "approval": "approved",
+        "rows_removed": [
+          5,
+          14,
+          65
+        ],
+        "cells_changed": 0,
+        "summary": "excluded 3 row(s): [5, 14, 65]",
+        "code": "df = df.drop(index=[5, 14, 65])"
+      },
+      {
+        "version": 2,
+        "tool": "normalize_labels",
+        "args": {
+          "column": "Region",
+          "mapping": {
+            " South": "South",
+            "east": "East",
+            "west": "West",
+            "North ": "North",
+            "north": "North"
+          },
+          "reason": "Case and space variants of region labels are common and low risk to merge; standardize to 'North', 'South', 'East', 'West'."
+        },
+        "reason": "Case and space variants of region labels are common and low risk to merge; standardize to 'North', 'South', 'East', 'West'.",
+        "risk": "low",
+        "approval": "auto",
+        "rows_removed": [],
+        "cells_changed": 6,
+        "summary": "Region: merged 5 label variant(s), 6 cells",
+        "code": "df['Region'] = df['Region'].replace({' South': 'South', 'east': 'East', 'west': 'West', 'North ': 'North', 'north': 'North'})"
+      }
+    ],
+    "rejected": [],
+    "oracle_decisions": [
+      {
+        "tool": "exclude_rows",
+        "risk": "high",
+        "approved": true,
+        "why": "moves data toward the reference"
+      }
+    ]
+  },
+  "corrections": 12,
+  "planted": 18,
+  "damaged_rows": 0,
+  "damaged_cells": 0,
+  "cleaned_available": true,
+  "system": "datasage-small-fix",
+  "dataset": "sales-heldout",
+  "question": "What is the total revenue by category?",
+  "reference_answer": {
+    "Accessories": 2450.0,
+    "Electronics": 29070.0,
+    "Furniture": 16505.0,
+    "Office Supplies": 972.0
+  },
+  "issues_reported": [
+    [
+      "cross_column",
+      "Revenue"
+    ],
+    [
+      "label_variant",
+      "Region"
+    ],
+    [
+      "missing",
+      "Region"
+    ],
+    [
+      "negative",
+      "Quantity"
+    ],
+    [
+      "negative",
+      "Revenue"
+    ],
+    [
+      "out_of_range",
+      "Quantity"
+    ],
+    [
+      "out_of_range",
+      "Revenue"
+    ]
+  ]
+}

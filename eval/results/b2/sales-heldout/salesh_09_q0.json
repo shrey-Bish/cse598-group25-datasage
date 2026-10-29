@@ -1,0 +1,61 @@
+{
+  "task_id": "salesh_09_q0",
+  "analysis_correct": false,
+  "completed": true,
+  "detect_tp": 4,
+  "detect_fp": 1,
+  "detect_fn": 1,
+  "tool_calls": 0,
+  "tool_errors": 0,
+  "recovered_errors": 0,
+  "approvals_asked": 0,
+  "seconds": 46.97,
+  "tokens": 2388,
+  "stop_reason": "done",
+  "note": "",
+  "answer": {
+    "Accessories": 30.26,
+    "Electronics": 277.86,
+    "Furniture": 199.64,
+    "Office Supplies": 12.0
+  },
+  "extra": {
+    "code": "import pandas as pd\n\ndef clean(df):\n    df = df.copy()\n    \n    # Fix Price: remove $ and convert to float\n    df['Price'] = df['Price'].astype(str).str.replace(r'\\$|\\.00', '', regex=True).astype(float)\n    \n    # Fix Quantity: ensure positive, correct negative values\n    df['Quantity'] = df['Quantity'].abs()\n    \n    # Recompute Revenue = Quantity * Price\n    df['Revenue'] = df['Quantity'] * df['Price']\n    \n    # Fix Region: normalize label variants and fill missing\n    df['Region'] = df['Region'].str.strip().replace({'Wst': 'West', 'Eats': 'East'})\n    df['Region'] = df['Region'].fillna('West')  # reasonable imputation based on context\n    \n    return df\n\ndef answer(df):\n    result = df.groupby('Category')['Price'].mean().round(2).to_dict()\n    return result"
+  },
+  "corrections": 7,
+  "planted": 12,
+  "damaged_rows": 0,
+  "damaged_cells": 0,
+  "cleaned_available": true,
+  "system": "b2",
+  "dataset": "sales-heldout",
+  "question": "What is the average unit price in each category?",
+  "reference_answer": {
+    "Accessories": 30.2632,
+    "Electronics": 277.8571,
+    "Furniture": 201.1538,
+    "Office Supplies": 12.0
+  },
+  "issues_reported": [
+    [
+      "label_variant",
+      "Region"
+    ],
+    [
+      "missing",
+      "Region"
+    ],
+    [
+      "negative",
+      "Quantity"
+    ],
+    [
+      "negative",
+      "Revenue"
+    ],
+    [
+      "text_number",
+      "Price"
+    ]
+  ]
+}

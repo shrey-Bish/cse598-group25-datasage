@@ -1,0 +1,53 @@
+{
+  "task_id": "salesh_01_q1",
+  "analysis_correct": true,
+  "completed": true,
+  "detect_tp": 2,
+  "detect_fp": 1,
+  "detect_fn": 1,
+  "tool_calls": 0,
+  "tool_errors": 0,
+  "recovered_errors": 0,
+  "approvals_asked": 0,
+  "seconds": 13.47,
+  "tokens": 2164,
+  "stop_reason": "done",
+  "note": "",
+  "answer": {
+    "Accessories": 21.0,
+    "Electronics": 18.0,
+    "Office Supplies": 17.0,
+    "Furniture": 14.0
+  },
+  "extra": {
+    "code": "import pandas as pd\n\ndef clean(df):\n    # Remove duplicate rows\n    df = df.drop_duplicates().reset_index(drop=True)\n    \n    # Clean Category column: strip whitespace and correct known typos\n    df = df.copy()\n    category_mapping = {\n        'Furnture': 'Furniture',\n        ' Furniture': 'Furniture',\n        'Furniture ': 'Furniture',\n        ' Office Supplies': 'Office Supplies',\n        'Accesories': 'Accessories'\n    }\n    df['Category'] = df['Category'].str.strip().replace(category_mapping)\n    \n    return df\n\ndef answer(df):\n    df_clean = clean(df)\n    result = df_clean['Category'].value_counts()\n    return {k: v for k, v in result.items()}"
+  },
+  "corrections": 9,
+  "planted": 9,
+  "damaged_rows": 0,
+  "damaged_cells": 0,
+  "cleaned_available": true,
+  "system": "b2",
+  "dataset": "sales-heldout",
+  "question": "How many orders are there in each category?",
+  "reference_answer": {
+    "Accessories": 21.0,
+    "Electronics": 18.0,
+    "Furniture": 14.0,
+    "Office Supplies": 17.0
+  },
+  "issues_reported": [
+    [
+      "duplicates",
+      "*"
+    ],
+    [
+      "label_variant",
+      "Category"
+    ],
+    [
+      "text_number",
+      "Category"
+    ]
+  ]
+}

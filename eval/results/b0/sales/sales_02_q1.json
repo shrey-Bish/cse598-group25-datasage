@@ -1,0 +1,45 @@
+{
+  "task_id": "sales_02_q1",
+  "analysis_correct": false,
+  "completed": true,
+  "detect_tp": 1,
+  "detect_fp": 0,
+  "detect_fn": 3,
+  "tool_calls": 0,
+  "tool_errors": 0,
+  "recovered_errors": 0,
+  "approvals_asked": 0,
+  "seconds": 0.003,
+  "tokens": 0,
+  "stop_reason": "done",
+  "note": "",
+  "answer": {
+    " Electronics": 1.0,
+    "Accessories": 6.0,
+    "Accessories ": 1.0,
+    "Electronics": 16.0,
+    "Electronics ": 1.0,
+    "Furniture": 12.0,
+    "Office Supplies": 10.0
+  },
+  "corrections": 2,
+  "planted": 10,
+  "damaged_rows": 0,
+  "damaged_cells": 0,
+  "cleaned_available": true,
+  "system": "b0",
+  "dataset": "sales",
+  "question": "How many orders are there in each category?",
+  "reference_answer": {
+    "Accessories": 7.0,
+    "Electronics": 18.0,
+    "Furniture": 12.0,
+    "Office Supplies": 10.0
+  },
+  "issues_reported": [
+    [
+      "label_variant",
+      "Region"
+    ]
+  ]
+}

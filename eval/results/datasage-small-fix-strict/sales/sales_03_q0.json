@@ -1,0 +1,133 @@
+{
+  "task_id": "sales_03_q0",
+  "analysis_correct": true,
+  "completed": true,
+  "detect_tp": 3,
+  "detect_fp": 1,
+  "detect_fn": 1,
+  "tool_calls": 11,
+  "tool_errors": 0,
+  "recovered_errors": 0,
+  "approvals_asked": 2,
+  "seconds": 11.66,
+  "tokens": 50594,
+  "stop_reason": "finish",
+  "note": "",
+  "answer": {
+    "East": 5100.0,
+    "North": 13920.0,
+    "South": 4240.0,
+    "West": 960.0
+  },
+  "extra": {
+    "final_summary": "The data had three main issues: (1) three rows with negative Quantity values (violating the rule that Quantity must be \u22651), which were excluded; (2) the Price column contained one text value '$6.00' that was converted to a number; (3) the Revenue column had three incorrect values that did not match Quantity * Price, which were recomputed. After fixes, the total revenue for Electronics by region is: East $5,100, North $13,920, South $4,240, West $960.",
+    "changes": [
+      {
+        "version": 1,
+        "tool": "exclude_rows",
+        "args": {
+          "rows": [
+            13,
+            20,
+            46
+          ],
+          "reason": "Negative Quantity values violate the rule that Quantity must be at least 1."
+        },
+        "reason": "Negative Quantity values violate the rule that Quantity must be at least 1.",
+        "risk": "high",
+        "approval": "approved",
+        "rows_removed": [
+          13,
+          20,
+          46
+        ],
+        "cells_changed": 0,
+        "summary": "excluded 3 row(s): [13, 20, 46]",
+        "code": "df = df.drop(index=[13, 20, 46])"
+      },
+      {
+        "version": 2,
+        "tool": "cast_numeric",
+        "args": {
+          "column": "Price",
+          "reason": "Price contains a value '$6.00' that is text but represents a number."
+        },
+        "reason": "Price contains a value '$6.00' that is text but represents a number.",
+        "risk": "low",
+        "approval": "auto",
+        "rows_removed": [],
+        "cells_changed": 0,
+        "summary": "Price: converted to numbers (51 text values, 0 became missing)",
+        "code": "df['Price'] = pd.to_numeric(df['Price'].astype(str).str.replace(r'[$, ]', '', regex=True), errors='coerce')"
+      },
+      {
+        "version": 3,
+        "tool": "recompute_column",
+        "args": {
+          "column": "Revenue",
+          "expression": "Quantity * Price",
+          "rows": [
+            0,
+            6,
+            44
+          ],
+          "reason": "Revenue does not match Quantity * Price for these rows; recompute using correct values."
+        },
+        "reason": "Revenue does not match Quantity * Price for these rows; recompute using correct values.",
+        "risk": "high",
+        "approval": "approved",
+        "rows_removed": [],
+        "cells_changed": 3,
+        "summary": "Revenue: recomputed as Quantity * Price on 3 row(s)",
+        "code": "df.loc[[0, 6, 44], 'Revenue'] = [1400.0, 480.0, 1080.0]  # Revenue = Quantity * Price"
+      }
+    ],
+    "rejected": [],
+    "oracle_decisions": [
+      {
+        "tool": "exclude_rows",
+        "risk": "high",
+        "approved": true,
+        "why": "moves data toward the reference"
+      },
+      {
+        "tool": "recompute_column",
+        "risk": "high",
+        "approved": true,
+        "why": "moves data toward the reference"
+      }
+    ]
+  },
+  "corrections": 7,
+  "planted": 8,
+  "damaged_rows": 0,
+  "damaged_cells": 0,
+  "cleaned_available": true,
+  "system": "datasage-small-fix-strict",
+  "dataset": "sales",
+  "question": "What is the total revenue by region for Electronics?",
+  "reference_answer": {
+    "East": 5100.0,
+    "North": 13920.0,
+    "South": 4240.0,
+    "West": 960.0
+  },
+  "issues_reported": [
+    [
+      "cross_column",
+      "Revenue"
+    ],
+    [
+      "negative",
+      "Quantity"
+    ],
+    [
+      "out_of_range",
+      "Quantity"
+    ],
+    [
+      "text_number",
+      "Price"
+    ]
+  ]
+}

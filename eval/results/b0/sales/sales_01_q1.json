@@ -1,0 +1,62 @@
+{
+  "task_id": "sales_01_q1",
+  "analysis_correct": false,
+  "completed": true,
+  "detect_tp": 4,
+  "detect_fp": 1,
+  "detect_fn": 1,
+  "tool_calls": 0,
+  "tool_errors": 0,
+  "recovered_errors": 0,
+  "approvals_asked": 0,
+  "seconds": 0.004,
+  "tokens": 0,
+  "stop_reason": "done",
+  "note": "",
+  "answer": {
+    "2026-01": 4944.0,
+    "2026-02": -208.0,
+    "2026-03": 3319.0,
+    "2026-04": -3938.0,
+    "2026-05": 3142.0,
+    "2026-06": 3882.0
+  },
+  "corrections": 2,
+  "planted": 12,
+  "damaged_rows": 0,
+  "damaged_cells": 0,
+  "cleaned_available": true,
+  "system": "b0",
+  "dataset": "sales",
+  "question": "What is the total revenue per month?",
+  "reference_answer": {
+    "2026-01": 4944.0,
+    "2026-02": 1292.0,
+    "2026-03": 3391.0,
+    "2026-04": 1287.0,
+    "2026-05": 3070.0,
+    "2026-06": 3882.0
+  },
+  "issues_reported": [
+    [
+      "duplicates",
+      "*"
+    ],
+    [
+      "invalid_date",
+      "Date"
+    ],
+    [
+      "label_variant",
+      "Category"
+    ],
+    [
+      "negative",
+      "Quantity"
+    ],
+    [
+      "negative",
+      "Revenue"
+    ]
+  ]
+}

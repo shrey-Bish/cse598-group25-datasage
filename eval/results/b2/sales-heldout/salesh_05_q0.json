@@ -1,0 +1,65 @@
+{
+  "task_id": "salesh_05_q0",
+  "analysis_correct": false,
+  "completed": true,
+  "detect_tp": 4,
+  "detect_fp": 2,
+  "detect_fn": 0,
+  "tool_calls": 0,
+  "tool_errors": 0,
+  "recovered_errors": 0,
+  "approvals_asked": 0,
+  "seconds": 23.58,
+  "tokens": 2423,
+  "stop_reason": "done",
+  "note": "",
+  "answer": {
+    "East": 94.0,
+    "North": 37.0,
+    "South": 78.0,
+    "West": 77.0
+  },
+  "extra": {
+    "code": "import pandas as pd\n\ndef clean(df):\n    df = df.copy()\n    \n    # Fix Price: remove $ and .00, convert to float\n    df['Price'] = df['Price'].astype(str).str.replace(r'\\$|\\.00', '', regex=True)\n    df['Price'] = pd.to_numeric(df['Price'], errors='coerce')\n    \n    # Fix Region: standardize case and correct typos\n    region_mapping = {'west': 'West', 'south': 'South', 'Wst': 'West', 'Suoth': 'South'}\n    df['Region'] = df['Region'].map(region_mapping).fillna(df['Region'])\n    \n    # Fix cross-column: recalculate Revenue from Quantity and Price\n    # But first ensure Quantity is positive\n    df['Quantity'] = df['Quantity'].abs()  # Fix negative quantity\n    df['Revenue'] = df['Quantity'] * df['Price']\n    \n    return df\n\ndef answer(df):\n    result = df.groupby('Region')['Quantity'].sum().dropna().to_dict()\n    return result"
+  },
+  "corrections": 9,
+  "planted": 10,
+  "damaged_rows": 0,
+  "damaged_cells": 0,
+  "cleaned_available": true,
+  "system": "b2",
+  "dataset": "sales-heldout",
+  "question": "How many units were sold in each region?",
+  "reference_answer": {
+    "East": 94.0,
+    "North": 37.0,
+    "South": 78.0,
+    "West": 72.0
+  },
+  "issues_reported": [
+    [
+      "cross_column",
+      "*"
+    ],
+    [
+      "label_variant",
+      "Region"
+    ],
+    [
+      "missing",
+      "Region"
+    ],
+    [
+      "negative",
+      "Quantity"
+    ],
+    [
+      "negative",
+      "Revenue"
+    ],
+    [
+      "text_number",
+      "Price"
+    ]
+  ]
+}

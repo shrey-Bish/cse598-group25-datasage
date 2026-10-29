@@ -1,0 +1,61 @@
+{
+  "task_id": "salesh_07_q0",
+  "analysis_correct": true,
+  "completed": true,
+  "detect_tp": 3,
+  "detect_fp": 2,
+  "detect_fn": 2,
+  "tool_calls": 0,
+  "tool_errors": 0,
+  "recovered_errors": 0,
+  "approvals_asked": 0,
+  "seconds": 20.85,
+  "tokens": 2169,
+  "stop_reason": "done",
+  "note": "",
+  "answer": {
+    "Accessories": 30.67,
+    "Electronics": 360.0,
+    "Furniture": 205.0,
+    "Office Supplies": 10.67
+  },
+  "extra": {
+    "code": "import pandas as pd\n\ndef clean(df):\n    # Remove exact duplicate rows\n    df = df.drop_duplicates()\n    \n    # Fix case and trailing spaces in Region\n    df['Region'] = df['Region'].str.strip().str.capitalize()\n    \n    # Correct 'east' to 'East' (if any)\n    df['Region'] = df['Region'].replace('east', 'East')\n    \n    # Remove rows with negative Quantity and Revenue (since Quantity must be >= 1)\n    df = df[df['Quantity'] > 0]\n    \n    # Recompute Revenue to ensure consistency\n    df['Revenue'] = df['Quantity'] * df['Price']\n    \n    return df\n\ndef answer(df):\n    result = df.groupby('Category')['Price'].mean().round(2)\n    return {k: v for k, v in result.items()}\n"
+  },
+  "corrections": 10,
+  "planted": 10,
+  "damaged_rows": 0,
+  "damaged_cells": 0,
+  "cleaned_available": true,
+  "system": "b2",
+  "dataset": "sales-heldout",
+  "question": "What is the average unit price in each category?",
+  "reference_answer": {
+    "Accessories": 30.6667,
+    "Electronics": 360.0,
+    "Furniture": 205.0,
+    "Office Supplies": 10.6667
+  },
+  "issues_reported": [
+    [
+      "duplicates",
+      "*"
+    ],
+    [
+      "missing",
+      "Region"
+    ],
+    [
+      "negative",
+      "Quantity"
+    ],
+    [
+      "negative",
+      "Revenue"
+    ],
+    [
+      "text_number",
+      "Region"
+    ]
+  ]
+}

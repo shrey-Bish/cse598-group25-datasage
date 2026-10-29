@@ -1,0 +1,176 @@
+{
+  "task_id": "sales_01_q0",
+  "analysis_correct": true,
+  "completed": true,
+  "detect_tp": 5,
+  "detect_fp": 0,
+  "detect_fn": 0,
+  "tool_calls": 14,
+  "tool_errors": 0,
+  "recovered_errors": 0,
+  "approvals_asked": 3,
+  "seconds": 256.98,
+  "tokens": 66567,
+  "stop_reason": "finish",
+  "note": "",
+  "answer": {
+    "Accessories": 13.0,
+    "Electronics": 10.0,
+    "Furniture": 7.0,
+    "Office Supplies": 30.0
+  },
+  "extra": {
+    "final_summary": "Found and fixed several data issues affecting the count of orders by category. Duplicate rows (2) were removed. Category labels were normalized (3 instances of 'office supplies' corrected to 'Office Supplies'). Price values with currency symbols were converted to numeric. Negative quantities (3 rows) were excluded as they violate the rule that Quantity must be at least 1. Two invalid dates were set to missing but do not affect the category count. Final counts: Accessories: 13, Electronics: 10, Furniture: 7, Office Supplies: 30.",
+    "changes": [
+      {
+        "version": 1,
+        "tool": "drop_duplicates",
+        "args": {
+          "reason": "Exact duplicate rows found at row 7 and row 13 (copy of row 6 and row 12). Removing duplicates to avoid double-counting orders."
+        },
+        "reason": "Exact duplicate rows found at row 7 and row 13 (copy of row 6 and row 12). Removing duplicates to avoid double-counting orders.",
+        "risk": "medium",
+        "approval": "approved",
+        "rows_removed": [
+          7,
+          13
+        ],
+        "cells_changed": 0,
+        "summary": "removed 2 exact duplicate row(s)",
+        "code": "df = df.drop_duplicates(keep='first')"
+      },
+      {
+        "version": 2,
+        "tool": "normalize_labels",
+        "args": {
+          "column": "Category",
+          "mapping": {
+            "office supplies": "Office Supplies"
+          },
+          "reason": "Standardizing label case: 'office supplies' should be 'Office Supplies' as per rules file."
+        },
+        "reason": "Standardizing label case: 'office supplies' should be 'Office Supplies' as per rules file.",
+        "risk": "low",
+        "approval": "auto",
+        "rows_removed": [],
+        "cells_changed": 3,
+        "summary": "Category: merged 1 label variant(s), 3 cells",
+        "code": "df['Category'] = df['Category'].replace({'office supplies': 'Office Supplies'})"
+      },
+      {
+        "version": 3,
+        "tool": "cast_numeric",
+        "args": {
+          "column": "Price",
+          "reason": "Price column contains text-formatted numbers like '$350.00' and '$18.00'. Converting to numeric to ensure correct calculations."
+        },
+        "reason": "Price column contains text-formatted numbers like '$350.00' and '$18.00'. Converting to numeric to ensure correct calculations.",
+        "risk": "low",
+        "approval": "auto",
+        "rows_removed": [],
+        "cells_changed": 0,
+        "summary": "Price: converted to numbers (63 text values, 0 became missing)",
+        "code": "df['Price'] = pd.to_numeric(df['Price'].astype(str).str.replace(r'[$, ]', '', regex=True), errors='coerce')"
+      },
+      {
+        "version": 4,
+        "tool": "exclude_rows",
+        "args": {
+          "rows": [
+            32,
+            53,
+            54
+          ],
+          "reason": "Quantity has negative values (-5, -6, -4) at rows 32, 53, 54. Rules state Quantity must be at least 1. These are invalid and will be excluded."
+        },
+        "reason": "Quantity has negative values (-5, -6, -4) at rows 32, 53, 54. Rules state Quantity must be at least 1. These are invalid and will be excluded.",
+        "risk": "high",
+        "approval": "approved",
+        "rows_removed": [
+          32,
+          53,
+          54
+        ],
+        "cells_changed": 0,
+        "summary": "excluded 3 row(s): [32, 53, 54]",
+        "code": "df = df.drop(index=[32, 53, 54])"
+      },
+      {
+        "version": 5,
+        "tool": "set_missing",
+        "args": {
+          "column": "Date",
+          "rows": [
+            43,
+            45
+          ],
+          "reason": "Date values '13/45/2026' and '2026-02-30' are invalid. Setting to missing as they cannot be interpreted as valid dates."
+        },
+        "reason": "Date values '13/45/2026' and '2026-02-30' are invalid. Setting to missing as they cannot be interpreted as valid dates.",
+        "risk": "high",
+        "approval": "approved",
+        "rows_removed": [],
+        "cells_changed": 2,
+        "summary": "Date: set 2 value(s) to missing",
+        "code": "df.loc[[43, 45], 'Date'] = pd.NA"
+      }
+    ],
+    "rejected": [],
+    "oracle_decisions": [
+      {
+        "tool": "drop_duplicates",
+        "risk": "medium",
+        "approved": true,
+        "why": "moves data toward the reference"
+      },
+      {
+        "tool": "exclude_rows",
+        "risk": "high",
+        "approved": true,
+        "why": "moves data toward the reference"
+      },
+      {
+        "tool": "set_missing",
+        "risk": "high",
+        "approved": true,
+        "why": "moves data toward the reference"
+      }
+    ]
+  },
+  "corrections": 12,
+  "planted": 12,
+  "damaged_rows": 0,
+  "damaged_cells": 0,
+  "cleaned_available": true,
+  "system": "datasage-fix",
+  "dataset": "sales",
+  "question": "How many orders are there in each category?",
+  "reference_answer": {
+    "Accessories": 13.0,
+    "Electronics": 10.0,
+    "Furniture": 7.0,
+    "Office Supplies": 30.0
+  },
+  "issues_reported": [
+    [
+      "duplicates",
+      "*"
+    ],
+    [
+      "invalid_date",
+      "Date"
+    ],
+    [
+      "label_variant",
+      "Category"
+    ],
+    [
+      "negative",
+      "Quantity"
+    ],
+    [
+      "text_number",
+      "Price"
+    ]
+  ]
+}

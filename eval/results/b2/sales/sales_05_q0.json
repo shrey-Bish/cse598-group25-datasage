@@ -1,0 +1,65 @@
+{
+  "task_id": "sales_05_q0",
+  "analysis_correct": false,
+  "completed": true,
+  "detect_tp": 4,
+  "detect_fp": 2,
+  "detect_fn": 1,
+  "tool_calls": 0,
+  "tool_errors": 0,
+  "recovered_errors": 0,
+  "approvals_asked": 0,
+  "seconds": 19.85,
+  "tokens": 2237,
+  "stop_reason": "done",
+  "note": "",
+  "answer": {
+    "Accessories": 20.0,
+    "Electronics": 14.0,
+    "Furniture": 12.0,
+    "Office Supplies": 11.0
+  },
+  "extra": {
+    "code": "import pandas as pd\n\ndef clean(df):\n    # Remove exact duplicate rows\n    df = df.drop_duplicates()\n    \n    # Clean Category: strip whitespace and standardize case\n    df['Category'] = df['Category'].str.strip().str.title()\n    \n    # Clean Region: fix known typos\n    region_mapping = {'Wst': 'West', 'Suoth': 'South'}\n    df['Region'] = df['Region'].replace(region_mapping)\n    \n    # Fix negative Quantity and Revenue by taking absolute value (assuming data entry error)\n    # But note: Revenue should be Quantity * Price, so we'll recalculate Revenue anyway\n    df['Quantity'] = df['Quantity'].abs()\n    \n    # Recalculate Revenue to ensure consistency\n    df['Revenue'] = df['Quantity'] * df['Price']\n    \n    return df\n\ndef answer(df):\n    df_clean = clean(df)\n    result = df_clean.groupby('Category').size().to_dict()\n    return result"
+  },
+  "corrections": 10,
+  "planted": 12,
+  "damaged_rows": 0,
+  "damaged_cells": 0,
+  "cleaned_available": true,
+  "system": "b2",
+  "dataset": "sales",
+  "question": "How many orders are there in each category?",
+  "reference_answer": {
+    "Accessories": 20.0,
+    "Electronics": 13.0,
+    "Furniture": 11.0,
+    "Office Supplies": 11.0
+  },
+  "issues_reported": [
+    [
+      "cross_column",
+      "*"
+    ],
+    [
+      "duplicates",
+      "*"
+    ],
+    [
+      "label_variant",
+      "Category"
+    ],
+    [
+      "label_variant",
+      "Region"
+    ],
+    [
+      "negative",
+      "Quantity"
+    ],
+    [
+      "negative",
+      "Revenue"
+    ]
+  ]
+}

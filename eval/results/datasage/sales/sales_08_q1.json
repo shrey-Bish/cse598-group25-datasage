@@ -1,0 +1,50 @@
+{
+  "task_id": "sales_08_q1",
+  "analysis_correct": true,
+  "completed": true,
+  "detect_tp": 2,
+  "detect_fp": 1,
+  "detect_fn": 3,
+  "tool_calls": 10,
+  "tool_errors": 0,
+  "recovered_errors": 0,
+  "approvals_asked": 1,
+  "seconds": 143.5,
+  "tokens": 44634,
+  "stop_reason": "finish",
+  "note": "",
+  "answer": {
+    "Accessories": 35.625,
+    "Electronics": 400.7692,
+    "Furniture": 171.875,
+    "Office Supplies": 11.4
+  },
+  "corrections": 6,
+  "planted": 8,
+  "damaged_rows": 0,
+  "damaged_cells": 0,
+  "cleaned_available": true,
+  "system": "datasage",
+  "dataset": "sales",
+  "question": "What is the average unit price in each category?",
+  "reference_answer": {
+    "Accessories": 35.625,
+    "Electronics": 400.7692,
+    "Furniture": 171.875,
+    "Office Supplies": 11.4
+  },
+  "issues_reported": [
+    [
+      "label_variant",
+      "Category"
+    ],
+    [
+      "out_of_range",
+      "Quantity"
+    ],
+    [
+      "text_number",
+      "Price"
+    ]
+  ]
+}

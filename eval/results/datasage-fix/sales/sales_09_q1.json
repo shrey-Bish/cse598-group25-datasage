@@ -1,0 +1,146 @@
+{
+  "task_id": "sales_09_q1",
+  "analysis_correct": true,
+  "completed": true,
+  "detect_tp": 4,
+  "detect_fp": 0,
+  "detect_fn": 0,
+  "tool_calls": 14,
+  "tool_errors": 0,
+  "recovered_errors": 0,
+  "approvals_asked": 2,
+  "seconds": 196.81,
+  "tokens": 66154,
+  "stop_reason": "finish",
+  "note": "",
+  "answer": {
+    "2026-01": 10646.0,
+    "2026-02": 7478.0,
+    "2026-03": 11050.0,
+    "2026-04": 645.0,
+    "2026-05": 5359.0,
+    "2026-06": 13371.0
+  },
+  "extra": {
+    "final_summary": "Found and fixed: 2 duplicate rows (removed), 5 label variants in Category (normalized), 1 invalid date (set to missing), 1 price stored as text (converted to number). After cleaning, analyzed 58 rows. Total revenue per month: Jan 2026: $10,646; Feb 2026: $7,478; Mar 2026: $11,050; Apr 2026: $645; May 2026: $5,359; Jun 2026: $13,371.",
+    "changes": [
+      {
+        "version": 1,
+        "tool": "drop_duplicates",
+        "args": {
+          "reason": "2 exact duplicate rows found (rows 14 and 28), keeping first occurrence"
+        },
+        "reason": "2 exact duplicate rows found (rows 14 and 28), keeping first occurrence",
+        "risk": "medium",
+        "approval": "approved",
+        "rows_removed": [
+          14,
+          28
+        ],
+        "cells_changed": 0,
+        "summary": "removed 2 exact duplicate row(s)",
+        "code": "df = df.drop_duplicates(keep='first')"
+      },
+      {
+        "version": 2,
+        "tool": "normalize_labels",
+        "args": {
+          "column": "Category",
+          "mapping": {
+            "electronics": "Electronics",
+            "Office Supplies ": "Office Supplies",
+            "furniture": "Furniture",
+            "Furniture ": "Furniture"
+          },
+          "reason": "5 label variants in Category column differ only by case or trailing space; normalizing to canonical form"
+        },
+        "reason": "5 label variants in Category column differ only by case or trailing space; normalizing to canonical form",
+        "risk": "low",
+        "approval": "auto",
+        "rows_removed": [],
+        "cells_changed": 5,
+        "summary": "Category: merged 4 label variant(s), 5 cells",
+        "code": "df['Category'] = df['Category'].replace({'electronics': 'Electronics', 'Office Supplies ': 'Office Supplies', 'furniture': 'Furniture', 'Furniture ': 'Furniture'})"
+      },
+      {
+        "version": 3,
+        "tool": "parse_dates",
+        "args": {
+          "column": "Date",
+          "reason": "1 invalid date '13/45/2026' in row 36; setting to missing"
+        },
+        "reason": "1 invalid date '13/45/2026' in row 36; setting to missing",
+        "risk": "medium",
+        "approval": "approved",
+        "rows_removed": [],
+        "cells_changed": 1,
+        "summary": "Date: 1 invalid date(s) set to missing",
+        "code": "df['Date'] = pd.to_datetime(df['Date'], format='%Y-%m-%d', errors='coerce').dt.strftime('%Y-%m-%d')"
+      },
+      {
+        "version": 4,
+        "tool": "cast_numeric",
+        "args": {
+          "column": "Price",
+          "reason": "1 price stored as text '$6.00' in row 60; converting to number 6.00"
+        },
+        "reason": "1 price stored as text '$6.00' in row 60; converting to number 6.00",
+        "risk": "low",
+        "approval": "auto",
+        "rows_removed": [],
+        "cells_changed": 0,
+        "summary": "Price: converted to numbers (59 text values, 0 became missing)",
+        "code": "df['Price'] = pd.to_numeric(df['Price'].astype(str).str.replace(r'[$, ]', '', regex=True), errors='coerce')"
+      }
+    ],
+    "rejected": [],
+    "oracle_decisions": [
+      {
+        "tool": "drop_duplicates",
+        "risk": "medium",
+        "approved": true,
+        "why": "moves data toward the reference"
+      },
+      {
+        "tool": "parse_dates",
+        "risk": "medium",
+        "approved": true,
+        "why": "moves data toward the reference"
+      }
+    ]
+  },
+  "corrections": 9,
+  "planted": 9,
+  "damaged_rows": 0,
+  "damaged_cells": 0,
+  "cleaned_available": true,
+  "system": "datasage-fix",
+  "dataset": "sales",
+  "question": "What is the total revenue per month?",
+  "reference_answer": {
+    "2026-01": 10646.0,
+    "2026-02": 7478.0,
+    "2026-03": 11050.0,
+    "2026-04": 645.0,
+    "2026-05": 5359.0,
+    "2026-06": 13371.0
+  },
+  "issues_reported": [
+    [
+      "duplicates",
+      "*"
+    ],
+    [
+      "invalid_date",
+      "Date"
+    ],
+    [
+      "label_variant",
+      "Category"
+    ],
+    [
+      "text_number",
+      "Price"
+    ]
+  ]
+}

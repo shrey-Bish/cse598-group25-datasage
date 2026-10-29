@@ -1,0 +1,59 @@
+{
+  "task_id": "penguins_00_q1",
+  "analysis_correct": false,
+  "completed": true,
+  "detect_tp": 5,
+  "detect_fp": 0,
+  "detect_fn": 1,
+  "tool_calls": 0,
+  "tool_errors": 0,
+  "recovered_errors": 0,
+  "approvals_asked": 0,
+  "seconds": 38.46,
+  "tokens": 2594,
+  "stop_reason": "done",
+  "note": "",
+  "answer": {
+    "Adelie": 125600.0,
+    "Chinstrap": 56900.0,
+    "Gentoo": 84475.0
+  },
+  "extra": {
+    "code": "import pandas as pd\n\ndef clean(df):\n    # Remove exact duplicate rows\n    df = df.drop_duplicates().reset_index(drop=True)\n    \n    # Fix label variants in 'species' and 'island' by stripping whitespace\n    df['species'] = df['species'].str.strip()\n    df['island'] = df['island'].str.replace('Bisco', 'Biscoe', regex=False).str.replace('Dram', 'Dream', regex=False)\n    \n    # Fix negative flipper_length_mm (assume typo, make positive)\n    df['flipper_length_mm'] = df['flipper_length_mm'].abs()\n    \n    # Fix out-of-range body_mass_g: 4750000 is way too high (likely extra zeros)\n    # Assume it should be 4750 (within 2500-6500 range)\n    df['body_mass_g'] = df['body_mass_g'].apply(lambda x: x if x <= 6500 else x / 1000)\n    \n    return df\n\ndef answer(df):\n    df_clean = clean(df)\n    result = df_clean.groupby('species')['body_mass_g'].sum().round(0).astype(int)\n    return result.to_dict()"
+  },
+  "corrections": 6,
+  "planted": 10,
+  "damaged_rows": 0,
+  "damaged_cells": 25,
+  "cleaned_available": true,
+  "system": "b2",
+  "dataset": "penguins",
+  "question": "What is the total body mass for each species?",
+  "reference_answer": {
+    "Adelie": 118450.0,
+    "Chinstrap": 56900.0,
+    "Gentoo": 75325.0
+  },
+  "issues_reported": [
+    [
+      "duplicates",
+      "*"
+    ],
+    [
+      "label_variant",
+      "island"
+    ],
+    [
+      "label_variant",
+      "species"
+    ],
+    [
+      "negative",
+      "flipper_length_mm"
+    ],
+    [
+      "out_of_range",
+      "body_mass_g"
+    ]
+  ]
+}

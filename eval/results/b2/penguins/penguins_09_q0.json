@@ -1,0 +1,55 @@
+{
+  "task_id": "penguins_09_q0",
+  "analysis_correct": true,
+  "completed": true,
+  "detect_tp": 4,
+  "detect_fp": 0,
+  "detect_fn": 0,
+  "tool_calls": 0,
+  "tool_errors": 0,
+  "recovered_errors": 0,
+  "approvals_asked": 0,
+  "seconds": 21.43,
+  "tokens": 2469,
+  "stop_reason": "done",
+  "note": "",
+  "answer": {
+    "Adelie": 189.44,
+    "Chinstrap": 193.85,
+    "Gentoo": 217.44
+  },
+  "extra": {
+    "code": "import pandas as pd\n\ndef clean(df):\n    # Remove exact duplicate rows\n    df = df.drop_duplicates()\n    \n    # Fix label variants in 'species' column\n    df = df.copy()\n    df['species'] = df['species'].str.capitalize()\n    \n    # Fix label variants in 'island' column (remove trailing spaces)\n    df['island'] = df['island'].str.strip()\n    \n    # Remove negative flipper_length_mm values (invalid per rules: min 170)\n    df = df[df['flipper_length_mm'] >= 170]\n    \n    return df\n\ndef answer(df):\n    # Group by species and compute average flipper length\n    result = df.groupby('species')['flipper_length_mm'].mean().round(2).to_dict()\n    return result"
+  },
+  "corrections": 8,
+  "planted": 8,
+  "damaged_rows": 0,
+  "damaged_cells": 0,
+  "cleaned_available": true,
+  "system": "b2",
+  "dataset": "penguins",
+  "question": "What is the average flipper length for each species?",
+  "reference_answer": {
+    "Adelie": 189.44,
+    "Chinstrap": 193.8462,
+    "Gentoo": 217.44
+  },
+  "issues_reported": [
+    [
+      "duplicates",
+      "*"
+    ],
+    [
+      "label_variant",
+      "island"
+    ],
+    [
+      "label_variant",
+      "species"
+    ],
+    [
+      "negative",
+      "flipper_length_mm"
+    ]
+  ]
+}

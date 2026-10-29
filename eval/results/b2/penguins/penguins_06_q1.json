@@ -1,0 +1,55 @@
+{
+  "task_id": "penguins_06_q1",
+  "analysis_correct": true,
+  "completed": true,
+  "detect_tp": 4,
+  "detect_fp": 0,
+  "detect_fn": 2,
+  "tool_calls": 0,
+  "tool_errors": 0,
+  "recovered_errors": 0,
+  "approvals_asked": 0,
+  "seconds": 31.36,
+  "tokens": 2520,
+  "stop_reason": "done",
+  "note": "",
+  "answer": {
+    "Adelie": 189.38,
+    "Chinstrap": 196.1,
+    "Gentoo": 215.0
+  },
+  "extra": {
+    "code": "import pandas as pd\n\ndef clean(df):\n    # Fix species typos\n    df = df.copy()\n    df['species'] = df['species'].replace({'Gentto': 'Gentoo', 'Chinstarp': 'Chinstrap'})\n    \n    # Fix island leading/trailing spaces\n    df['island'] = df['island'].str.strip()\n    \n    # Convert body_mass_g from text to number (remove commas and convert)\n    df['body_mass_g'] = df['body_mass_g'].astype(str).str.replace(',', '').astype(float)\n    \n    # Remove duplicate rows\n    df = df.drop_duplicates().reset_index(drop=True)\n    \n    return df\n\ndef answer(df):\n    # Group by species and compute average flipper length\n    result = df.groupby('species')['flipper_length_mm'].mean().round(2).to_dict()\n    return result"
+  },
+  "corrections": 9,
+  "planted": 11,
+  "damaged_rows": 0,
+  "damaged_cells": 0,
+  "cleaned_available": true,
+  "system": "b2",
+  "dataset": "penguins",
+  "question": "What is the average flipper length for each species?",
+  "reference_answer": {
+    "Adelie": 189.5333,
+    "Chinstrap": 196.1,
+    "Gentoo": 215.0
+  },
+  "issues_reported": [
+    [
+      "duplicates",
+      "*"
+    ],
+    [
+      "label_variant",
+      "island"
+    ],
+    [
+      "label_variant",
+      "species"
+    ],
+    [
+      "text_number",
+      "body_mass_g"
+    ]
+  ]
+}

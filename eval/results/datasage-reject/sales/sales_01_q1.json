@@ -1,0 +1,118 @@
+{
+  "task_id": "sales_01_q1",
+  "analysis_correct": false,
+  "completed": true,
+  "detect_tp": 4,
+  "detect_fp": 1,
+  "detect_fn": 1,
+  "tool_calls": 14,
+  "tool_errors": 0,
+  "recovered_errors": 0,
+  "approvals_asked": 3,
+  "seconds": 194.72,
+  "tokens": 65663,
+  "stop_reason": "finish",
+  "note": "",
+  "answer": {
+    "2026-01": 4944.0,
+    "2026-02": -208.0,
+    "2026-03": 3319.0,
+    "2026-04": -3938.0,
+    "2026-05": 3142.0,
+    "2026-06": 3882.0
+  },
+  "extra": {
+    "final_summary": "The analysis shows total revenue per month, but several data issues affect reliability:\n\n- Two exact duplicate rows (row 7 and 13) were found but not removed due to user rejection. This may inflate revenue.\n- Two invalid dates ('13/45/2026', '2026-02-30') were not fixed, so those rows may be misassigned to months.\n- Three negative quantities (-5, -6, -4) were not corrected, leading to negative revenue values (e.g., -$3,938 in April).\n- 'office supplies' was safely normalized to 'Office Supplies'.\n- Price values with '$' were successfully converted to numeric.\n\nDespite attempted fixes, the user rejected dropping duplicates, parsing dates, and handling negative quantities. The final revenue totals include these known issues.",
+    "changes": [
+      {
+        "version": 1,
+        "tool": "normalize_labels",
+        "args": {
+          "column": "Category",
+          "mapping": {
+            "office supplies": "Office Supplies"
+          },
+          "reason": "Standardize 'office supplies' to 'Office Supplies' to match the allowed values in the rules file. This is a case variant and safe to fix."
+        },
+        "reason": "Standardize 'office supplies' to 'Office Supplies' to match the allowed values in the rules file. This is a case variant and safe to fix.",
+        "risk": "low",
+        "approval": "auto",
+        "rows_removed": [],
+        "cells_changed": 3,
+        "summary": "Category: merged 1 label variant(s), 3 cells",
+        "code": "df['Category'] = df['Category'].replace({'office supplies': 'Office Supplies'})"
+      },
+      {
+        "version": 2,
+        "tool": "cast_numeric",
+        "args": {
+          "column": "Price",
+          "reason": "Two prices stored as text with dollar signs: '$350.00' (row 3) and '$18.00' (row 15). Converting to numeric to ensure correct calculation."
+        },
+        "reason": "Two prices stored as text with dollar signs: '$350.00' (row 3) and '$18.00' (row 15). Converting to numeric to ensure correct calculation.",
+        "risk": "low",
+        "approval": "auto",
+        "rows_removed": [],
+        "cells_changed": 0,
+        "summary": "Price: converted to numbers (65 text values, 0 became missing)",
+        "code": "df['Price'] = pd.to_numeric(df['Price'].astype(str).str.replace(r'[$, ]', '', regex=True), errors='coerce')"
+      }
+    ],
+    "rejected": [
+      {
+        "tool": "drop_duplicates",
+        "risk": "medium",
+        "summary": "removed 2 exact duplicate row(s)"
+      },
+      {
+        "tool": "parse_dates",
+        "risk": "medium",
+        "summary": "Date: 2 invalid date(s) set to missing"
+      },
+      {
+        "tool": "set_missing",
+        "risk": "high",
+        "summary": "Quantity: set 3 value(s) to missing"
+      }
+    ],
+    "oracle_decisions": []
+  },
+  "corrections": 5,
+  "planted": 12,
+  "damaged_rows": 0,
+  "damaged_cells": 0,
+  "cleaned_available": true,
+  "system": "datasage-reject",
+  "dataset": "sales",
+  "question": "What is the total revenue per month?",
+  "reference_answer": {
+    "2026-01": 4944.0,
+    "2026-02": 1292.0,
+    "2026-03": 3391.0,
+    "2026-04": 1287.0,
+    "2026-05": 3070.0,
+    "2026-06": 3882.0
+  },
+  "issues_reported": [
+    [
+      "duplicates",
+      "*"
+    ],
+    [
+      "invalid_date",
+      "Date"
+    ],
+    [
+      "label_variant",
+      "Category"
+    ],
+    [
+      "out_of_range",
+      "Quantity"
+    ],
+    [
+      "text_number",
+      "Price"
+    ]
+  ]
+}

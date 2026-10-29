@@ -1,0 +1,65 @@
+{
+  "task_id": "salesh_02_q0",
+  "analysis_correct": true,
+  "completed": true,
+  "detect_tp": 3,
+  "detect_fp": 3,
+  "detect_fn": 2,
+  "tool_calls": 0,
+  "tool_errors": 0,
+  "recovered_errors": 0,
+  "approvals_asked": 0,
+  "seconds": 27.13,
+  "tokens": 2473,
+  "stop_reason": "done",
+  "note": "",
+  "answer": {
+    "Accessories": 2450.0,
+    "Electronics": 29070.0,
+    "Furniture": 16505.0,
+    "Office Supplies": 972.0
+  },
+  "extra": {
+    "code": "import pandas as pd\n\ndef clean(df):\n    df = df.copy()\n    \n    # Fix Region: strip whitespace and standardize case\n    df['Region'] = df['Region'].astype(str).str.strip().str.title()\n    \n    # Fix Date: convert to datetime, coerce errors to NaT\n    df['Date'] = pd.to_datetime(df['Date'], format='%Y-%m-%d', errors='coerce')\n    \n    # Fix Quantity: convert to numeric, ensure positive\n    df['Quantity'] = pd.to_numeric(df['Quantity'], errors='coerce')\n    \n    # Recompute Revenue based on Quantity and Price, but only where Quantity is valid and positive\n    # Keep original Revenue only if Quantity > 0, otherwise recalculate\n    valid_mask = (df['Quantity'] > 0) & (df['Price'] > 0)\n    df.loc[valid_mask, 'Revenue'] = df.loc[valid_mask, 'Quantity'] * df.loc[valid_mask, 'Price']\n    \n    # For any remaining negative or invalid Revenue, recalculate only if Quantity and Price are valid\n    invalid_revenue_mask = (~valid_mask) | (df['Revenue'] <= 0)\n    df.loc[invalid_revenue_mask & (df['Quantity'] > 0) & (df['Price'] > 0), 'Revenue'] = \\\n        df.loc[invalid_revenue_mask & (df['Quantity'] > 0) & (df['Price'] > 0), 'Quantity'] * \\\n        df.loc[invalid_revenue_mask & (df['Quantity'] > 0) & (df['Price'] > 0), 'Price']\n    \n    # Set Revenue to NaN where Quantity <= 0 or invalid\n    df.loc[~valid_mask, 'Revenue'] = pd.NA\n    \n    return df\n\ndef answer(df):\n    # Group by Category and sum Revenue (excludes NaN)\n    result = df.groupby('Category')['Revenue'].sum().dropna().to_dict()\n    return result"
+  },
+  "corrections": 15,
+  "planted": 18,
+  "damaged_rows": 0,
+  "damaged_cells": 0,
+  "cleaned_available": true,
+  "system": "b2",
+  "dataset": "sales-heldout",
+  "question": "What is the total revenue by category?",
+  "reference_answer": {
+    "Accessories": 2450.0,
+    "Electronics": 29070.0,
+    "Furniture": 16505.0,
+    "Office Supplies": 972.0
+  },
+  "issues_reported": [
+    [
+      "cross_column",
+      "*"
+    ],
+    [
+      "invalid_date",
+      "Date"
+    ],
+    [
+      "label_variant",
+      "Region"
+    ],
+    [
+      "negative",
+      "Quantity"
+    ],
+    [
+      "negative",
+      "Revenue"
+    ],
+    [
+      "text_number",
+      "Quantity"
+    ]
+  ]
+}

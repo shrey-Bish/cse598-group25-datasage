@@ -1,0 +1,48 @@
+{
+  "task_id": "penguins_01_q0",
+  "analysis_correct": false,
+  "completed": true,
+  "detect_tp": 3,
+  "detect_fp": 0,
+  "detect_fn": 1,
+  "tool_calls": 0,
+  "tool_errors": 0,
+  "recovered_errors": 0,
+  "approvals_asked": 0,
+  "seconds": 0.003,
+  "tokens": 0,
+  "stop_reason": "done",
+  "note": "",
+  "answer": {
+    "FEMALE": 4400.0,
+    "MALE": 4175.0,
+    "female": 3962.1212,
+    "male": 4242.3913
+  },
+  "corrections": 1,
+  "planted": 6,
+  "damaged_rows": 0,
+  "damaged_cells": 0,
+  "cleaned_available": true,
+  "system": "b0",
+  "dataset": "penguins",
+  "question": "What is the average body mass for each sex?",
+  "reference_answer": {
+    "female": 3952.2727,
+    "male": 4237.0
+  },
+  "issues_reported": [
+    [
+      "duplicates",
+      "*"
+    ],
+    [
+      "label_variant",
+      "sex"
+    ],
+    [
+      "missing",
+      "sex"
+    ]
+  ]
+}

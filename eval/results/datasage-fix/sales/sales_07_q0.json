@@ -1,0 +1,199 @@
+{
+  "task_id": "sales_07_q0",
+  "analysis_correct": true,
+  "completed": true,
+  "detect_tp": 6,
+  "detect_fp": 1,
+  "detect_fn": 0,
+  "tool_calls": 15,
+  "tool_errors": 0,
+  "recovered_errors": 0,
+  "approvals_asked": 5,
+  "seconds": 233.26,
+  "tokens": 69358,
+  "stop_reason": "finish",
+  "note": "",
+  "answer": {
+    "2026-01": 3834.0,
+    "2026-02": 1940.0,
+    "2026-03": 16790.0,
+    "2026-04": 760.0,
+    "2026-05": 12970.0,
+    "2026-06": 7149.0
+  },
+  "extra": {
+    "final_summary": "The data had several issues affecting the total revenue per month calculation. One duplicate row was removed. The category 'Furnture' was corrected to 'Furniture'. Two invalid dates were set to missing, allowing valid dates to be grouped by month. Three rows with negative quantities (violating the rule that quantity must be >=1) were excluded. One revenue value was corrected to match the formula Revenue = Quantity * Price. After these fixes, the total revenue per month was calculated from 44 valid rows. Note: 3 rows had missing Region, but this does not affect the revenue sum by month.",
+    "changes": [
+      {
+        "version": 1,
+        "tool": "drop_duplicates",
+        "args": {
+          "reason": "One exact duplicate row found (row 16), which may cause double-counting. Removing to ensure each order is counted once."
+        },
+        "reason": "One exact duplicate row found (row 16), which may cause double-counting. Removing to ensure each order is counted once.",
+        "risk": "medium",
+        "approval": "approved",
+        "rows_removed": [
+          16
+        ],
+        "cells_changed": 0,
+        "summary": "removed 1 exact duplicate row(s)",
+        "code": "df = df.drop_duplicates(keep='first')"
+      },
+      {
+        "version": 2,
+        "tool": "normalize_labels",
+        "args": {
+          "column": "Category",
+          "mapping": {
+            "Furnture": "Furniture"
+          },
+          "reason": "One instance of 'Furnture' is a clear misspelling of 'Furniture'. Correcting to match the allowed categories in the rules."
+        },
+        "reason": "One instance of 'Furnture' is a clear misspelling of 'Furniture'. Correcting to match the allowed categories in the rules.",
+        "risk": "high",
+        "approval": "approved",
+        "rows_removed": [],
+        "cells_changed": 1,
+        "summary": "Category: merged 1 label variant(s), 1 cells",
+        "code": "df['Category'] = df['Category'].replace({'Furnture': 'Furniture'})"
+      },
+      {
+        "version": 3,
+        "tool": "parse_dates",
+        "args": {
+          "column": "Date",
+          "reason": "Two invalid dates found: '2026-14-01' (invalid month) and '13/45/2026' (wrong format). Setting these to missing so the rest of the valid dates can be used for monthly grouping."
+        },
+        "reason": "Two invalid dates found: '2026-14-01' (invalid month) and '13/45/2026' (wrong format). Setting these to missing so the rest of the valid dates can be used for monthly grouping.",
+        "risk": "medium",
+        "approval": "approved",
+        "rows_removed": [],
+        "cells_changed": 2,
+        "summary": "Date: 2 invalid date(s) set to missing",
+        "code": "df['Date'] = pd.to_datetime(df['Date'], format='%Y-%m-%d', errors='coerce').dt.strftime('%Y-%m-%d')"
+      },
+      {
+        "version": 4,
+        "tool": "exclude_rows",
+        "args": {
+          "rows": [
+            13,
+            25,
+            43
+          ],
+          "reason": "Three rows have negative Quantity (-2, -7, -6), which violates the rule that Quantity must be at least 1. These likely represent returns or errors and are excluded to ensure accurate revenue calculation."
+        },
+        "reason": "Three rows have negative Quantity (-2, -7, -6), which violates the rule that Quantity must be at least 1. These likely represent returns or errors and are excluded to ensure accurate revenue calculation.",
+        "risk": "high",
+        "approval": "approved",
+        "rows_removed": [
+          13,
+          25,
+          43
+        ],
+        "cells_changed": 0,
+        "summary": "excluded 3 row(s): [13, 25, 43]",
+        "code": "df = df.drop(index=[13, 25, 43])"
+      },
+      {
+        "version": 5,
+        "tool": "recompute_column",
+        "args": {
+          "column": "Revenue",
+          "expression": "Quantity * Price",
+          "rows": [
+            37
+          ],
+          "reason": "One row (37) has Revenue = 4805 but should be 480 (Quantity * Price = 6 * 80). Correcting to match the defined formula."
+        },
+        "reason": "One row (37) has Revenue = 4805 but should be 480 (Quantity * Price = 6 * 80). Correcting to match the defined formula.",
+        "risk": "high",
+        "approval": "approved",
+        "rows_removed": [],
+        "cells_changed": 1,
+        "summary": "Revenue: recomputed as Quantity * Price on 1 row(s)",
+        "code": "df.loc[[37], 'Revenue'] = [480.0]  # Revenue = Quantity * Price"
+      }
+    ],
+    "rejected": [],
+    "oracle_decisions": [
+      {
+        "tool": "drop_duplicates",
+        "risk": "medium",
+        "approved": true,
+        "why": "moves data toward the reference"
+      },
+      {
+        "tool": "normalize_labels",
+        "risk": "high",
+        "approved": true,
+        "why": "moves data toward the reference"
+      },
+      {
+        "tool": "parse_dates",
+        "risk": "medium",
+        "approved": true,
+        "why": "moves data toward the reference"
+      },
+      {
+        "tool": "exclude_rows",
+        "risk": "high",
+        "approved": true,
+        "why": "moves data toward the reference"
+      },
+      {
+        "tool": "recompute_column",
+        "risk": "high",
+        "approved": true,
+        "why": "moves data toward the reference"
+      }
+    ]
+  },
+  "corrections": 11,
+  "planted": 11,
+  "damaged_rows": 0,
+  "damaged_cells": 0,
+  "cleaned_available": true,
+  "system": "datasage-fix",
+  "dataset": "sales",
+  "question": "What is the total revenue per month?",
+  "reference_answer": {
+    "2026-01": 3834.0,
+    "2026-02": 1940.0,
+    "2026-03": 16790.0,
+    "2026-04": 760.0,
+    "2026-05": 12970.0,
+    "2026-06": 7149.0
+  },
+  "issues_reported": [
+    [
+      "cross_column",
+      "Revenue"
+    ],
+    [
+      "duplicates",
+      "*"
+    ],
+    [
+      "invalid_date",
+      "Date"
+    ],
+    [
+      "label_variant",
+      "Category"
+    ],
+    [
+      "missing",
+      "Region"
+    ],
+    [
+      "negative",
+      "Quantity"
+    ],
+    [
+      "out_of_range",
+      "Quantity"
+    ]
+  ]
+}

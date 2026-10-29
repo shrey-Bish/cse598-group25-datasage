@@ -1,0 +1,177 @@
+{
+  "task_id": "salesh_09_q0",
+  "analysis_correct": true,
+  "completed": true,
+  "detect_tp": 4,
+  "detect_fp": 1,
+  "detect_fn": 1,
+  "tool_calls": 16,
+  "tool_errors": 0,
+  "recovered_errors": 0,
+  "approvals_asked": 4,
+  "seconds": 17.53,
+  "tokens": 80210,
+  "stop_reason": "finish",
+  "note": "",
+  "answer": {
+    "Accessories": 30.2632,
+    "Electronics": 277.8571,
+    "Furniture": 201.1538,
+    "Office Supplies": 12.0
+  },
+  "extra": {
+    "final_summary": "The data had several issues affecting the question: (1) One row with Quantity = -7 was excluded as it violates the rule that Quantity must be at least 1; (2) The Price column contained currency symbols ('$300.00') and was converted to numeric; (3) The Region column had inconsistent labels (e.g., 'East ', ' West', 'Wst') and was normalized; (4) One missing Region value was set to missing. After fixes, the average unit price by category is: Accessories: $30.26, Electronics: $277.86, Furniture: $201.15, Office Supplies: $12.00.",
+    "changes": [
+      {
+        "version": 1,
+        "tool": "exclude_rows",
+        "args": {
+          "rows": [
+            34
+          ],
+          "reason": "Quantity is -7, which violates the rule that Quantity must be at least 1 (positive whole number)"
+        },
+        "reason": "Quantity is -7, which violates the rule that Quantity must be at least 1 (positive whole number)",
+        "risk": "high",
+        "approval": "approved",
+        "rows_removed": [
+          34
+        ],
+        "cells_changed": 0,
+        "summary": "excluded 1 row(s): [34]",
+        "code": "df = df.drop(index=[34])"
+      },
+      {
+        "version": 2,
+        "tool": "parse_dates",
+        "args": {
+          "column": "Date",
+          "reason": "Date column has valid YYYY-MM-DD format, but some values are not recognized as dates"
+        },
+        "reason": "Date column has valid YYYY-MM-DD format, but some values are not recognized as dates",
+        "risk": "medium",
+        "approval": "approved",
+        "rows_removed": [],
+        "cells_changed": 3,
+        "summary": "Date: 3 invalid date(s) set to missing",
+        "code": "df['Date'] = pd.to_datetime(df['Date'], format='%Y-%m-%d', errors='coerce').dt.strftime('%Y-%m-%d')"
+      },
+      {
+        "version": 3,
+        "tool": "cast_numeric",
+        "args": {
+          "column": "Price",
+          "reason": "Price contains currency symbols like '$300.00' and should be converted to numeric values"
+        },
+        "reason": "Price contains currency symbols like '$300.00' and should be converted to numeric values",
+        "risk": "low",
+        "approval": "auto",
+        "rows_removed": [],
+        "cells_changed": 0,
+        "summary": "Price: converted to numbers (57 text values, 0 became missing)",
+        "code": "df['Price'] = pd.to_numeric(df['Price'].astype(str).str.replace(r'[$, ]', '', regex=True), errors='coerce')"
+      },
+      {
+        "version": 4,
+        "tool": "normalize_labels",
+        "args": {
+          "column": "Region",
+          "mapping": {
+            "East ": "East",
+            " West": "West",
+            "Wst": "West"
+          },
+          "reason": "Standardize region labels to remove spaces and correct misspellings"
+        },
+        "reason": "Standardize region labels to remove spaces and correct misspellings",
+        "risk": "high",
+        "approval": "approved",
+        "rows_removed": [],
+        "cells_changed": 4,
+        "summary": "Region: merged 3 label variant(s), 4 cells",
+        "code": "df['Region'] = df['Region'].replace({'East ': 'East', ' West': 'West', 'Wst': 'West'})"
+      },
+      {
+        "version": 5,
+        "tool": "set_missing",
+        "args": {
+          "column": "Region",
+          "rows": [
+            15
+          ],
+          "reason": "Region is missing and cannot be inferred from context"
+        },
+        "reason": "Region is missing and cannot be inferred from context",
+        "risk": "high",
+        "approval": "approved",
+        "rows_removed": [],
+        "cells_changed": 0,
+        "summary": "Region: set 1 value(s) to missing",
+        "code": "df.loc[[15], 'Region'] = pd.NA"
+      }
+    ],
+    "rejected": [],
+    "oracle_decisions": [
+      {
+        "tool": "exclude_rows",
+        "risk": "high",
+        "approved": true,
+        "why": "moves data toward the reference"
+      },
+      {
+        "tool": "parse_dates",
+        "risk": "medium",
+        "approved": true,
+        "why": "moves data toward the reference"
+      },
+      {
+        "tool": "normalize_labels",
+        "risk": "high",
+        "approved": true,
+        "why": "moves data toward the reference"
+      },
+      {
+        "tool": "set_missing",
+        "risk": "high",
+        "approved": true,
+        "why": "moves data toward the reference"
+      }
+    ]
+  },
+  "corrections": 11,
+  "planted": 12,
+  "damaged_rows": 0,
+  "damaged_cells": 0,
+  "cleaned_available": true,
+  "system": "datasage-small-fix-strict",
+  "dataset": "sales-heldout",
+  "question": "What is the average unit price in each category?",
+  "reference_answer": {
+    "Accessories": 30.2632,
+    "Electronics": 277.8571,
+    "Furniture": 201.1538,
+    "Office Supplies": 12.0
+  },
+  "issues_reported": [
+    [
+      "label_variant",
+      "Region"
+    ],
+    [
+      "missing",
+      "Region"
+    ],
+    [
+      "negative",
+      "Quantity"
+    ],
+    [
+      "out_of_range",
+      "Quantity"
+    ],
+    [
+      "text_number",
+      "Price"
+    ]
+  ]
+}

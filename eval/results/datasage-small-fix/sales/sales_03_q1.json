@@ -1,0 +1,133 @@
+{
+  "task_id": "sales_03_q1",
+  "analysis_correct": true,
+  "completed": true,
+  "detect_tp": 3,
+  "detect_fp": 1,
+  "detect_fn": 1,
+  "tool_calls": 11,
+  "tool_errors": 0,
+  "recovered_errors": 0,
+  "approvals_asked": 2,
+  "seconds": 12.14,
+  "tokens": 50566,
+  "stop_reason": "finish",
+  "note": "",
+  "answer": {
+    "East": 53.0,
+    "North": 69.0,
+    "South": 34.0,
+    "West": 64.0
+  },
+  "extra": {
+    "final_summary": "The data had three rows with negative Quantity values (13, 20, 46), which violate the rule that Quantity must be at least 1. These were excluded. The Price column contained one value '$6.00' as text, which was converted to a number. Revenue values in three rows (0, 6, 44) did not match Quantity * Price and were recomputed. After fixes, the total units sold per region are: East: 53, North: 69, South: 34, West: 64.",
+    "changes": [
+      {
+        "version": 1,
+        "tool": "exclude_rows",
+        "args": {
+          "rows": [
+            13,
+            20,
+            46
+          ],
+          "reason": "Negative Quantity values (Quantity < 1) violate the rule that Quantity must be at least 1."
+        },
+        "reason": "Negative Quantity values (Quantity < 1) violate the rule that Quantity must be at least 1.",
+        "risk": "high",
+        "approval": "approved",
+        "rows_removed": [
+          13,
+          20,
+          46
+        ],
+        "cells_changed": 0,
+        "summary": "excluded 3 row(s): [13, 20, 46]",
+        "code": "df = df.drop(index=[13, 20, 46])"
+      },
+      {
+        "version": 2,
+        "tool": "cast_numeric",
+        "args": {
+          "column": "Price",
+          "reason": "Price contains a value '$6.00' that is text but represents a number."
+        },
+        "reason": "Price contains a value '$6.00' that is text but represents a number.",
+        "risk": "low",
+        "approval": "auto",
+        "rows_removed": [],
+        "cells_changed": 0,
+        "summary": "Price: converted to numbers (51 text values, 0 became missing)",
+        "code": "df['Price'] = pd.to_numeric(df['Price'].astype(str).str.replace(r'[$, ]', '', regex=True), errors='coerce')"
+      },
+      {
+        "version": 3,
+        "tool": "recompute_column",
+        "args": {
+          "column": "Revenue",
+          "expression": "Quantity * Price",
+          "rows": [
+            0,
+            6,
+            44
+          ],
+          "reason": "Revenue does not match Quantity * Price for these rows; recompute to fix."
+        },
+        "reason": "Revenue does not match Quantity * Price for these rows; recompute to fix.",
+        "risk": "high",
+        "approval": "approved",
+        "rows_removed": [],
+        "cells_changed": 3,
+        "summary": "Revenue: recomputed as Quantity * Price on 3 row(s)",
+        "code": "df.loc[[0, 6, 44], 'Revenue'] = [1400.0, 480.0, 1080.0]  # Revenue = Quantity * Price"
+      }
+    ],
+    "rejected": [],
+    "oracle_decisions": [
+      {
+        "tool": "exclude_rows",
+        "risk": "high",
+        "approved": true,
+        "why": "moves data toward the reference"
+      },
+      {
+        "tool": "recompute_column",
+        "risk": "high",
+        "approved": true,
+        "why": "moves data toward the reference"
+      }
+    ]
+  },
+  "corrections": 7,
+  "planted": 8,
+  "damaged_rows": 0,
+  "damaged_cells": 0,
+  "cleaned_available": true,
+  "system": "datasage-small-fix",
+  "dataset": "sales",
+  "question": "How many units were sold in each region?",
+  "reference_answer": {
+    "East": 53.0,
+    "North": 69.0,
+    "South": 34.0,
+    "West": 64.0
+  },
+  "issues_reported": [
+    [
+      "cross_column",
+      "Revenue"
+    ],
+    [
+      "negative",
+      "Quantity"
+    ],
+    [
+      "out_of_range",
+      "Quantity"
+    ],
+    [
+      "text_number",
+      "Price"
+    ]
+  ]
+}

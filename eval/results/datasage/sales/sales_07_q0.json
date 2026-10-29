@@ -1,0 +1,70 @@
+{
+  "task_id": "sales_07_q0",
+  "analysis_correct": false,
+  "completed": true,
+  "detect_tp": 6,
+  "detect_fp": 1,
+  "detect_fn": 0,
+  "tool_calls": 15,
+  "tool_errors": 0,
+  "recovered_errors": 0,
+  "approvals_asked": 5,
+  "seconds": 259.36,
+  "tokens": 68384,
+  "stop_reason": "finish",
+  "note": "",
+  "answer": {
+    "2026-01": 3834.0,
+    "2026-02": 1928.0,
+    "2026-03": 16510.0,
+    "2026-04": 760.0,
+    "2026-05": 12820.0,
+    "2026-06": 7149.0
+  },
+  "corrections": 8,
+  "planted": 11,
+  "damaged_rows": 0,
+  "damaged_cells": 0,
+  "cleaned_available": true,
+  "system": "datasage",
+  "dataset": "sales",
+  "question": "What is the total revenue per month?",
+  "reference_answer": {
+    "2026-01": 3834.0,
+    "2026-02": 1940.0,
+    "2026-03": 16790.0,
+    "2026-04": 760.0,
+    "2026-05": 12970.0,
+    "2026-06": 7149.0
+  },
+  "issues_reported": [
+    [
+      "cross_column",
+      "Revenue"
+    ],
+    [
+      "duplicates",
+      "*"
+    ],
+    [
+      "invalid_date",
+      "Date"
+    ],
+    [
+      "label_variant",
+      "Category"
+    ],
+    [
+      "missing",
+      "Region"
+    ],
+    [
+      "negative",
+      "Quantity"
+    ],
+    [
+      "out_of_range",
+      "Quantity"
+    ]
+  ]
+}

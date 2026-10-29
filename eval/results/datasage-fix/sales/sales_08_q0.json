@@ -1,0 +1,151 @@
+{
+  "task_id": "sales_08_q0",
+  "analysis_correct": true,
+  "completed": true,
+  "detect_tp": 4,
+  "detect_fp": 1,
+  "detect_fn": 1,
+  "tool_calls": 13,
+  "tool_errors": 0,
+  "recovered_errors": 0,
+  "approvals_asked": 2,
+  "seconds": 188.97,
+  "tokens": 60271,
+  "stop_reason": "finish",
+  "note": "",
+  "answer": {
+    "2026-01": 4356.0,
+    "2026-02": 9349.0,
+    "2026-03": 1254.0,
+    "2026-04": 1005.0,
+    "2026-05": 6566.0,
+    "2026-06": 3322.0
+  },
+  "extra": {
+    "final_summary": "Found and fixed: 2 invalid dates (set to missing), 1 label variant in Category (accessories -> Accessories), 1 text-formatted price ($350.00 -> 350.00), and 2 rows with negative Quantity (excluded). Revenue is correctly calculated as Quantity * Price. Total revenue per month: Jan 2026: $4,356; Feb 2026: $9,349; Mar 2026: $1,254; Apr 2026: $1,005; May 2026: $6,566; Jun 2026: $3,322.",
+    "changes": [
+      {
+        "version": 1,
+        "tool": "parse_dates",
+        "args": {
+          "column": "Date",
+          "reason": "2 values are invalid dates ('TBD', '13/45/2026') and must be set to missing to allow date parsing"
+        },
+        "reason": "2 values are invalid dates ('TBD', '13/45/2026') and must be set to missing to allow date parsing",
+        "risk": "medium",
+        "approval": "approved",
+        "rows_removed": [],
+        "cells_changed": 2,
+        "summary": "Date: 2 invalid date(s) set to missing",
+        "code": "df['Date'] = pd.to_datetime(df['Date'], format='%Y-%m-%d', errors='coerce').dt.strftime('%Y-%m-%d')"
+      },
+      {
+        "version": 2,
+        "tool": "normalize_labels",
+        "args": {
+          "column": "Category",
+          "mapping": {
+            "accessories": "Accessories"
+          },
+          "reason": "Standardize 'accessories' to 'Accessories' to match allowed values in rules"
+        },
+        "reason": "Standardize 'accessories' to 'Accessories' to match allowed values in rules",
+        "risk": "low",
+        "approval": "auto",
+        "rows_removed": [],
+        "cells_changed": 1,
+        "summary": "Category: merged 1 label variant(s), 1 cells",
+        "code": "df['Category'] = df['Category'].replace({'accessories': 'Accessories'})"
+      },
+      {
+        "version": 3,
+        "tool": "cast_numeric",
+        "args": {
+          "column": "Price",
+          "reason": "Convert '$350.00' to 350.00 so it can be used in calculations"
+        },
+        "reason": "Convert '$350.00' to 350.00 so it can be used in calculations",
+        "risk": "low",
+        "approval": "auto",
+        "rows_removed": [],
+        "cells_changed": 0,
+        "summary": "Price: converted to numbers (41 text values, 0 became missing)",
+        "code": "df['Price'] = pd.to_numeric(df['Price'].astype(str).str.replace(r'[$, ]', '', regex=True), errors='coerce')"
+      },
+      {
+        "version": 4,
+        "tool": "exclude_rows",
+        "args": {
+          "rows": [
+            9,
+            37
+          ],
+          "reason": "Quantity is negative (-3 and -8), but rules state Quantity must be at least 1"
+        },
+        "reason": "Quantity is negative (-3 and -8), but rules state Quantity must be at least 1",
+        "risk": "high",
+        "approval": "approved",
+        "rows_removed": [
+          9,
+          37
+        ],
+        "cells_changed": 0,
+        "summary": "excluded 2 row(s): [9, 37]",
+        "code": "df = df.drop(index=[9, 37])"
+      }
+    ],
+    "rejected": [],
+    "oracle_decisions": [
+      {
+        "tool": "parse_dates",
+        "risk": "medium",
+        "approved": true,
+        "why": "moves data toward the reference"
+      },
+      {
+        "tool": "exclude_rows",
+        "risk": "high",
+        "approved": true,
+        "why": "moves data toward the reference"
+      }
+    ]
+  },
+  "corrections": 8,
+  "planted": 8,
+  "damaged_rows": 0,
+  "damaged_cells": 0,
+  "cleaned_available": true,
+  "system": "datasage-fix",
+  "dataset": "sales",
+  "question": "What is the total revenue per month?",
+  "reference_answer": {
+    "2026-01": 4356.0,
+    "2026-02": 9349.0,
+    "2026-03": 1254.0,
+    "2026-04": 1005.0,
+    "2026-05": 6566.0,
+    "2026-06": 3322.0
+  },
+  "issues_reported": [
+    [
+      "invalid_date",
+      "Date"
+    ],
+    [
+      "label_variant",
+      "Category"
+    ],
+    [
+      "missing",
+      "Region"
+    ],
+    [
+      "out_of_range",
+      "Quantity"
+    ],
+    [
+      "text_number",
+      "Price"
+    ]
+  ]
+}

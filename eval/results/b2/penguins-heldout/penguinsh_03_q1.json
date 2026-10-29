@@ -1,0 +1,59 @@
+{
+  "task_id": "penguinsh_03_q1",
+  "analysis_correct": false,
+  "completed": true,
+  "detect_tp": 5,
+  "detect_fp": 0,
+  "detect_fn": 1,
+  "tool_calls": 0,
+  "tool_errors": 0,
+  "recovered_errors": 0,
+  "approvals_asked": 0,
+  "seconds": 26.22,
+  "tokens": 2565,
+  "stop_reason": "done",
+  "note": "",
+  "answer": {
+    "Biscoe": 21.0,
+    "Dream": 17.0,
+    "Torgersen": 4.0
+  },
+  "extra": {
+    "code": "import pandas as pd\n\ndef clean(df):\n    # Fix species typo\n    df = df.copy()\n    df['species'] = df['species'].replace({'Adeile': 'Adelie'})\n    \n    # Fix island leading spaces\n    df['island'] = df['island'].str.strip()\n    \n    # Fix sex case\n    df['sex'] = df['sex'].str.lower()\n    \n    # Remove exact duplicate rows\n    df = df.drop_duplicates().reset_index(drop=True)\n    \n    # Fix body_mass_g out of range (4850000 is way too high)\n    # Using domain knowledge: likely extra zeros, so divide by 1000\n    df.loc[df['body_mass_g'] > 6500, 'body_mass_g'] = df.loc[df['body_mass_g'] > 6500, 'body_mass_g'] / 1000\n    \n    return df\n\ndef answer(df):\n    df = clean(df)\n    counts = df['island'].value_counts().sort_index()\n    return {idx: val for idx, val in counts.items()}\n"
+  },
+  "corrections": 8,
+  "planted": 9,
+  "damaged_rows": 0,
+  "damaged_cells": 0,
+  "cleaned_available": true,
+  "system": "b2",
+  "dataset": "penguins-heldout",
+  "question": "How many penguins were measured on each island?",
+  "reference_answer": {
+    "Biscoe": 20.0,
+    "Dream": 17.0,
+    "Torgersen": 4.0
+  },
+  "issues_reported": [
+    [
+      "duplicates",
+      "*"
+    ],
+    [
+      "label_variant",
+      "island"
+    ],
+    [
+      "label_variant",
+      "sex"
+    ],
+    [
+      "label_variant",
+      "species"
+    ],
+    [
+      "out_of_range",
+      "body_mass_g"
+    ]
+  ]
+}

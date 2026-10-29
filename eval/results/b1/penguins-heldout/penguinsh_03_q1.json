@@ -1,0 +1,53 @@
+{
+  "task_id": "penguinsh_03_q1",
+  "analysis_correct": false,
+  "completed": true,
+  "detect_tp": 4,
+  "detect_fp": 0,
+  "detect_fn": 2,
+  "tool_calls": 0,
+  "tool_errors": 0,
+  "recovered_errors": 0,
+  "approvals_asked": 0,
+  "seconds": 0.034,
+  "tokens": 0,
+  "stop_reason": "done",
+  "note": "",
+  "answer": {
+    "Biscoe": 21.0,
+    "Dream": 17.0,
+    "Torgersen": 4.0
+  },
+  "extra": {},
+  "corrections": 7,
+  "planted": 9,
+  "damaged_rows": 0,
+  "damaged_cells": 0,
+  "cleaned_available": true,
+  "system": "b1",
+  "dataset": "penguins-heldout",
+  "question": "How many penguins were measured on each island?",
+  "reference_answer": {
+    "Biscoe": 20.0,
+    "Dream": 17.0,
+    "Torgersen": 4.0
+  },
+  "issues_reported": [
+    [
+      "duplicates",
+      "*"
+    ],
+    [
+      "label_variant",
+      "island"
+    ],
+    [
+      "label_variant",
+      "sex"
+    ],
+    [
+      "missing",
+      "sex"
+    ]
+  ]
+}

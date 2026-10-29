@@ -1,0 +1,119 @@
+{
+  "task_id": "sales_04_q0",
+  "analysis_correct": true,
+  "completed": true,
+  "detect_tp": 3,
+  "detect_fp": 0,
+  "detect_fn": 1,
+  "tool_calls": 10,
+  "tool_errors": 0,
+  "recovered_errors": 0,
+  "approvals_asked": 1,
+  "seconds": 151.01,
+  "tokens": 45609,
+  "stop_reason": "finish",
+  "note": "",
+  "answer": {
+    "Accessories": 13.0,
+    "Electronics": 12.0,
+    "Furniture": 11.0,
+    "Office Supplies": 12.0
+  },
+  "extra": {
+    "final_summary": "Found and fixed label variants in Category (leading/trailing spaces) and Region (misspellings), and converted Price from text to number. All Revenue values were correct per Quantity * Price. Counted 48 orders: 13 in Accessories, 12 in Electronics, 12 in Office Supplies, and 11 in Furniture.",
+    "changes": [
+      {
+        "version": 1,
+        "tool": "normalize_labels",
+        "args": {
+          "column": "Category",
+          "mapping": {
+            " Accessories": "Accessories",
+            "Office Supplies ": "Office Supplies",
+            " Furniture": "Furniture"
+          },
+          "reason": "Fix trailing/leading spaces in Category labels to match allowed values"
+        },
+        "reason": "Fix trailing/leading spaces in Category labels to match allowed values",
+        "risk": "low",
+        "approval": "auto",
+        "rows_removed": [],
+        "cells_changed": 3,
+        "summary": "Category: merged 3 label variant(s), 3 cells",
+        "code": "df['Category'] = df['Category'].replace({' Accessories': 'Accessories', 'Office Supplies ': 'Office Supplies', ' Furniture': 'Furniture'})"
+      },
+      {
+        "version": 2,
+        "tool": "normalize_labels",
+        "args": {
+          "column": "Region",
+          "mapping": {
+            "Nort": "North",
+            "Suoth": "South",
+            "Wst": "West"
+          },
+          "reason": "Correct likely misspellings in Region to match allowed values"
+        },
+        "reason": "Correct likely misspellings in Region to match allowed values",
+        "risk": "high",
+        "approval": "approved",
+        "rows_removed": [],
+        "cells_changed": 3,
+        "summary": "Region: merged 3 label variant(s), 3 cells",
+        "code": "df['Region'] = df['Region'].replace({'Nort': 'North', 'Suoth': 'South', 'Wst': 'West'})"
+      },
+      {
+        "version": 3,
+        "tool": "cast_numeric",
+        "args": {
+          "column": "Price",
+          "reason": "Convert Price from text to number to enable calculations, e.g. '$40.00' -> 40.00"
+        },
+        "reason": "Convert Price from text to number to enable calculations, e.g. '$40.00' -> 40.00",
+        "risk": "low",
+        "approval": "auto",
+        "rows_removed": [],
+        "cells_changed": 0,
+        "summary": "Price: converted to numbers (48 text values, 0 became missing)",
+        "code": "df['Price'] = pd.to_numeric(df['Price'].astype(str).str.replace(r'[$, ]', '', regex=True), errors='coerce')"
+      }
+    ],
+    "rejected": [],
+    "oracle_decisions": [
+      {
+        "tool": "normalize_labels",
+        "risk": "high",
+        "approved": true,
+        "why": "moves data toward the reference"
+      }
+    ]
+  },
+  "corrections": 8,
+  "planted": 8,
+  "damaged_rows": 0,
+  "damaged_cells": 0,
+  "cleaned_available": true,
+  "system": "datasage-fix",
+  "dataset": "sales",
+  "question": "How many orders are there in each category?",
+  "reference_answer": {
+    "Accessories": 13.0,
+    "Electronics": 12.0,
+    "Furniture": 11.0,
+    "Office Supplies": 12.0
+  },
+  "issues_reported": [
+    [
+      "label_variant",
+      "Category"
+    ],
+    [
+      "label_variant",
+      "Region"
+    ],
+    [
+      "text_number",
+      "Price"
+    ]
+  ]
+}

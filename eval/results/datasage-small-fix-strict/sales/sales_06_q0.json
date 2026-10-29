@@ -1,0 +1,205 @@
+{
+  "task_id": "sales_06_q0",
+  "analysis_correct": true,
+  "completed": true,
+  "detect_tp": 5,
+  "detect_fp": 1,
+  "detect_fn": 0,
+  "tool_calls": 17,
+  "tool_errors": 0,
+  "recovered_errors": 0,
+  "approvals_asked": 5,
+  "seconds": 16.3,
+  "tokens": 81650,
+  "stop_reason": "finish",
+  "note": "",
+  "answer": {
+    "East": 59.0,
+    "North": 56.0,
+    "South": 79.0,
+    "West": 72.0
+  },
+  "extra": {
+    "final_summary": "The data had several issues affecting the question: 1) 3 invalid dates (TBD, 13/45/2026, not-a-date) were set to missing; 2) 1 missing Region value was set to missing; 3) ' East' (with space) and 'Suoth' (misspelling) were normalized to 'East' and 'South'; 4) 1 row with Quantity = -4 was excluded (invalid per rules); 5) 2 duplicate rows were removed. After fixes, the analysis shows: East: 59 units, North: 56 units, South: 79 units, West: 72 units.",
+    "changes": [
+      {
+        "version": 1,
+        "tool": "parse_dates",
+        "args": {
+          "column": "Date",
+          "reason": "3 rows have invalid dates (TBD, 13/45/2026, not-a-date); these will be set to missing"
+        },
+        "reason": "3 rows have invalid dates (TBD, 13/45/2026, not-a-date); these will be set to missing",
+        "risk": "medium",
+        "approval": "approved",
+        "rows_removed": [],
+        "cells_changed": 3,
+        "summary": "Date: 3 invalid date(s) set to missing",
+        "code": "df['Date'] = pd.to_datetime(df['Date'], format='%Y-%m-%d', errors='coerce').dt.strftime('%Y-%m-%d')"
+      },
+      {
+        "version": 2,
+        "tool": "set_missing",
+        "args": {
+          "column": "Region",
+          "rows": [
+            26
+          ],
+          "reason": "missing region value in row 26"
+        },
+        "reason": "missing region value in row 26",
+        "risk": "high",
+        "approval": "approved",
+        "rows_removed": [],
+        "cells_changed": 0,
+        "summary": "Region: set 1 value(s) to missing",
+        "code": "df.loc[[26], 'Region'] = pd.NA"
+      },
+      {
+        "version": 3,
+        "tool": "normalize_labels",
+        "args": {
+          "column": "Region",
+          "mapping": {
+            " East": "East"
+          },
+          "reason": "space variant of 'East'"
+        },
+        "reason": "space variant of 'East'",
+        "risk": "low",
+        "approval": "auto",
+        "rows_removed": [],
+        "cells_changed": 1,
+        "summary": "Region: merged 1 label variant(s), 1 cells",
+        "code": "df['Region'] = df['Region'].replace({' East': 'East'})"
+      },
+      {
+        "version": 4,
+        "tool": "normalize_labels",
+        "args": {
+          "column": "Region",
+          "mapping": {
+            "Suoth": "South"
+          },
+          "reason": "likely misspelling of 'South'"
+        },
+        "reason": "likely misspelling of 'South'",
+        "risk": "high",
+        "approval": "approved",
+        "rows_removed": [],
+        "cells_changed": 1,
+        "summary": "Region: merged 1 label variant(s), 1 cells",
+        "code": "df['Region'] = df['Region'].replace({'Suoth': 'South'})"
+      },
+      {
+        "version": 5,
+        "tool": "exclude_rows",
+        "args": {
+          "rows": [
+            21
+          ],
+          "reason": "Quantity = -4 is invalid (must be >= 1 per rules)"
+        },
+        "reason": "Quantity = -4 is invalid (must be >= 1 per rules)",
+        "risk": "high",
+        "approval": "approved",
+        "rows_removed": [
+          21
+        ],
+        "cells_changed": 0,
+        "summary": "excluded 1 row(s): [21]",
+        "code": "df = df.drop(index=[21])"
+      },
+      {
+        "version": 6,
+        "tool": "drop_duplicates",
+        "args": {
+          "reason": "2 exact duplicate rows found (rows 40 and 51); keeping first copy"
+        },
+        "reason": "2 exact duplicate rows found (rows 40 and 51); keeping first copy",
+        "risk": "medium",
+        "approval": "approved",
+        "rows_removed": [
+          40,
+          51
+        ],
+        "cells_changed": 0,
+        "summary": "removed 2 exact duplicate row(s)",
+        "code": "df = df.drop_duplicates(keep='first')"
+      }
+    ],
+    "rejected": [],
+    "oracle_decisions": [
+      {
+        "tool": "parse_dates",
+        "risk": "medium",
+        "approved": true,
+        "why": "moves data toward the reference"
+      },
+      {
+        "tool": "set_missing",
+        "risk": "high",
+        "approved": true,
+        "why": "moves data toward the reference"
+      },
+      {
+        "tool": "normalize_labels",
+        "risk": "high",
+        "approved": true,
+        "why": "moves data toward the reference"
+      },
+      {
+        "tool": "exclude_rows",
+        "risk": "high",
+        "approved": true,
+        "why": "moves data toward the reference"
+      },
+      {
+        "tool": "drop_duplicates",
+        "risk": "medium",
+        "approved": true,
+        "why": "moves data toward the reference"
+      }
+    ]
+  },
+  "corrections": 9,
+  "planted": 9,
+  "damaged_rows": 0,
+  "damaged_cells": 0,
+  "cleaned_available": true,
+  "system": "datasage-small-fix-strict",
+  "dataset": "sales",
+  "question": "How many units were sold in each region?",
+  "reference_answer": {
+    "East": 59.0,
+    "North": 56.0,
+    "South": 79.0,
+    "West": 72.0
+  },
+  "issues_reported": [
+    [
+      "duplicates",
+      "*"
+    ],
+    [
+      "invalid_date",
+      "Date"
+    ],
+    [
+      "label_variant",
+      "Region"
+    ],
+    [
+      "missing",
+      "Region"
+    ],
+    [
+      "negative",
+      "Quantity"
+    ],
+    [
+      "out_of_range",
+      "Quantity"
+    ]
+  ]
+}

@@ -1,0 +1,126 @@
+{
+  "task_id": "sales_02_q0",
+  "analysis_correct": false,
+  "completed": true,
+  "detect_tp": 4,
+  "detect_fp": 0,
+  "detect_fn": 0,
+  "tool_calls": 11,
+  "tool_errors": 0,
+  "recovered_errors": 0,
+  "approvals_asked": 1,
+  "seconds": 136.64,
+  "tokens": 50888,
+  "stop_reason": "finish",
+  "note": "",
+  "answer": {
+    "2026-01": 26286.0,
+    "2026-02": 15032.0,
+    "2026-03": 27268.0,
+    "2026-04": 6944.0,
+    "2026-05": 4971.0,
+    "2026-06": 4586.0
+  },
+  "extra": {
+    "final_summary": "Found and fixed: (1) trailing/leading spaces in Category (3 cells), (2) lowercase variants in Region (3 cells), (3) currency symbols in Price (2 cells). Left uncorrected: Revenue for rows 30 and 33 does not match Quantity * Price; fix was rejected. Answer uses the original Revenue values.",
+    "changes": [
+      {
+        "version": 1,
+        "tool": "normalize_labels",
+        "args": {
+          "column": "Category",
+          "mapping": {
+            "Electronics ": "Electronics",
+            " Electronics": "Electronics",
+            "Accessories ": "Accessories"
+          },
+          "reason": "Fix trailing/leading spaces in Category to match allowed values"
+        },
+        "reason": "Fix trailing/leading spaces in Category to match allowed values",
+        "risk": "low",
+        "approval": "auto",
+        "rows_removed": [],
+        "cells_changed": 3,
+        "summary": "Category: merged 3 label variant(s), 3 cells",
+        "code": "df['Category'] = df['Category'].replace({'Electronics ': 'Electronics', ' Electronics': 'Electronics', 'Accessories ': 'Accessories'})"
+      },
+      {
+        "version": 2,
+        "tool": "normalize_labels",
+        "args": {
+          "column": "Region",
+          "mapping": {
+            "west": "West",
+            "east": "East",
+            "north": "North"
+          },
+          "reason": "Fix lowercase variants in Region to match allowed values"
+        },
+        "reason": "Fix lowercase variants in Region to match allowed values",
+        "risk": "low",
+        "approval": "auto",
+        "rows_removed": [],
+        "cells_changed": 3,
+        "summary": "Region: merged 3 label variant(s), 3 cells",
+        "code": "df['Region'] = df['Region'].replace({'west': 'West', 'east': 'East', 'north': 'North'})"
+      },
+      {
+        "version": 3,
+        "tool": "cast_numeric",
+        "args": {
+          "column": "Price",
+          "reason": "Convert Price from text to number, removing currency symbols like '$'"
+        },
+        "reason": "Convert Price from text to number, removing currency symbols like '$'",
+        "risk": "low",
+        "approval": "auto",
+        "rows_removed": [],
+        "cells_changed": 0,
+        "summary": "Price: converted to numbers (47 text values, 0 became missing)",
+        "code": "df['Price'] = pd.to_numeric(df['Price'].astype(str).str.replace(r'[$, ]', '', regex=True), errors='coerce')"
+      }
+    ],
+    "rejected": [
+      {
+        "tool": "recompute_column",
+        "risk": "high",
+        "summary": "Revenue: recomputed as Quantity * Price on 2 row(s)"
+      }
+    ],
+    "oracle_decisions": []
+  },
+  "corrections": 8,
+  "planted": 10,
+  "damaged_rows": 0,
+  "damaged_cells": 0,
+  "cleaned_available": true,
+  "system": "datasage-reject",
+  "dataset": "sales",
+  "question": "What is the total revenue per month?",
+  "reference_answer": {
+    "2026-01": 4011.0,
+    "2026-02": 15032.0,
+    "2026-03": 12418.0,
+    "2026-04": 6944.0,
+    "2026-05": 4971.0,
+    "2026-06": 4586.0
+  },
+  "issues_reported": [
+    [
+      "cross_column",
+      "Revenue"
+    ],
+    [
+      "label_variant",
+      "Category"
+    ],
+    [
+      "label_variant",
+      "Region"
+    ],
+    [
+      "text_number",
+      "Price"
+    ]
+  ]
+}

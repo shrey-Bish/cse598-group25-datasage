@@ -1,0 +1,126 @@
+{
+  "task_id": "salesh_01_q1",
+  "analysis_correct": true,
+  "completed": true,
+  "detect_tp": 3,
+  "detect_fp": 0,
+  "detect_fn": 0,
+  "tool_calls": 10,
+  "tool_errors": 0,
+  "recovered_errors": 0,
+  "approvals_asked": 2,
+  "seconds": 154.95,
+  "tokens": 43286,
+  "stop_reason": "finish",
+  "note": "",
+  "answer": {
+    "Accessories": 21.0,
+    "Electronics": 18.0,
+    "Furniture": 14.0,
+    "Office Supplies": 17.0
+  },
+  "extra": {
+    "final_summary": "Found and fixed data issues affecting the count of orders by category. Initially, there were 2 exact duplicate rows (e.g., row 6 and row 60), which were removed to prevent double-counting. The 'Category' column had label inconsistencies: 3 variants due to extra spaces (e.g., ' Furniture', 'Furniture ') and 2 likely misspellings ('Furnture', 'Accesories'). All were normalized to the correct categories per the rules file. The 'Revenue' column was verified to equal 'Quantity * Price' and had no errors. One missing value in 'Region' was noted but does not affect the category count. After cleaning, the analysis shows: Accessories (21 orders), Electronics (18 orders), Furniture (14 orders), and Office Supplies (17 orders).",
+    "changes": [
+      {
+        "version": 1,
+        "tool": "drop_duplicates",
+        "args": {
+          "reason": "2 exact duplicate rows found (row 6 and row 60 are duplicates of earlier rows); removing duplicates to avoid double-counting orders"
+        },
+        "reason": "2 exact duplicate rows found (row 6 and row 60 are duplicates of earlier rows); removing duplicates to avoid double-counting orders",
+        "risk": "medium",
+        "approval": "approved",
+        "rows_removed": [
+          6,
+          60
+        ],
+        "cells_changed": 0,
+        "summary": "removed 2 exact duplicate row(s)",
+        "code": "df = df.drop_duplicates(keep='first')"
+      },
+      {
+        "version": 2,
+        "tool": "normalize_labels",
+        "args": {
+          "column": "Category",
+          "mapping": {
+            " Office Supplies": "Office Supplies",
+            " Furniture": "Furniture",
+            "Furniture ": "Furniture"
+          },
+          "reason": "merging case and space variants in Category column: ' Office Supplies' -> 'Office Supplies', ' Furniture' -> 'Furniture', 'Furniture ' -> 'Furniture'"
+        },
+        "reason": "merging case and space variants in Category column: ' Office Supplies' -> 'Office Supplies', ' Furniture' -> 'Furniture', 'Furniture ' -> 'Furniture'",
+        "risk": "low",
+        "approval": "auto",
+        "rows_removed": [],
+        "cells_changed": 3,
+        "summary": "Category: merged 3 label variant(s), 3 cells",
+        "code": "df['Category'] = df['Category'].replace({' Office Supplies': 'Office Supplies', ' Furniture': 'Furniture', 'Furniture ': 'Furniture'})"
+      },
+      {
+        "version": 3,
+        "tool": "normalize_labels",
+        "args": {
+          "column": "Category",
+          "mapping": {
+            "Furnture": "Furniture",
+            "Accesories": "Accessories"
+          },
+          "reason": "merging likely misspellings in Category: 'Furnture' -> 'Furniture', 'Accesories' -> 'Accessories'"
+        },
+        "reason": "merging likely misspellings in Category: 'Furnture' -> 'Furniture', 'Accesories' -> 'Accessories'",
+        "risk": "high",
+        "approval": "approved",
+        "rows_removed": [],
+        "cells_changed": 3,
+        "summary": "Category: merged 2 label variant(s), 3 cells",
+        "code": "df['Category'] = df['Category'].replace({'Furnture': 'Furniture', 'Accesories': 'Accessories'})"
+      }
+    ],
+    "rejected": [],
+    "oracle_decisions": [
+      {
+        "tool": "drop_duplicates",
+        "risk": "medium",
+        "approved": true,
+        "why": "moves data toward the reference"
+      },
+      {
+        "tool": "normalize_labels",
+        "risk": "high",
+        "approved": true,
+        "why": "moves data toward the reference"
+      }
+    ]
+  },
+  "corrections": 9,
+  "planted": 9,
+  "damaged_rows": 0,
+  "damaged_cells": 0,
+  "cleaned_available": true,
+  "system": "datasage",
+  "dataset": "sales-heldout",
+  "question": "How many orders are there in each category?",
+  "reference_answer": {
+    "Accessories": 21.0,
+    "Electronics": 18.0,
+    "Furniture": 14.0,
+    "Office Supplies": 17.0
+  },
+  "issues_reported": [
+    [
+      "duplicates",
+      "*"
+    ],
+    [
+      "label_variant",
+      "Category"
+    ],
+    [
+      "missing",
+      "Region"
+    ]
+  ]
+}

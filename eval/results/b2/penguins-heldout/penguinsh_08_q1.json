@@ -1,0 +1,55 @@
+{
+  "task_id": "penguinsh_08_q1",
+  "analysis_correct": true,
+  "completed": true,
+  "detect_tp": 4,
+  "detect_fp": 0,
+  "detect_fn": 0,
+  "tool_calls": 0,
+  "tool_errors": 0,
+  "recovered_errors": 0,
+  "approvals_asked": 0,
+  "seconds": 47.14,
+  "tokens": 2560,
+  "stop_reason": "done",
+  "note": "",
+  "answer": {
+    "Adelie": 190.38,
+    "Chinstrap": 196.0,
+    "Gentoo": 215.39
+  },
+  "extra": {
+    "code": "import pandas as pd\n\ndef clean(df):\n    # Remove exact duplicate rows\n    df = df.drop_duplicates()\n    \n    # Fix island label variants\n    island_mapping = {'Dram': 'Dream', 'Torgerson': 'Torgersen'}\n    df['island'] = df['island'].replace(island_mapping)\n    \n    # Fix sex label variants (only FEMALE -> female, leave others as is)\n    df['sex'] = df['sex'].replace({'FEMALE': 'female'})\n    \n    # Convert body_mass_g from text to number (remove commas and convert)\n    df['body_mass_g'] = df['body_mass_g'].astype(str).str.replace(',', '').astype(float)\n    \n    # Ensure flipper_length_mm is numeric (it's stored as string in sample)\n    df['flipper_length_mm'] = pd.to_numeric(df['flipper_length_mm'], errors='coerce')\n    \n    return df\n\ndef answer(df):\n    # Group by species and calculate mean flipper length\n    result = df.groupby('species')['flipper_length_mm'].mean().round(2).to_dict()\n    return result"
+  },
+  "corrections": 9,
+  "planted": 9,
+  "damaged_rows": 0,
+  "damaged_cells": 0,
+  "cleaned_available": true,
+  "system": "b2",
+  "dataset": "penguins-heldout",
+  "question": "What is the average flipper length for each species?",
+  "reference_answer": {
+    "Adelie": 190.375,
+    "Chinstrap": 196.0,
+    "Gentoo": 215.3913
+  },
+  "issues_reported": [
+    [
+      "duplicates",
+      "*"
+    ],
+    [
+      "label_variant",
+      "island"
+    ],
+    [
+      "label_variant",
+      "sex"
+    ],
+    [
+      "text_number",
+      "body_mass_g"
+    ]
+  ]
+}

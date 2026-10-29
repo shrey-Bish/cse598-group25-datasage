@@ -1,0 +1,67 @@
+{
+  "task_id": "penguins_08_q1",
+  "analysis_correct": false,
+  "completed": true,
+  "detect_tp": 3,
+  "detect_fp": 4,
+  "detect_fn": 2,
+  "tool_calls": 0,
+  "tool_errors": 0,
+  "recovered_errors": 0,
+  "approvals_asked": 0,
+  "seconds": 0.65,
+  "tokens": 2690,
+  "stop_reason": "done",
+  "note": "",
+  "answer": {
+    "Biscoe": 39.385714285714286,
+    "Dream": 39.271428571428565,
+    "Torgersen": 37.945454545454545
+  },
+  "extra": {
+    "code": "import pandas as pd\n\ndef clean(df):\n    # Fix island: standardize 'dream' to 'Dream'\n    df = df.copy()\n    df['island'] = df['island'].replace({'dream': 'Dream'})\n    \n    # Fix sex: strip extra spaces\n    df['sex'] = df['sex'].str.strip() if df['sex'].dtype == 'object' else df['sex']\n    \n    # Convert text numbers to numeric for flipper_length_mm, body_mass_g, and year\n    df['flipper_length_mm'] = pd.to_numeric(df['flipper_length_mm'], errors='coerce')\n    df['body_mass_g'] = pd.to_numeric(df['body_mass_g'], errors='coerce')\n    df['year'] = pd.to_numeric(df['year'], errors='coerce')\n    \n    # Fix flipper_length_mm: remove negative values (invalid)\n    df.loc[df['flipper_length_mm'] < 0, 'flipper_length_mm'] = pd.NA\n    \n    # Fix body_mass_g: cap at max 6500 (per rules)\n    df.loc[df['body_mass_g'] > 6500, 'body_mass_g'] = pd.NA\n    \n    return df\n\ndef answer(df):\n    # Filter for Adelie penguins only\n    ad = df[df['species'] == 'Adelie']\n    # Group by island and compute average bill length\n    result = ad.groupby('island')['bill_length_mm'].mean().dropna().to_dict()\n    return result"
+  },
+  "corrections": 6,
+  "planted": 12,
+  "damaged_rows": 0,
+  "damaged_cells": 0,
+  "cleaned_available": true,
+  "system": "b2",
+  "dataset": "penguins",
+  "question": "What is the average bill length by island for Adelie penguins?",
+  "reference_answer": {
+    "Biscoe": 39.3857,
+    "Dream": 39.2714,
+    "Torgersen": 37.53
+  },
+  "issues_reported": [
+    [
+      "label_variant",
+      "island"
+    ],
+    [
+      "negative",
+      "flipper_length_mm"
+    ],
+    [
+      "out_of_range",
+      "body_mass_g"
+    ],
+    [
+      "text_number",
+      "body_mass_g"
+    ],
+    [
+      "text_number",
+      "flipper_length_mm"
+    ],
+    [
+      "text_number",
+      "year"
+    ],
+    [
+      "values_with_extra_spaces",
+      "sex"
+    ]
+  ]
+}

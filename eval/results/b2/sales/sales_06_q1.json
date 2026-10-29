@@ -1,0 +1,61 @@
+{
+  "task_id": "sales_06_q1",
+  "analysis_correct": false,
+  "completed": true,
+  "detect_tp": 2,
+  "detect_fp": 3,
+  "detect_fn": 3,
+  "tool_calls": 0,
+  "tool_errors": 0,
+  "recovered_errors": 0,
+  "approvals_asked": 0,
+  "seconds": 30.54,
+  "tokens": 2250,
+  "stop_reason": "done",
+  "note": "",
+  "answer": {
+    "Accessories": 18.0,
+    "Electronics": 5.0,
+    "Furniture": 14.0,
+    "Office Supplies": 17.0
+  },
+  "extra": {
+    "code": "import pandas as pd\n\ndef clean(df):\n    # Remove exact duplicate rows\n    df = df.drop_duplicates()\n    \n    # Fix text/spacing issue in Region\n    df['Region'] = df['Region'].str.strip()\n    \n    # Correct 'Suoth' to 'South' in Region\n    df['Region'] = df['Region'].replace('Suoth', 'South')\n    \n    # Fix Revenue inconsistency: recalculate as Quantity * Price\n    # But only where Quantity is positive (negative Quantity is invalid)\n    # We'll fix Quantity later\n    \n    # For now, mark or fix negative Quantity\n    # Since Quantity should be >= 1, negative is invalid\n    # We assume negative Quantity is data entry error (e.g. sign by mistake)\n    # So we take absolute value and ensure at least 1\n    df['Quantity'] = df['Quantity'].abs()\n    df['Quantity'] = df['Quantity'].clip(lower=1)\n    \n    # Now recalculate Revenue\n    df['Revenue'] = df['Quantity'] * df['Price']\n    \n    return df\n\ndef answer(df):\n    # Group by Category and count number of orders\n    result = df.groupby('Category').size().to_dict()\n    return result"
+  },
+  "corrections": 5,
+  "planted": 9,
+  "damaged_rows": 0,
+  "damaged_cells": 0,
+  "cleaned_available": true,
+  "system": "b2",
+  "dataset": "sales",
+  "question": "How many orders are there in each category?",
+  "reference_answer": {
+    "Accessories": 17.0,
+    "Electronics": 5.0,
+    "Furniture": 14.0,
+    "Office Supplies": 17.0
+  },
+  "issues_reported": [
+    [
+      "cross_column",
+      "Revenue"
+    ],
+    [
+      "duplicates",
+      "*"
+    ],
+    [
+      "negative",
+      "Quantity"
+    ],
+    [
+      "negative",
+      "Revenue"
+    ],
+    [
+      "text_number",
+      "Region"
+    ]
+  ]
+}
