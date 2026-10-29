@@ -1,0 +1,40 @@
+Order_ID,Date,Product,Category,Quantity,Price,Region,Revenue
+2001,2026-03-18,Lamp,Furniture,3,45,West,135
+2002,2026-04-16,Mouse,Accessories,3,25,North,75
+2003,2026-05-23,Webcam,Electronics,6,60,West,360
+2004,2026-05-16,Keyboard,Accessories,1,50,South,50
+2005,2026-01-17,Pen Pack,Office Supplies,1,12,,12
+2006,2026-01-22,Pen Pack,Office Supplies,7,12,North,84
+2007,2026-04-22,Hub,Accessories,3,40,East,120
+2008,2026-05-10,Stapler,Office Supplies,7,18,South,126
+2009,2026-02-08,Monitor,Electronics,6,300,North,1800
+2011,2026-05-05,Desk,Furniture,3,350,North,1050
+2012,2026-06-11,Keyboard,Accessories,5,50,West,250
+2013,2026-03-09,Lamp,Furniture,3,45,East,135
+2014,2026-01-05,Chair,Furniture,7,180,South,1260
+2015,2026-04-10,Pen Pack,Office Supplies,7,12,East,84
+2016,2026-02-03,Desk,Furniture,7,350,South,2450
+2017,2026-04-09,Headset,Electronics,3,80,East,240
+2018,2026-04-17,Tablet,Electronics,1,450,North,450
+2019,2026-01-18,Laptop,Electronics,3,900,North,2700
+2020,2026-02-01,Cable,Accessories,3,15,North,45
+2021,2026-02-15,Hub,Accessories,8,40,West,320
+2022,2026-02-04,Notebook,Office Supplies,5,6,West,30
+2023,2026-05-07,Webcam,Electronics,5,60,East,300
+2024,2026-02-27,Pen Pack,Office Supplies,2,12,South,24
+2025,2026-02-21,Chair,Furniture,6,180,West,1080
+2026,2026-06-25,Laptop,Electronics,2,900,West,1800
+2027,2026-06-01,Pen Pack,Office Supplies,1,12,North,12
+2028,2026-05-19,Cable,Accessories,8,15,West,120
+2029,2026-06-28,Chair,Furniture,6,180,North,1080
+2030,2026-02-01,Tablet,Electronics,8,450,South,3600
+2031,,Pen Pack,Office Supplies,8,12,East,96
+2032,2026-03-12,Pen Pack,Office Supplies,7,12,West,84
+2033,2026-01-15,Monitor,Electronics,1,300,North,300
+2034,2026-03-15,Laptop,Electronics,1,900,North,900
+2035,2026-05-04,Webcam,Electronics,6,60,North,360
+2036,2026-04-02,Notebook,Office Supplies,6,6,South,36
+2037,2026-06-22,Lamp,Furniture,4,45,North,180
+2039,2026-05-05,Tablet,Electronics,8,450,West,3600
+2040,2026-05-22,Monitor,Electronics,2,300,,600
+2041,,Keyboard,Accessories,4,50,North,200

@@ -1,0 +1,55 @@
+Order_ID,Date,Product,Category,Quantity,Price,Region,Revenue
+2001,2026-02-06,Lamp,Furniture,5,45,East,225
+2002,2026-03-06,Desk,Furniture,5,350,West,1750
+2003,2026-02-12,Desk,Furniture,8,350,East,2800
+2004,2026-02-01,Lamp,Furniture,2,45,West,90
+2005,2026-03-23,Pen Pack,Office Supplies,7,12,East,84
+2006,2026-02-06,Hub,Accessories,4,40,North,160
+2007,2026-05-21,Hub,Accessories,5,40,West,200
+2008,2026-06-06,Desk,Furniture,5,350,North,1750
+2009,2026-06-19,Mouse,Accessories,4,25,West,100
+2010,2026-01-15,Desk,Furniture,3,350,North,1050
+2011,2026-06-12,Cable,Accessories,5,15,South,75
+2012,2026-02-12,Tablet,Electronics,7,450,North,3150
+2013,2026-03-21,Stapler,Office Supplies,7,18,West,126
+2014,2026-04-18,Lamp,Furniture,1,45,North,45
+2015,2026-03-18,Keyboard,Accessories,6,50,North,300
+2016,2026-03-21,Mouse,Accessories,6,25,West,150
+2017,2026-03-11,Stapler,Office Supplies,2,18,West,36
+2018,2026-02-05,Pen Pack,Office Supplies,6,12,South,72
+2019,2026-01-21,Notebook,Office Supplies,2,6,East,12
+2020,2026-03-22,Notebook,Office Supplies,7,6,South,42
+2021,2026-01-12,Pen Pack,Office Supplies,8,12,East,96
+2022,2026-04-06,Hub,Accessories,4,40,East,160
+2023,2026-05-01,Hub,Accessories,7,40,East,280
+2024,2026-05-14,Notebook,Office Supplies,5,6,East,30
+2025,2026-06-09,Hub,Accessories,3,40,South,120
+2026,2026-04-17,Tablet,Electronics,6,450,West,2700
+2027,2026-03-05,Keyboard,Accessories,8,50,East,400
+2028,2026-01-27,Lamp,Furniture,7,45,West,315
+2029,2026-06-14,Chair,Furniture,1,180,South,180
+2030,2026-02-08,Notebook,Office Supplies,6,6,North,36
+2031,2026-06-06,Notebook,Office Supplies,4,6,South,24
+2032,2026-04-10,Cable,Accessories,7,15,South,105
+2033,2026-04-18,Stapler,Office Supplies,7,18,South,126
+2034,2026-03-21,Monitor,Electronics,8,300,North,2400
+2035,2026-01-05,Cable,Accessories,8,15,South,120
+2036,2026-04-04,Chair,Furniture,8,180,West,1440
+2037,2026-06-13,Headset,Electronics,7,80,North,560
+2038,2026-04-18,Headset,Electronics,6,80,West,480
+2039,2026-04-04,Pen Pack,Office Supplies,1,12,South,12
+2040,2026-01-04,Pen Pack,Office Supplies,8,12,East,96
+2041,2026-02-17,Pen Pack,Office Supplies,4,12,North,48
+2042,2026-05-06,Lamp,Furniture,7,45,West,315
+2043,2026-06-21,Pen Pack,Office Supplies,5,12,East,60
+2044,2026-04-26,Chair,Furniture,2,180,South,360
+2045,2026-06-03,Lamp,Furniture,7,45,South,315
+2046,2026-03-15,Lamp,Furniture,2,45,North,90
+2047,2026-02-26,Cable,Accessories,1,15,East,15
+2048,2026-05-09,Keyboard,Accessories,7,50,South,350
+2049,2026-02-07,Cable,Accessories,2,15,South,30
+2050,2026-06-15,Keyboard,Accessories,3,50,North,150
+2051,2026-01-16,Notebook,Office Supplies,7,6,South,42
+2052,2026-04-11,Notebook,Office Supplies,3,6,East,18
+2053,2026-05-28,Cable,Accessories,5,15,South,75
+2054,2026-05-23,Cable,Accessories,7,15,West,105

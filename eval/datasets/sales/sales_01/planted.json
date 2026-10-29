@@ -1,0 +1,113 @@
+{
+  "id_column": "Order_ID",
+  "errors": [
+    {
+      "type": "label_variant",
+      "subtype": "label_case",
+      "column": "Category",
+      "id": "2038",
+      "resolution": "restore",
+      "clean_value": "Office Supplies",
+      "messy_value": "office supplies"
+    },
+    {
+      "type": "label_variant",
+      "subtype": "label_case",
+      "column": "Category",
+      "id": "2001",
+      "resolution": "restore",
+      "clean_value": "Office Supplies",
+      "messy_value": "office supplies"
+    },
+    {
+      "type": "label_variant",
+      "subtype": "label_case",
+      "column": "Category",
+      "id": "2043",
+      "resolution": "restore",
+      "clean_value": "Office Supplies",
+      "messy_value": "office supplies"
+    },
+    {
+      "type": "negative",
+      "subtype": "negative",
+      "column": "Quantity",
+      "id": "2053",
+      "resolution": "exclude",
+      "clean_value": 4.0,
+      "messy_value": -4.0
+    },
+    {
+      "type": "negative",
+      "subtype": "negative",
+      "column": "Quantity",
+      "id": "2031",
+      "resolution": "exclude",
+      "clean_value": 5.0,
+      "messy_value": -5.0
+    },
+    {
+      "type": "negative",
+      "subtype": "negative",
+      "column": "Quantity",
+      "id": "2052",
+      "resolution": "exclude",
+      "clean_value": 6.0,
+      "messy_value": -6.0
+    },
+    {
+      "type": "text_number",
+      "subtype": "text_number",
+      "column": "Price",
+      "id": "2004",
+      "resolution": "restore",
+      "clean_value": 350.0,
+      "messy_value": "$350.00"
+    },
+    {
+      "type": "text_number",
+      "subtype": "text_number",
+      "column": "Price",
+      "id": "2014",
+      "resolution": "restore",
+      "clean_value": 18.0,
+      "messy_value": "$18.00"
+    },
+    {
+      "type": "invalid_date",
+      "subtype": "invalid_date",
+      "column": "Date",
+      "id": "2042",
+      "resolution": "set_missing",
+      "clean_value": "2026-05-13",
+      "messy_value": "13/45/2026"
+    },
+    {
+      "type": "invalid_date",
+      "subtype": "invalid_date",
+      "column": "Date",
+      "id": "2044",
+      "resolution": "set_missing",
+      "clean_value": "2026-03-10",
+      "messy_value": "2026-02-30"
+    },
+    {
+      "type": "duplicates",
+      "subtype": "duplicates",
+      "column": "*",
+      "id": "2007",
+      "resolution": "drop_copy",
+      "clean_value": null,
+      "messy_value": null
+    },
+    {
+      "type": "duplicates",
+      "subtype": "duplicates",
+      "column": "*",
+      "id": "2012",
+      "resolution": "drop_copy",
+      "clean_value": null,
+      "messy_value": null
+    }
+  ]
+}

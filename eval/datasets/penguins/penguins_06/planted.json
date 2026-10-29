@@ -1,0 +1,104 @@
+{
+  "id_column": "penguin_id",
+  "errors": [
+    {
+      "type": "out_of_range",
+      "subtype": "out_of_range",
+      "column": "body_mass_g",
+      "id": "P7255317",
+      "resolution": "exclude",
+      "clean_value": 3700.0,
+      "messy_value": 3700000.0
+    },
+    {
+      "type": "out_of_range",
+      "subtype": "out_of_range",
+      "column": "body_mass_g",
+      "id": "P8840029",
+      "resolution": "exclude",
+      "clean_value": 3475.0,
+      "messy_value": 3475000.0
+    },
+    {
+      "type": "label_variant",
+      "subtype": "label_space",
+      "column": "island",
+      "id": "P4056945",
+      "resolution": "restore",
+      "clean_value": "Biscoe",
+      "messy_value": " Biscoe"
+    },
+    {
+      "type": "label_variant",
+      "subtype": "label_space",
+      "column": "island",
+      "id": "P2363646",
+      "resolution": "restore",
+      "clean_value": "Biscoe",
+      "messy_value": " Biscoe"
+    },
+    {
+      "type": "label_variant",
+      "subtype": "label_space",
+      "column": "island",
+      "id": "P4315021",
+      "resolution": "restore",
+      "clean_value": "Biscoe",
+      "messy_value": "Biscoe "
+    },
+    {
+      "type": "text_number",
+      "subtype": "text_number",
+      "column": "body_mass_g",
+      "id": "P3064343",
+      "resolution": "restore",
+      "clean_value": 5300.0,
+      "messy_value": "5,300"
+    },
+    {
+      "type": "text_number",
+      "subtype": "text_number",
+      "column": "body_mass_g",
+      "id": "P2890411",
+      "resolution": "restore",
+      "clean_value": 4300.0,
+      "messy_value": "4,300"
+    },
+    {
+      "type": "label_variant",
+      "subtype": "label_typo",
+      "column": "species",
+      "id": "P1805661",
+      "resolution": "restore",
+      "clean_value": "Chinstrap",
+      "messy_value": "Chinstarp"
+    },
+    {
+      "type": "label_variant",
+      "subtype": "label_typo",
+      "column": "species",
+      "id": "P6311044",
+      "resolution": "restore",
+      "clean_value": "Gentoo",
+      "messy_value": "Gentto"
+    },
+    {
+      "type": "missing",
+      "subtype": "missing",
+      "column": "sex",
+      "id": "P3087326",
+      "resolution": "keep_missing",
+      "clean_value": null,
+      "messy_value": ""
+    },
+    {
+      "type": "duplicates",
+      "subtype": "duplicates",
+      "column": "*",
+      "id": "P7016436",
+      "resolution": "drop_copy",
+      "clean_value": null,
+      "messy_value": null
+    }
+  ]
+}

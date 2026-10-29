@@ -1,0 +1,38 @@
+[
+  {
+    "task_id": "sales_08_q0",
+    "question": "What is the total revenue per month?",
+    "spec": {
+      "group_by": [
+        "Date:month"
+      ],
+      "metric": "Revenue",
+      "agg": "sum"
+    },
+    "reference_answer": {
+      "2026-01": 4356.0,
+      "2026-02": 9349.0,
+      "2026-03": 1254.0,
+      "2026-04": 1005.0,
+      "2026-05": 6566.0,
+      "2026-06": 3322.0
+    }
+  },
+  {
+    "task_id": "sales_08_q1",
+    "question": "What is the average unit price in each category?",
+    "spec": {
+      "group_by": [
+        "Category"
+      ],
+      "metric": "Price",
+      "agg": "mean"
+    },
+    "reference_answer": {
+      "Accessories": 35.625,
+      "Electronics": 400.7692,
+      "Furniture": 171.875,
+      "Office Supplies": 11.4
+    }
+  }
+]

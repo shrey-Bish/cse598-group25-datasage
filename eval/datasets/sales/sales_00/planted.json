@@ -1,0 +1,86 @@
+{
+  "id_column": "Order_ID",
+  "errors": [
+    {
+      "type": "cross_column",
+      "subtype": "cross_column",
+      "column": "Revenue",
+      "id": "2010",
+      "resolution": "restore",
+      "clean_value": 18.0,
+      "messy_value": 1805.0
+    },
+    {
+      "type": "cross_column",
+      "subtype": "cross_column",
+      "column": "Revenue",
+      "id": "2037",
+      "resolution": "restore",
+      "clean_value": 18.0,
+      "messy_value": 1805.0
+    },
+    {
+      "type": "missing",
+      "subtype": "missing",
+      "column": "Region",
+      "id": "2033",
+      "resolution": "keep_missing",
+      "clean_value": null,
+      "messy_value": ""
+    },
+    {
+      "type": "missing",
+      "subtype": "missing",
+      "column": "Region",
+      "id": "2002",
+      "resolution": "keep_missing",
+      "clean_value": null,
+      "messy_value": ""
+    },
+    {
+      "type": "missing",
+      "subtype": "missing",
+      "column": "Region",
+      "id": "2018",
+      "resolution": "keep_missing",
+      "clean_value": null,
+      "messy_value": ""
+    },
+    {
+      "type": "negative",
+      "subtype": "negative",
+      "column": "Quantity",
+      "id": "2026",
+      "resolution": "exclude",
+      "clean_value": 2.0,
+      "messy_value": -2.0
+    },
+    {
+      "type": "negative",
+      "subtype": "negative",
+      "column": "Quantity",
+      "id": "2061",
+      "resolution": "exclude",
+      "clean_value": 4.0,
+      "messy_value": -4.0
+    },
+    {
+      "type": "label_variant",
+      "subtype": "label_typo",
+      "column": "Category",
+      "id": "2020",
+      "resolution": "restore",
+      "clean_value": "Office Supplies",
+      "messy_value": "Office Suplies"
+    },
+    {
+      "type": "label_variant",
+      "subtype": "label_typo",
+      "column": "Category",
+      "id": "2049",
+      "resolution": "restore",
+      "clean_value": "Office Supplies",
+      "messy_value": "Office Suplies"
+    }
+  ]
+}

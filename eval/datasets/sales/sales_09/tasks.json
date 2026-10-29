@@ -1,0 +1,38 @@
+[
+  {
+    "task_id": "sales_09_q0",
+    "question": "How many orders are there in each category?",
+    "spec": {
+      "group_by": [
+        "Category"
+      ],
+      "metric": null,
+      "agg": "count"
+    },
+    "reference_answer": {
+      "Accessories": 9.0,
+      "Electronics": 20.0,
+      "Furniture": 14.0,
+      "Office Supplies": 16.0
+    }
+  },
+  {
+    "task_id": "sales_09_q1",
+    "question": "What is the total revenue per month?",
+    "spec": {
+      "group_by": [
+        "Date:month"
+      ],
+      "metric": "Revenue",
+      "agg": "sum"
+    },
+    "reference_answer": {
+      "2026-01": 10646.0,
+      "2026-02": 7478.0,
+      "2026-03": 11050.0,
+      "2026-04": 645.0,
+      "2026-05": 5359.0,
+      "2026-06": 13371.0
+    }
+  }
+]

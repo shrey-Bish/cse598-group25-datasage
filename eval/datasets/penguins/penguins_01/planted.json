@@ -1,0 +1,59 @@
+{
+  "id_column": "penguin_id",
+  "errors": [
+    {
+      "type": "missing",
+      "subtype": "missing",
+      "column": "sex",
+      "id": "P3007440",
+      "resolution": "keep_missing",
+      "clean_value": null,
+      "messy_value": ""
+    },
+    {
+      "type": "label_variant",
+      "subtype": "label_case",
+      "column": "sex",
+      "id": "P9659247",
+      "resolution": "restore",
+      "clean_value": "male",
+      "messy_value": "MALE"
+    },
+    {
+      "type": "label_variant",
+      "subtype": "label_case",
+      "column": "sex",
+      "id": "P5643334",
+      "resolution": "restore",
+      "clean_value": "female",
+      "messy_value": "FEMALE"
+    },
+    {
+      "type": "label_variant",
+      "subtype": "label_case",
+      "column": "sex",
+      "id": "P7321213",
+      "resolution": "restore",
+      "clean_value": "male",
+      "messy_value": "MALE"
+    },
+    {
+      "type": "label_variant",
+      "subtype": "label_typo",
+      "column": "island",
+      "id": "P2631726",
+      "resolution": "restore",
+      "clean_value": "Biscoe",
+      "messy_value": "Bisco"
+    },
+    {
+      "type": "duplicates",
+      "subtype": "duplicates",
+      "column": "*",
+      "id": "P1960039",
+      "resolution": "drop_copy",
+      "clean_value": null,
+      "messy_value": null
+    }
+  ]
+}

@@ -1,0 +1,104 @@
+{
+  "id_column": "Order_ID",
+  "errors": [
+    {
+      "type": "invalid_date",
+      "subtype": "invalid_date",
+      "column": "Date",
+      "id": "2018",
+      "resolution": "set_missing",
+      "clean_value": "2026-05-28",
+      "messy_value": "2026-14-01"
+    },
+    {
+      "type": "invalid_date",
+      "subtype": "invalid_date",
+      "column": "Date",
+      "id": "2035",
+      "resolution": "set_missing",
+      "clean_value": "2026-04-27",
+      "messy_value": "13/45/2026"
+    },
+    {
+      "type": "negative",
+      "subtype": "negative",
+      "column": "Quantity",
+      "id": "2025",
+      "resolution": "exclude",
+      "clean_value": 7.0,
+      "messy_value": -7.0
+    },
+    {
+      "type": "negative",
+      "subtype": "negative",
+      "column": "Quantity",
+      "id": "2043",
+      "resolution": "exclude",
+      "clean_value": 6.0,
+      "messy_value": -6.0
+    },
+    {
+      "type": "negative",
+      "subtype": "negative",
+      "column": "Quantity",
+      "id": "2014",
+      "resolution": "exclude",
+      "clean_value": 2.0,
+      "messy_value": -2.0
+    },
+    {
+      "type": "cross_column",
+      "subtype": "cross_column",
+      "column": "Revenue",
+      "id": "2037",
+      "resolution": "restore",
+      "clean_value": 480.0,
+      "messy_value": 4805.0
+    },
+    {
+      "type": "label_variant",
+      "subtype": "label_typo",
+      "column": "Category",
+      "id": "2047",
+      "resolution": "restore",
+      "clean_value": "Furniture",
+      "messy_value": "Furnture"
+    },
+    {
+      "type": "missing",
+      "subtype": "missing",
+      "column": "Region",
+      "id": "2049",
+      "resolution": "keep_missing",
+      "clean_value": null,
+      "messy_value": ""
+    },
+    {
+      "type": "missing",
+      "subtype": "missing",
+      "column": "Region",
+      "id": "2002",
+      "resolution": "keep_missing",
+      "clean_value": null,
+      "messy_value": ""
+    },
+    {
+      "type": "missing",
+      "subtype": "missing",
+      "column": "Region",
+      "id": "2021",
+      "resolution": "keep_missing",
+      "clean_value": null,
+      "messy_value": ""
+    },
+    {
+      "type": "duplicates",
+      "subtype": "duplicates",
+      "column": "*",
+      "id": "2016",
+      "resolution": "drop_copy",
+      "clean_value": null,
+      "messy_value": null
+    }
+  ]
+}

@@ -1,0 +1,122 @@
+{
+  "id_column": "penguin_id",
+  "errors": [
+    {
+      "type": "label_variant",
+      "subtype": "label_typo",
+      "column": "island",
+      "id": "P1451516",
+      "resolution": "restore",
+      "clean_value": "Dream",
+      "messy_value": "Dram"
+    },
+    {
+      "type": "label_variant",
+      "subtype": "label_typo",
+      "column": "island",
+      "id": "P5484909",
+      "resolution": "restore",
+      "clean_value": "Biscoe",
+      "messy_value": "Bisco"
+    },
+    {
+      "type": "label_variant",
+      "subtype": "label_typo",
+      "column": "island",
+      "id": "P9784038",
+      "resolution": "restore",
+      "clean_value": "Biscoe",
+      "messy_value": "Bisco"
+    },
+    {
+      "type": "negative",
+      "subtype": "negative",
+      "column": "flipper_length_mm",
+      "id": "P2993162",
+      "resolution": "exclude",
+      "clean_value": 202.0,
+      "messy_value": -202.0
+    },
+    {
+      "type": "negative",
+      "subtype": "negative",
+      "column": "flipper_length_mm",
+      "id": "P7972518",
+      "resolution": "exclude",
+      "clean_value": 196.0,
+      "messy_value": -196.0
+    },
+    {
+      "type": "missing",
+      "subtype": "missing",
+      "column": "sex",
+      "id": "P3887853",
+      "resolution": "keep_missing",
+      "clean_value": null,
+      "messy_value": ""
+    },
+    {
+      "type": "missing",
+      "subtype": "missing",
+      "column": "sex",
+      "id": "P4919445",
+      "resolution": "keep_missing",
+      "clean_value": null,
+      "messy_value": ""
+    },
+    {
+      "type": "missing",
+      "subtype": "missing",
+      "column": "sex",
+      "id": "P6691304",
+      "resolution": "keep_missing",
+      "clean_value": null,
+      "messy_value": ""
+    },
+    {
+      "type": "label_variant",
+      "subtype": "label_space",
+      "column": "island",
+      "id": "P1282519",
+      "resolution": "restore",
+      "clean_value": "Dream",
+      "messy_value": " Dream"
+    },
+    {
+      "type": "label_variant",
+      "subtype": "label_space",
+      "column": "island",
+      "id": "P7562110",
+      "resolution": "restore",
+      "clean_value": "Biscoe",
+      "messy_value": "Biscoe "
+    },
+    {
+      "type": "label_variant",
+      "subtype": "label_space",
+      "column": "island",
+      "id": "P7039817",
+      "resolution": "restore",
+      "clean_value": "Dream",
+      "messy_value": "Dream "
+    },
+    {
+      "type": "duplicates",
+      "subtype": "duplicates",
+      "column": "*",
+      "id": "P3399630",
+      "resolution": "drop_copy",
+      "clean_value": null,
+      "messy_value": null
+    },
+    {
+      "type": "duplicates",
+      "subtype": "duplicates",
+      "column": "*",
+      "id": "P1759231",
+      "resolution": "drop_copy",
+      "clean_value": null,
+      "messy_value": null
+    }
+  ]
+}

@@ -1,0 +1,86 @@
+{
+  "id_column": "penguin_id",
+  "errors": [
+    {
+      "type": "out_of_range",
+      "subtype": "out_of_range",
+      "column": "body_mass_g",
+      "id": "P8705717",
+      "resolution": "exclude",
+      "clean_value": 4300.0,
+      "messy_value": 4300000.0
+    },
+    {
+      "type": "text_number",
+      "subtype": "text_number",
+      "column": "body_mass_g",
+      "id": "P7306138",
+      "resolution": "restore",
+      "clean_value": 3725.0,
+      "messy_value": "3,725"
+    },
+    {
+      "type": "text_number",
+      "subtype": "text_number",
+      "column": "body_mass_g",
+      "id": "P8774825",
+      "resolution": "restore",
+      "clean_value": 3750.0,
+      "messy_value": "3,750"
+    },
+    {
+      "type": "text_number",
+      "subtype": "text_number",
+      "column": "body_mass_g",
+      "id": "P3247013",
+      "resolution": "restore",
+      "clean_value": 4100.0,
+      "messy_value": "4,100"
+    },
+    {
+      "type": "label_variant",
+      "subtype": "label_case",
+      "column": "sex",
+      "id": "P5231615",
+      "resolution": "restore",
+      "clean_value": "male",
+      "messy_value": "MALE"
+    },
+    {
+      "type": "label_variant",
+      "subtype": "label_case",
+      "column": "sex",
+      "id": "P7270339",
+      "resolution": "restore",
+      "clean_value": "male",
+      "messy_value": "MALE"
+    },
+    {
+      "type": "label_variant",
+      "subtype": "label_case",
+      "column": "sex",
+      "id": "P9981402",
+      "resolution": "restore",
+      "clean_value": "male",
+      "messy_value": "MALE"
+    },
+    {
+      "type": "duplicates",
+      "subtype": "duplicates",
+      "column": "*",
+      "id": "P4363903",
+      "resolution": "drop_copy",
+      "clean_value": null,
+      "messy_value": null
+    },
+    {
+      "type": "duplicates",
+      "subtype": "duplicates",
+      "column": "*",
+      "id": "P5620841",
+      "resolution": "drop_copy",
+      "clean_value": null,
+      "messy_value": null
+    }
+  ]
+}

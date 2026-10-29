@@ -1,0 +1,45 @@
+penguin_id,species,island,bill_length_mm,bill_depth_mm,flipper_length_mm,body_mass_g,sex,year
+P1778000,Adelie,Torgersen,39.3,20.6,190,3650,male,2007
+P4254401,Adelie,Biscoe,37.7,18.7,180,3600,male,2007
+P3685602,Adelie,Biscoe,40.5,17.9,187,3200,female,2007
+P8716803,Adelie,Dream,39.6,18.8,190,4600,MALE,2007
+P3841304,Adelie,Dream,36.0,17.9,190,3450,female,2007
+P4885705,Adelie,Biscoe,34.5,18.1,187,2900,female,2008
+P5048306,Adelie,Biscoe,39.0,17.5,186,3550,female,2008
+P5211607,Adelie ,Biscoe,35.5,16.2,195,3350,female,2008
+P7583808,Adelie,Torgersen,33.5,19.0,190,3600,female,2008
+P2890809,Adelie,Dream,34.0,17.1,185,3400,female,2008
+P3013610,Adelie,Biscoe,37.7,16.0,183,3075,female,2009
+P2737211,Adelie,Biscoe,37.9,18.6,193,2925,female,2009
+P7132412,Adelie,Biscoe,38.2,20.0,190,3900,male,2009
+P1933013,Adelie,Biscoe,43.2,19.0,197,4775,male,2009
+P4698414,Adelie,Torgersen,35.7,17.0,189,3350,female,2009
+P6923915,Adelie,Dream,37.5,18.5,199,4475,male,2009
+P9155316,Adelie,Dream,37.0,16.5,185,3400,female,2009
+P4840617,Adelie,Dream,39.7,17.9,193,4250,,2009
+P7153418,Adelie,Dream,36.0,17.1,187,3700,female,2009
+P6676219,Gentoo ,Biscoe,46.1,13.2,211,4500,female,2007
+P5208120,Gentoo,Biscoe,50.0,15.2,218,5700,male,2007
+P4346621,Gentoo,Biscoe,46.7,15.3,219,5200000,male,2007
+P3900322,Gentoo,Biscoe,43.3,13.4,209,4400,female,2007
+P9772023,Gentoo,Biscoe,48.4,14.6,213,5850,male,2007
+P4127724,Gentoo,Biscoe,45.1,14.5,215,5000,female,2007
+P1167825,Gentoo,Biscoe,42.6,13.7,213,4950,female,2008
+P1400326,Gentoo,Biscoe,42.7,13.7,208,3950,female,2008
+P8359827,Gentoo,Biscoe,46.6,14.2,210,4850,female,2008
+P4351828,Gentoo,Biscoe,45.0,15.4,220,5050,male,2008
+P5425329, Gentoo,Biscoe,52.2,17.1,228,5400,male,2009
+P6976130,Gentoo,Biscoe,55.9,17.0,228,5600000,male,2009
+P5133031,Gentoo,Biscoe,47.2,15.5,215,4975,female,2009
+P4853532,Gentoo,Biscoe,49.1,15.0,228,5500,male,2009
+P1620433,Gentoo,Biscoe,43.5,15.2,213,4650,female,2009
+P1620433,Gentoo,Biscoe,43.5,15.2,213,4650,female,2009
+P8000934,Gentoo,Biscoe,48.8,16.2,222,6000,male,2009
+P1749735,Gentoo,Biscoe,49.9,16.1,213,5400,male,2009
+P5042436,Chinstrap,Dream,46.5,17.9,192,3500,,2007
+P4331537,Chinstrap,Dream,51.3,19.2,193,3650,male,2007
+P6676538,Chinstrap,Dream,46.0,18.9,195,4150,female,2007
+P7284539,Chinstrap,Dream,46.4,18.6,190,3450,female,2007
+P3127640,Chinstrap,Dream,42.4,17.3,181,3600000,female,2007
+P4613941,Chinstrap,Dream,52.2,18.8,197,3450,male,2009
+P6655942,Chinstrap,Dream,50.2,18.8,202,3800,,2009

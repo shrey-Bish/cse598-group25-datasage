@@ -1,0 +1,33 @@
+[
+  {
+    "task_id": "penguins_06_q0",
+    "question": "What is the average body mass for each sex?",
+    "spec": {
+      "group_by": [
+        "sex"
+      ],
+      "metric": "body_mass_g",
+      "agg": "mean"
+    },
+    "reference_answer": {
+      "female": 4017.7419,
+      "male": 4385.1562
+    }
+  },
+  {
+    "task_id": "penguins_06_q1",
+    "question": "What is the average flipper length for each species?",
+    "spec": {
+      "group_by": [
+        "species"
+      ],
+      "metric": "flipper_length_mm",
+      "agg": "mean"
+    },
+    "reference_answer": {
+      "Adelie": 189.5333,
+      "Chinstrap": 196.1,
+      "Gentoo": 215.0
+    }
+  }
+]

@@ -1,0 +1,77 @@
+{
+  "id_column": "penguin_id",
+  "errors": [
+    {
+      "type": "label_variant",
+      "subtype": "label_case",
+      "column": "species",
+      "id": "P1121934",
+      "resolution": "restore",
+      "clean_value": "Gentoo",
+      "messy_value": "gentoo"
+    },
+    {
+      "type": "label_variant",
+      "subtype": "label_case",
+      "column": "species",
+      "id": "P3038614",
+      "resolution": "restore",
+      "clean_value": "Adelie",
+      "messy_value": "adelie"
+    },
+    {
+      "type": "label_variant",
+      "subtype": "label_case",
+      "column": "species",
+      "id": "P4698417",
+      "resolution": "restore",
+      "clean_value": "Adelie",
+      "messy_value": "adelie"
+    },
+    {
+      "type": "negative",
+      "subtype": "negative",
+      "column": "flipper_length_mm",
+      "id": "P8840712",
+      "resolution": "exclude",
+      "clean_value": 195.0,
+      "messy_value": -195.0
+    },
+    {
+      "type": "label_variant",
+      "subtype": "label_space",
+      "column": "island",
+      "id": "P7466641",
+      "resolution": "restore",
+      "clean_value": "Biscoe",
+      "messy_value": "Biscoe "
+    },
+    {
+      "type": "label_variant",
+      "subtype": "label_space",
+      "column": "island",
+      "id": "P6048308",
+      "resolution": "restore",
+      "clean_value": "Biscoe",
+      "messy_value": "Biscoe "
+    },
+    {
+      "type": "duplicates",
+      "subtype": "duplicates",
+      "column": "*",
+      "id": "P3257510",
+      "resolution": "drop_copy",
+      "clean_value": null,
+      "messy_value": null
+    },
+    {
+      "type": "duplicates",
+      "subtype": "duplicates",
+      "column": "*",
+      "id": "P5412261",
+      "resolution": "drop_copy",
+      "clean_value": null,
+      "messy_value": null
+    }
+  ]
+}

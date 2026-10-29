@@ -1,0 +1,42 @@
+[
+  {
+    "task_id": "sales_03_q0",
+    "question": "What is the total revenue by region for Electronics?",
+    "spec": {
+      "group_by": [
+        "Region"
+      ],
+      "metric": "Revenue",
+      "agg": "sum",
+      "filters": [
+        {
+          "column": "Category",
+          "value": "Electronics"
+        }
+      ]
+    },
+    "reference_answer": {
+      "East": 5100.0,
+      "North": 13920.0,
+      "South": 4240.0,
+      "West": 960.0
+    }
+  },
+  {
+    "task_id": "sales_03_q1",
+    "question": "How many units were sold in each region?",
+    "spec": {
+      "group_by": [
+        "Region"
+      ],
+      "metric": "Quantity",
+      "agg": "sum"
+    },
+    "reference_answer": {
+      "East": 53.0,
+      "North": 69.0,
+      "South": 34.0,
+      "West": 64.0
+    }
+  }
+]

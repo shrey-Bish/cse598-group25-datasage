@@ -1,0 +1,95 @@
+{
+  "id_column": "Order_ID",
+  "errors": [
+    {
+      "type": "cross_column",
+      "subtype": "cross_column",
+      "column": "Revenue",
+      "id": "2031",
+      "resolution": "restore",
+      "clean_value": 150.0,
+      "messy_value": 15000.0
+    },
+    {
+      "type": "cross_column",
+      "subtype": "cross_column",
+      "column": "Revenue",
+      "id": "2034",
+      "resolution": "restore",
+      "clean_value": 225.0,
+      "messy_value": 22500.0
+    },
+    {
+      "type": "label_variant",
+      "subtype": "label_case",
+      "column": "Region",
+      "id": "2007",
+      "resolution": "restore",
+      "clean_value": "North",
+      "messy_value": "north"
+    },
+    {
+      "type": "label_variant",
+      "subtype": "label_case",
+      "column": "Region",
+      "id": "2029",
+      "resolution": "restore",
+      "clean_value": "East",
+      "messy_value": "east"
+    },
+    {
+      "type": "label_variant",
+      "subtype": "label_case",
+      "column": "Region",
+      "id": "2021",
+      "resolution": "restore",
+      "clean_value": "West",
+      "messy_value": "west"
+    },
+    {
+      "type": "label_variant",
+      "subtype": "label_space",
+      "column": "Category",
+      "id": "2035",
+      "resolution": "restore",
+      "clean_value": "Electronics",
+      "messy_value": " Electronics"
+    },
+    {
+      "type": "label_variant",
+      "subtype": "label_space",
+      "column": "Category",
+      "id": "2010",
+      "resolution": "restore",
+      "clean_value": "Accessories",
+      "messy_value": "Accessories "
+    },
+    {
+      "type": "label_variant",
+      "subtype": "label_space",
+      "column": "Category",
+      "id": "2019",
+      "resolution": "restore",
+      "clean_value": "Electronics",
+      "messy_value": "Electronics "
+    },
+    {
+      "type": "text_number",
+      "subtype": "text_number",
+      "column": "Price",
+      "id": "2004",
+      "resolution": "restore",
+      "clean_value": 50.0,
+      "messy_value": "$50.00"
+    },
+    {
+      "type": "text_number",
+      "subtype": "text_number",
+      "column": "Price",
+      "id": "2018",
+      "resolution": "restore",
+      "clean_value": 6.0,
+      "messy_value": "$6.00"
+    }
+  ]
+}

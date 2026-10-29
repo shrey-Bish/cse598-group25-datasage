@@ -1,0 +1,36 @@
+[
+  {
+    "task_id": "sales_06_q0",
+    "question": "How many units were sold in each region?",
+    "spec": {
+      "group_by": [
+        "Region"
+      ],
+      "metric": "Quantity",
+      "agg": "sum"
+    },
+    "reference_answer": {
+      "East": 59.0,
+      "North": 56.0,
+      "South": 79.0,
+      "West": 72.0
+    }
+  },
+  {
+    "task_id": "sales_06_q1",
+    "question": "How many orders are there in each category?",
+    "spec": {
+      "group_by": [
+        "Category"
+      ],
+      "metric": null,
+      "agg": "count"
+    },
+    "reference_answer": {
+      "Accessories": 17.0,
+      "Electronics": 5.0,
+      "Furniture": 14.0,
+      "Office Supplies": 17.0
+    }
+  }
+]

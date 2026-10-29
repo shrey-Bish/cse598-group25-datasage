@@ -1,0 +1,59 @@
+{
+  "id_column": "penguin_id",
+  "errors": [
+    {
+      "type": "out_of_range",
+      "subtype": "out_of_range",
+      "column": "body_mass_g",
+      "id": "P4149840",
+      "resolution": "exclude",
+      "clean_value": 4575.0,
+      "messy_value": 4575000.0
+    },
+    {
+      "type": "text_number",
+      "subtype": "text_number",
+      "column": "body_mass_g",
+      "id": "P3993104",
+      "resolution": "restore",
+      "clean_value": 3800.0,
+      "messy_value": "3,800"
+    },
+    {
+      "type": "missing",
+      "subtype": "missing",
+      "column": "sex",
+      "id": "P1732524",
+      "resolution": "keep_missing",
+      "clean_value": null,
+      "messy_value": ""
+    },
+    {
+      "type": "negative",
+      "subtype": "negative",
+      "column": "flipper_length_mm",
+      "id": "P8671232",
+      "resolution": "exclude",
+      "clean_value": 220.0,
+      "messy_value": -220.0
+    },
+    {
+      "type": "duplicates",
+      "subtype": "duplicates",
+      "column": "*",
+      "id": "P7182007",
+      "resolution": "drop_copy",
+      "clean_value": null,
+      "messy_value": null
+    },
+    {
+      "type": "duplicates",
+      "subtype": "duplicates",
+      "column": "*",
+      "id": "P8625818",
+      "resolution": "drop_copy",
+      "clean_value": null,
+      "messy_value": null
+    }
+  ]
+}

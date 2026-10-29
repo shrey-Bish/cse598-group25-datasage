@@ -1,0 +1,95 @@
+{
+  "id_column": "penguin_id",
+  "errors": [
+    {
+      "type": "missing",
+      "subtype": "missing",
+      "column": "sex",
+      "id": "P9105654",
+      "resolution": "keep_missing",
+      "clean_value": null,
+      "messy_value": ""
+    },
+    {
+      "type": "label_variant",
+      "subtype": "label_space",
+      "column": "species",
+      "id": "P7971000",
+      "resolution": "restore",
+      "clean_value": "Adelie",
+      "messy_value": " Adelie"
+    },
+    {
+      "type": "label_variant",
+      "subtype": "label_space",
+      "column": "species",
+      "id": "P2079955",
+      "resolution": "restore",
+      "clean_value": "Chinstrap",
+      "messy_value": "Chinstrap "
+    },
+    {
+      "type": "label_variant",
+      "subtype": "label_typo",
+      "column": "island",
+      "id": "P1601362",
+      "resolution": "restore",
+      "clean_value": "Dream",
+      "messy_value": "Dram"
+    },
+    {
+      "type": "label_variant",
+      "subtype": "label_typo",
+      "column": "island",
+      "id": "P6577634",
+      "resolution": "restore",
+      "clean_value": "Biscoe",
+      "messy_value": "Bisco"
+    },
+    {
+      "type": "out_of_range",
+      "subtype": "out_of_range",
+      "column": "body_mass_g",
+      "id": "P5928344",
+      "resolution": "exclude",
+      "clean_value": 4750.0,
+      "messy_value": 4750000.0
+    },
+    {
+      "type": "out_of_range",
+      "subtype": "out_of_range",
+      "column": "body_mass_g",
+      "id": "P8633214",
+      "resolution": "exclude",
+      "clean_value": 3550.0,
+      "messy_value": 3550000.0
+    },
+    {
+      "type": "negative",
+      "subtype": "negative",
+      "column": "flipper_length_mm",
+      "id": "P6553824",
+      "resolution": "exclude",
+      "clean_value": 190.0,
+      "messy_value": -190.0
+    },
+    {
+      "type": "negative",
+      "subtype": "negative",
+      "column": "flipper_length_mm",
+      "id": "P3001536",
+      "resolution": "exclude",
+      "clean_value": 213.0,
+      "messy_value": -213.0
+    },
+    {
+      "type": "duplicates",
+      "subtype": "duplicates",
+      "column": "*",
+      "id": "P8335123",
+      "resolution": "drop_copy",
+      "clean_value": null,
+      "messy_value": null
+    }
+  ]
+}

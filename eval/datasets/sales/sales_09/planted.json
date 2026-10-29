@@ -1,0 +1,86 @@
+{
+  "id_column": "Order_ID",
+  "errors": [
+    {
+      "type": "label_variant",
+      "subtype": "label_space",
+      "column": "Category",
+      "id": "2057",
+      "resolution": "restore",
+      "clean_value": "Furniture",
+      "messy_value": "Furniture "
+    },
+    {
+      "type": "label_variant",
+      "subtype": "label_space",
+      "column": "Category",
+      "id": "2056",
+      "resolution": "restore",
+      "clean_value": "Office Supplies",
+      "messy_value": "Office Supplies "
+    },
+    {
+      "type": "text_number",
+      "subtype": "text_number",
+      "column": "Price",
+      "id": "2059",
+      "resolution": "restore",
+      "clean_value": 6.0,
+      "messy_value": "$6.00"
+    },
+    {
+      "type": "invalid_date",
+      "subtype": "invalid_date",
+      "column": "Date",
+      "id": "2035",
+      "resolution": "set_missing",
+      "clean_value": "2026-06-20",
+      "messy_value": "13/45/2026"
+    },
+    {
+      "type": "label_variant",
+      "subtype": "label_case",
+      "column": "Category",
+      "id": "2049",
+      "resolution": "restore",
+      "clean_value": "Furniture",
+      "messy_value": "furniture"
+    },
+    {
+      "type": "label_variant",
+      "subtype": "label_case",
+      "column": "Category",
+      "id": "2037",
+      "resolution": "restore",
+      "clean_value": "Furniture",
+      "messy_value": "furniture"
+    },
+    {
+      "type": "label_variant",
+      "subtype": "label_case",
+      "column": "Category",
+      "id": "2053",
+      "resolution": "restore",
+      "clean_value": "Electronics",
+      "messy_value": "electronics"
+    },
+    {
+      "type": "duplicates",
+      "subtype": "duplicates",
+      "column": "*",
+      "id": "2014",
+      "resolution": "drop_copy",
+      "clean_value": null,
+      "messy_value": null
+    },
+    {
+      "type": "duplicates",
+      "subtype": "duplicates",
+      "column": "*",
+      "id": "2027",
+      "resolution": "drop_copy",
+      "clean_value": null,
+      "messy_value": null
+    }
+  ]
+}

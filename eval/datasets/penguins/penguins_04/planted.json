@@ -1,0 +1,104 @@
+{
+  "id_column": "penguin_id",
+  "errors": [
+    {
+      "type": "out_of_range",
+      "subtype": "out_of_range",
+      "column": "body_mass_g",
+      "id": "P6976130",
+      "resolution": "exclude",
+      "clean_value": 5600.0,
+      "messy_value": 5600000.0
+    },
+    {
+      "type": "out_of_range",
+      "subtype": "out_of_range",
+      "column": "body_mass_g",
+      "id": "P4346621",
+      "resolution": "exclude",
+      "clean_value": 5200.0,
+      "messy_value": 5200000.0
+    },
+    {
+      "type": "out_of_range",
+      "subtype": "out_of_range",
+      "column": "body_mass_g",
+      "id": "P3127640",
+      "resolution": "exclude",
+      "clean_value": 3600.0,
+      "messy_value": 3600000.0
+    },
+    {
+      "type": "label_variant",
+      "subtype": "label_space",
+      "column": "species",
+      "id": "P5425329",
+      "resolution": "restore",
+      "clean_value": "Gentoo",
+      "messy_value": " Gentoo"
+    },
+    {
+      "type": "label_variant",
+      "subtype": "label_space",
+      "column": "species",
+      "id": "P6676219",
+      "resolution": "restore",
+      "clean_value": "Gentoo",
+      "messy_value": "Gentoo "
+    },
+    {
+      "type": "label_variant",
+      "subtype": "label_space",
+      "column": "species",
+      "id": "P5211607",
+      "resolution": "restore",
+      "clean_value": "Adelie",
+      "messy_value": "Adelie "
+    },
+    {
+      "type": "label_variant",
+      "subtype": "label_case",
+      "column": "sex",
+      "id": "P8716803",
+      "resolution": "restore",
+      "clean_value": "male",
+      "messy_value": "MALE"
+    },
+    {
+      "type": "missing",
+      "subtype": "missing",
+      "column": "sex",
+      "id": "P6655942",
+      "resolution": "keep_missing",
+      "clean_value": null,
+      "messy_value": ""
+    },
+    {
+      "type": "missing",
+      "subtype": "missing",
+      "column": "sex",
+      "id": "P5042436",
+      "resolution": "keep_missing",
+      "clean_value": null,
+      "messy_value": ""
+    },
+    {
+      "type": "missing",
+      "subtype": "missing",
+      "column": "sex",
+      "id": "P4840617",
+      "resolution": "keep_missing",
+      "clean_value": null,
+      "messy_value": ""
+    },
+    {
+      "type": "duplicates",
+      "subtype": "duplicates",
+      "column": "*",
+      "id": "P1620433",
+      "resolution": "drop_copy",
+      "clean_value": null,
+      "messy_value": null
+    }
+  ]
+}

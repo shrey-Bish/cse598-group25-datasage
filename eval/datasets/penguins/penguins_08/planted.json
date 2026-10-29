@@ -1,0 +1,113 @@
+{
+  "id_column": "penguin_id",
+  "errors": [
+    {
+      "type": "label_variant",
+      "subtype": "label_space",
+      "column": "sex",
+      "id": "P1039019",
+      "resolution": "restore",
+      "clean_value": "male",
+      "messy_value": " male"
+    },
+    {
+      "type": "label_variant",
+      "subtype": "label_space",
+      "column": "sex",
+      "id": "P2295745",
+      "resolution": "restore",
+      "clean_value": "male",
+      "messy_value": " male"
+    },
+    {
+      "type": "label_variant",
+      "subtype": "label_space",
+      "column": "sex",
+      "id": "P8903421",
+      "resolution": "restore",
+      "clean_value": "male",
+      "messy_value": "male "
+    },
+    {
+      "type": "negative",
+      "subtype": "negative",
+      "column": "flipper_length_mm",
+      "id": "P9018851",
+      "resolution": "exclude",
+      "clean_value": 195.0,
+      "messy_value": -195.0
+    },
+    {
+      "type": "missing",
+      "subtype": "missing",
+      "column": "sex",
+      "id": "P1570248",
+      "resolution": "keep_missing",
+      "clean_value": null,
+      "messy_value": ""
+    },
+    {
+      "type": "missing",
+      "subtype": "missing",
+      "column": "sex",
+      "id": "P5105502",
+      "resolution": "keep_missing",
+      "clean_value": null,
+      "messy_value": ""
+    },
+    {
+      "type": "missing",
+      "subtype": "missing",
+      "column": "sex",
+      "id": "P8839924",
+      "resolution": "keep_missing",
+      "clean_value": null,
+      "messy_value": ""
+    },
+    {
+      "type": "out_of_range",
+      "subtype": "out_of_range",
+      "column": "body_mass_g",
+      "id": "P4567428",
+      "resolution": "exclude",
+      "clean_value": 5400.0,
+      "messy_value": 5400000.0
+    },
+    {
+      "type": "out_of_range",
+      "subtype": "out_of_range",
+      "column": "body_mass_g",
+      "id": "P1609811",
+      "resolution": "exclude",
+      "clean_value": 4000.0,
+      "messy_value": 4000000.0
+    },
+    {
+      "type": "label_variant",
+      "subtype": "label_case",
+      "column": "island",
+      "id": "P9538446",
+      "resolution": "restore",
+      "clean_value": "Dream",
+      "messy_value": "dream"
+    },
+    {
+      "type": "label_variant",
+      "subtype": "label_case",
+      "column": "island",
+      "id": "P8300416",
+      "resolution": "restore",
+      "clean_value": "Dream",
+      "messy_value": "dream"
+    },
+    {
+      "type": "label_variant",
+      "subtype": "label_case",
+      "column": "island",
+      "id": "P4957259",
+      "resolution": "restore",
+      "clean_value": "Dream",
+      "messy_value": "dream"
+    }
+  ]
+}

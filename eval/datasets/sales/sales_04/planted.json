@@ -1,0 +1,77 @@
+{
+  "id_column": "Order_ID",
+  "errors": [
+    {
+      "type": "label_variant",
+      "subtype": "label_space",
+      "column": "Category",
+      "id": "2019",
+      "resolution": "restore",
+      "clean_value": "Office Supplies",
+      "messy_value": "Office Supplies "
+    },
+    {
+      "type": "label_variant",
+      "subtype": "label_space",
+      "column": "Category",
+      "id": "2037",
+      "resolution": "restore",
+      "clean_value": "Accessories",
+      "messy_value": " Accessories"
+    },
+    {
+      "type": "label_variant",
+      "subtype": "label_space",
+      "column": "Category",
+      "id": "2024",
+      "resolution": "restore",
+      "clean_value": "Furniture",
+      "messy_value": " Furniture"
+    },
+    {
+      "type": "missing",
+      "subtype": "missing",
+      "column": "Region",
+      "id": "2032",
+      "resolution": "keep_missing",
+      "clean_value": null,
+      "messy_value": ""
+    },
+    {
+      "type": "text_number",
+      "subtype": "text_number",
+      "column": "Price",
+      "id": "2048",
+      "resolution": "restore",
+      "clean_value": 40.0,
+      "messy_value": "$40.00"
+    },
+    {
+      "type": "label_variant",
+      "subtype": "label_typo",
+      "column": "Region",
+      "id": "2020",
+      "resolution": "restore",
+      "clean_value": "South",
+      "messy_value": "Suoth"
+    },
+    {
+      "type": "label_variant",
+      "subtype": "label_typo",
+      "column": "Region",
+      "id": "2006",
+      "resolution": "restore",
+      "clean_value": "North",
+      "messy_value": "Nort"
+    },
+    {
+      "type": "label_variant",
+      "subtype": "label_typo",
+      "column": "Region",
+      "id": "2021",
+      "resolution": "restore",
+      "clean_value": "West",
+      "messy_value": "Wst"
+    }
+  ]
+}
