@@ -16,6 +16,8 @@ DataSage is an agent that takes a messy CSV or Excel file and a question about i
 | Maulik Jadav | [@maulik-jadav](https://github.com/maulik-jadav) |
 | Vatsal Nirmal | [@vatsal-prog](https://github.com/vatsal-prog) |
 
+Team tasks, setup and how to open a pull request: [docs/TEAM_HANDOFF.md](docs/TEAM_HANDOFF.md).
+
 ## Repository layout
 
 ```text
