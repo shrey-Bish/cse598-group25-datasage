@@ -1,0 +1,174 @@
+{
+  "task_id": "salest_06_q1",
+  "analysis_correct": true,
+  "completed": true,
+  "detect_tp": 4,
+  "detect_fp": 3,
+  "detect_fn": 0,
+  "tool_calls": 15,
+  "tool_errors": 0,
+  "recovered_errors": 0,
+  "approvals_asked": 4,
+  "seconds": 19.04,
+  "tokens": 72098,
+  "stop_reason": "finish",
+  "note": "",
+  "answer": {
+    "East": 46.0,
+    "North": 90.0,
+    "South": 42.0,
+    "West": 62.0
+  },
+  "extra": {
+    "final_summary": "The data had several issues affecting the question 'How many units were sold in each region?':\n\n1. One exact duplicate row (row 46) was removed.\n2. Row 43 was excluded because it had invalid data: Quantity = -2 (must be >= 1) and Revenue = -120 (must be >= 0).\n3. Three rows (20, 27, 49) had incorrect Revenue values that did not match Quantity * Price; these were corrected.\n4. One label variant 'Nort' in the Region column was corrected to 'North'.\n\nAfter these fixes, the analysis was run on the cleaned data. The total units sold per region are:\n- East: 46\n- North: 90\n- South: 42\n- West: 62",
+    "changes": [
+      {
+        "version": 1,
+        "tool": "drop_duplicates",
+        "args": {
+          "reason": "Found one exact duplicate row (row 46), which is likely a data entry error."
+        },
+        "reason": "Found one exact duplicate row (row 46), which is likely a data entry error.",
+        "risk": "medium",
+        "approval": "approved",
+        "rows_removed": [
+          46
+        ],
+        "cells_changed": 0,
+        "summary": "removed 1 exact duplicate row(s)",
+        "code": "df = df.drop_duplicates(keep='first')"
+      },
+      {
+        "version": 2,
+        "tool": "exclude_rows",
+        "args": {
+          "rows": [
+            43
+          ],
+          "reason": "Row 43 has Quantity = -2 and Revenue = -120, which violates the rules: Quantity must be >= 1 and Revenue must be >= 0. Also, Revenue should be Quantity * Price, but -2 * 60 = -120, so the formula holds but the values are invalid. This row is likely a return or error and should be excluded."
+        },
+        "reason": "Row 43 has Quantity = -2 and Revenue = -120, which violates the rules: Quantity must be >= 1 and Revenue must be >= 0. Also, Revenue should be Quantity * Price, but -2 * 60 = -120, so the formula holds but the values are invalid. This row is likely a return or error and should be excluded.",
+        "risk": "high",
+        "approval": "approved",
+        "rows_removed": [
+          43
+        ],
+        "cells_changed": 0,
+        "summary": "excluded 1 row(s): [43]",
+        "code": "df = df.drop(index=[43])"
+      },
+      {
+        "version": 3,
+        "tool": "recompute_column",
+        "args": {
+          "column": "Revenue",
+          "expression": "Quantity * Price",
+          "rows": [
+            20,
+            27,
+            49
+          ],
+          "reason": "Revenue values in rows 20, 27, and 49 are incorrect: they do not match Quantity * Price. For example, row 20 has Quantity=24 and Price=100, so Revenue should be 2400, not 2405. These are likely data entry errors."
+        },
+        "reason": "Revenue values in rows 20, 27, and 49 are incorrect: they do not match Quantity * Price. For example, row 20 has Quantity=24 and Price=100, so Revenue should be 2400, not 2405. These are likely data entry errors.",
+        "risk": "high",
+        "approval": "approved",
+        "rows_removed": [],
+        "cells_changed": 3,
+        "summary": "Revenue: recomputed as Quantity * Price on 3 row(s)",
+        "code": "df.loc[[20, 27, 49], 'Revenue'] = [24.0, 50.0, 180.0]  # Revenue = Quantity * Price"
+      },
+      {
+        "version": 4,
+        "tool": "normalize_labels",
+        "args": {
+          "column": "Region",
+          "mapping": {
+            "Nort": "North"
+          },
+          "reason": "Row 12 has 'Nort' which is a misspelling of 'North'. This is a likely data entry error and should be corrected."
+        },
+        "reason": "Row 12 has 'Nort' which is a misspelling of 'North'. This is a likely data entry error and should be corrected.",
+        "risk": "high",
+        "approval": "approved",
+        "rows_removed": [],
+        "cells_changed": 1,
+        "summary": "Region: merged 1 label variant(s), 1 cells",
+        "code": "df['Region'] = df['Region'].replace({'Nort': 'North'})"
+      }
+    ],
+    "rejected": [],
+    "oracle_decisions": [
+      {
+        "tool": "drop_duplicates",
+        "risk": "medium",
+        "approved": true,
+        "why": "moves data toward the reference"
+      },
+      {
+        "tool": "exclude_rows",
+        "risk": "high",
+        "approved": true,
+        "why": "moves data toward the reference"
+      },
+      {
+        "tool": "recompute_column",
+        "risk": "high",
+        "approved": true,
+        "why": "moves data toward the reference"
+      },
+      {
+        "tool": "normalize_labels",
+        "risk": "high",
+        "approved": true,
+        "why": "moves data toward the reference"
+      }
+    ],
+    "coverage_refusals": 0,
+    "model_turns": 15
+  },
+  "corrections": 6,
+  "planted": 6,
+  "damaged_rows": 0,
+  "damaged_cells": 0,
+  "cleaned_available": true,
+  "system": "datasage-small-fix",
+  "dataset": "sales-test",
+  "question": "How many units were sold in each region?",
+  "reference_answer": {
+    "East": 46.0,
+    "North": 90.0,
+    "South": 42.0,
+    "West": 62.0
+  },
+  "issues_reported": [
+    [
+      "cross_column",
+      "Revenue"
+    ],
+    [
+      "duplicates",
+      "*"
+    ],
+    [
+      "label_variant",
+      "Region"
+    ],
+    [
+      "negative",
+      "Quantity"
+    ],
+    [
+      "negative",
+      "Revenue"
+    ],
+    [
+      "out_of_range",
+      "Quantity"
+    ],
+    [
+      "out_of_range",
+      "Revenue"
+    ]
+  ]
+}

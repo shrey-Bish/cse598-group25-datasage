@@ -1,0 +1,150 @@
+{
+  "task_id": "salest_03_q1",
+  "analysis_correct": true,
+  "completed": true,
+  "detect_tp": 5,
+  "detect_fp": 0,
+  "detect_fn": 1,
+  "tool_calls": 15,
+  "tool_errors": 0,
+  "recovered_errors": 0,
+  "approvals_asked": 2,
+  "seconds": 16.29,
+  "tokens": 74956,
+  "stop_reason": "finish",
+  "note": "",
+  "answer": {
+    "East": 52.0,
+    "North": 87.0,
+    "South": 45.0,
+    "West": 74.0
+  },
+  "extra": {
+    "final_summary": "The data had several issues: a missing Region value in one row (row 44), a label variant ' Furniture' in the Category column that was merged into 'Furniture', and two Price values with dollar signs that were converted to numbers. Two Revenue values were incorrect and were fixed by recomputing them as Quantity * Price. Two exact duplicate rows were removed. After these fixes, the analysis shows that 87 units were sold in the North, 74 in the West, 52 in the East, and 45 in the South.",
+    "changes": [
+      {
+        "version": 1,
+        "tool": "normalize_labels",
+        "args": {
+          "column": "Category",
+          "mapping": {
+            " Furniture": "Furniture"
+          },
+          "reason": "merge case/space variant into allowed label"
+        },
+        "reason": "merge case/space variant into allowed label",
+        "risk": "low",
+        "approval": "auto",
+        "rows_removed": [],
+        "cells_changed": 1,
+        "summary": "Category: merged 1 label variant(s), 1 cells",
+        "code": "df['Category'] = df['Category'].replace({' Furniture': 'Furniture'})"
+      },
+      {
+        "version": 2,
+        "tool": "cast_numeric",
+        "args": {
+          "column": "Price",
+          "reason": "convert text with dollar signs to numbers"
+        },
+        "reason": "convert text with dollar signs to numbers",
+        "risk": "low",
+        "approval": "auto",
+        "rows_removed": [],
+        "cells_changed": 0,
+        "summary": "Price: converted to numbers (60 text values, 0 became missing)",
+        "code": "df['Price'] = pd.to_numeric(df['Price'].astype(str).str.replace(r'[$, ]', '', regex=True), errors='coerce')"
+      },
+      {
+        "version": 3,
+        "tool": "recompute_column",
+        "args": {
+          "column": "Revenue",
+          "expression": "Quantity * Price",
+          "rows": [
+            29,
+            46
+          ],
+          "reason": "fix Revenue values that do not match Quantity * Price"
+        },
+        "reason": "fix Revenue values that do not match Quantity * Price",
+        "risk": "high",
+        "approval": "approved",
+        "rows_removed": [],
+        "cells_changed": 2,
+        "summary": "Revenue: recomputed as Quantity * Price on 2 row(s)",
+        "code": "df.loc[[29, 46], 'Revenue'] = [2700.0, 108.0]  # Revenue = Quantity * Price"
+      },
+      {
+        "version": 4,
+        "tool": "drop_duplicates",
+        "args": {
+          "reason": "remove exact duplicate rows"
+        },
+        "reason": "remove exact duplicate rows",
+        "risk": "medium",
+        "approval": "approved",
+        "rows_removed": [
+          51,
+          56
+        ],
+        "cells_changed": 0,
+        "summary": "removed 2 exact duplicate row(s)",
+        "code": "df = df.drop_duplicates(keep='first')"
+      }
+    ],
+    "rejected": [],
+    "oracle_decisions": [
+      {
+        "tool": "recompute_column",
+        "risk": "high",
+        "approved": true,
+        "why": "moves data toward the reference"
+      },
+      {
+        "tool": "drop_duplicates",
+        "risk": "medium",
+        "approved": true,
+        "why": "moves data toward the reference"
+      }
+    ],
+    "coverage_refusals": 0,
+    "model_turns": 15
+  },
+  "corrections": 8,
+  "planted": 11,
+  "damaged_rows": 0,
+  "damaged_cells": 0,
+  "cleaned_available": true,
+  "system": "datasage-m3",
+  "dataset": "sales-test",
+  "question": "How many units were sold in each region?",
+  "reference_answer": {
+    "East": 52.0,
+    "North": 87.0,
+    "South": 45.0,
+    "West": 74.0
+  },
+  "issues_reported": [
+    [
+      "cross_column",
+      "Revenue"
+    ],
+    [
+      "duplicates",
+      "*"
+    ],
+    [
+      "label_variant",
+      "Category"
+    ],
+    [
+      "missing",
+      "Region"
+    ],
+    [
+      "text_number",
+      "Price"
+    ]
+  ]
+}

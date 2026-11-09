@@ -4,8 +4,9 @@ Usage:
   python -m eval.run_eval --system datasage --dataset sales --workers 4
   python -m eval.run_eval --system b2 --dataset penguins
 Systems: b0, b1, b2, datasage, datasage-small, datasage-reject, datasage-novalidator,
-         datasage-fix, datasage-fix-strict, datasage-small-fix, datasage-small-fix-strict
-Datasets: sales, penguins (dev) and sales-heldout, penguins-heldout
+         datasage-fix, datasage-fix-strict, datasage-small-fix, datasage-small-fix-strict,
+         datasage-m3 (small model, the default agent), datasage-m3-compact, datasage-m3-large
+Datasets: sales, penguins (dev), sales-heldout, penguins-heldout, and sales-test, penguins-test (seed 202)
 """
 
 from __future__ import annotations
@@ -17,11 +18,10 @@ from concurrent.futures import ThreadPoolExecutor, as_completed
 from pathlib import Path
 
 from baselines import systems
-from datasage.agent import make_client
+from datasage.agent import SMALL_MODEL, make_client
 from eval.scoring import SystemOutput, all_bundles, score
 
 ROOT = Path(__file__).resolve().parent
-SMALL_MODEL = "qwen3-30b-a3b-instruct-2507"
 
 SYSTEMS = {
     "b0": lambda b, t, c, trace: systems.run_b0(b, t),
@@ -39,6 +39,11 @@ SYSTEMS = {
                                                                     client=c, trace_path=trace),
     "datasage-small-fix-strict": lambda b, t, c, trace: systems.run_datasage(b, t, model=SMALL_MODEL, prompt_fix=True,
                                                                            approver="oracle-strict", client=c, trace_path=trace),
+    # Milestone 3 (Section 6, items 1 and 2): compact memory, coverage check, spelling merges.
+    "datasage-m3": lambda b, t, c, trace: systems.run_datasage(b, t, model=SMALL_MODEL, m3=True, client=c, trace_path=trace),
+    "datasage-m3-compact": lambda b, t, c, trace: systems.run_datasage(b, t, model=SMALL_MODEL, m3=True, memory="compact",
+                                                                     client=c, trace_path=trace),
+    "datasage-m3-large": lambda b, t, c, trace: systems.run_datasage(b, t, m3=True, client=c, trace_path=trace),
 }
 
 
@@ -75,7 +80,7 @@ def run(system: str, dataset: str, workers: int, limit: int | None, results_dir:
 def main() -> None:
     parser = argparse.ArgumentParser()
     parser.add_argument("--system", required=True, choices=list(SYSTEMS))
-    parser.add_argument("--dataset", required=True, choices=["sales", "penguins", "sales-heldout", "penguins-heldout"])
+    parser.add_argument("--dataset", required=True, choices=["sales", "penguins", "sales-heldout", "penguins-heldout", "sales-test", "penguins-test"])
     parser.add_argument("--workers", type=int, default=4)
     parser.add_argument("--limit", type=int)
     parser.add_argument("--only", default="", help="comma list of task ids to run")

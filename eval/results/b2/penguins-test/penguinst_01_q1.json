@@ -1,0 +1,51 @@
+{
+  "task_id": "penguinst_01_q1",
+  "analysis_correct": true,
+  "completed": true,
+  "detect_tp": 3,
+  "detect_fp": 0,
+  "detect_fn": 1,
+  "tool_calls": 0,
+  "tool_errors": 0,
+  "recovered_errors": 0,
+  "approvals_asked": 0,
+  "seconds": 45.97,
+  "tokens": 2440,
+  "stop_reason": "done",
+  "note": "",
+  "answer": {
+    "Adelie": 3767.24,
+    "Chinstrap": 3726.79,
+    "Gentoo": 4895.83
+  },
+  "extra": {
+    "code": "import pandas as pd\n\ndef clean(df):\n    df = df.copy()\n    # Fix species label variants\n    df['species'] = df['species'].str.strip()\n    # Fix island label variants (lowercase to proper case)\n    df['island'] = df['island'].replace({'biscoe': 'Biscoe'})\n    # Convert body_mass_g from text to number (remove commas)\n    df['body_mass_g'] = df['body_mass_g'].str.replace(',', '').astype(float)\n    return df\n\ndef answer(df):\n    result = df.groupby('species')['body_mass_g'].mean().round(2).to_dict()\n    return result"
+  },
+  "corrections": 7,
+  "planted": 7,
+  "damaged_rows": 0,
+  "damaged_cells": 0,
+  "cleaned_available": true,
+  "system": "b2",
+  "dataset": "penguins-test",
+  "question": "What is the average body mass for each species?",
+  "reference_answer": {
+    "Adelie": 3767.2414,
+    "Chinstrap": 3726.7857,
+    "Gentoo": 4895.8333
+  },
+  "issues_reported": [
+    [
+      "label_variant",
+      "island"
+    ],
+    [
+      "label_variant",
+      "species"
+    ],
+    [
+      "text_number",
+      "body_mass_g"
+    ]
+  ]
+}

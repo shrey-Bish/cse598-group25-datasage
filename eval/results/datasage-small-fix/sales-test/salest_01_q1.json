@@ -1,0 +1,160 @@
+{
+  "task_id": "salest_01_q1",
+  "analysis_correct": true,
+  "completed": true,
+  "detect_tp": 3,
+  "detect_fp": 3,
+  "detect_fn": 1,
+  "tool_calls": 15,
+  "tool_errors": 0,
+  "recovered_errors": 0,
+  "approvals_asked": 2,
+  "seconds": 20.32,
+  "tokens": 74722,
+  "stop_reason": "finish",
+  "note": "",
+  "answer": {
+    "Accessories": 2390.0,
+    "Electronics": 27140.0,
+    "Furniture": 7665.0,
+    "Office Supplies": 780.0
+  },
+  "extra": {
+    "final_summary": "The data had several issues affecting the total revenue by category: 3 rows with negative Quantity, Price, and Revenue values (rows 20, 35, 58) violated the rules (Quantity must be >= 1, Price >= 0, Revenue >= 0) and were excluded. The Price column contained currency symbols ('$6.00', '$180.00') and was converted to numeric. One row (row 52) had an incorrect Revenue value (14405 vs expected 144) and was corrected using the formula Quantity * Price. The Region column had case variants ('south', 'east') and was normalized to 'South' and 'East'. After fixes, the total revenue by category is: Accessories $2,390, Electronics $27,140, Furniture $7,665, and Office Supplies $780.",
+    "changes": [
+      {
+        "version": 1,
+        "tool": "exclude_rows",
+        "args": {
+          "rows": [
+            20,
+            35,
+            58
+          ],
+          "reason": "Negative Quantity, Price, and Revenue values violate the rules (Quantity must be >= 1, Price >= 0, Revenue >= 0). These rows are invalid and should be excluded."
+        },
+        "reason": "Negative Quantity, Price, and Revenue values violate the rules (Quantity must be >= 1, Price >= 0, Revenue >= 0). These rows are invalid and should be excluded.",
+        "risk": "high",
+        "approval": "approved",
+        "rows_removed": [
+          20,
+          35,
+          58
+        ],
+        "cells_changed": 0,
+        "summary": "excluded 3 row(s): [20, 35, 58]",
+        "code": "df = df.drop(index=[20, 35, 58])"
+      },
+      {
+        "version": 2,
+        "tool": "cast_numeric",
+        "args": {
+          "column": "Price",
+          "reason": "Price contains currency symbols like '$6.00' and '$180.00', which are valid numeric formats and should be converted to numbers."
+        },
+        "reason": "Price contains currency symbols like '$6.00' and '$180.00', which are valid numeric formats and should be converted to numbers.",
+        "risk": "low",
+        "approval": "auto",
+        "rows_removed": [],
+        "cells_changed": 0,
+        "summary": "Price: converted to numbers (58 text values, 0 became missing)",
+        "code": "df['Price'] = pd.to_numeric(df['Price'].astype(str).str.replace(r'[$, ]', '', regex=True), errors='coerce')"
+      },
+      {
+        "version": 3,
+        "tool": "recompute_column",
+        "args": {
+          "column": "Revenue",
+          "expression": "Quantity * Price",
+          "rows": [
+            52
+          ],
+          "reason": "Revenue value at row 52 is incorrect (14405 vs expected 144). Recompute using Quantity * Price."
+        },
+        "reason": "Revenue value at row 52 is incorrect (14405 vs expected 144). Recompute using Quantity * Price.",
+        "risk": "high",
+        "approval": "approved",
+        "rows_removed": [],
+        "cells_changed": 1,
+        "summary": "Revenue: recomputed as Quantity * Price on 1 row(s)",
+        "code": "df.loc[[52], 'Revenue'] = [144.0]  # Revenue = Quantity * Price"
+      },
+      {
+        "version": 4,
+        "tool": "normalize_labels",
+        "args": {
+          "column": "Region",
+          "mapping": {
+            "south": "South",
+            "east": "East"
+          },
+          "reason": "Region labels have case variants: 'south' and 'east' should be standardized to 'South' and 'East'."
+        },
+        "reason": "Region labels have case variants: 'south' and 'east' should be standardized to 'South' and 'East'.",
+        "risk": "low",
+        "approval": "auto",
+        "rows_removed": [],
+        "cells_changed": 2,
+        "summary": "Region: merged 2 label variant(s), 2 cells",
+        "code": "df['Region'] = df['Region'].replace({'south': 'South', 'east': 'East'})"
+      }
+    ],
+    "rejected": [],
+    "oracle_decisions": [
+      {
+        "tool": "exclude_rows",
+        "risk": "high",
+        "approved": true,
+        "why": "moves data toward the reference"
+      },
+      {
+        "tool": "recompute_column",
+        "risk": "high",
+        "approved": true,
+        "why": "moves data toward the reference"
+      }
+    ],
+    "coverage_refusals": 0,
+    "model_turns": 15
+  },
+  "corrections": 8,
+  "planted": 8,
+  "damaged_rows": 0,
+  "damaged_cells": 0,
+  "cleaned_available": true,
+  "system": "datasage-small-fix",
+  "dataset": "sales-test",
+  "question": "What is the total revenue by category?",
+  "reference_answer": {
+    "Accessories": 2390.0,
+    "Electronics": 27140.0,
+    "Furniture": 7665.0,
+    "Office Supplies": 780.0
+  },
+  "issues_reported": [
+    [
+      "cross_column",
+      "Revenue"
+    ],
+    [
+      "negative",
+      "Quantity"
+    ],
+    [
+      "negative",
+      "Revenue"
+    ],
+    [
+      "out_of_range",
+      "Quantity"
+    ],
+    [
+      "out_of_range",
+      "Revenue"
+    ],
+    [
+      "text_number",
+      "Price"
+    ]
+  ]
+}

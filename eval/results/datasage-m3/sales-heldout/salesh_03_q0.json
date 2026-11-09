@@ -1,0 +1,184 @@
+{
+  "task_id": "salesh_03_q0",
+  "analysis_correct": true,
+  "completed": true,
+  "detect_tp": 5,
+  "detect_fp": 0,
+  "detect_fn": 1,
+  "tool_calls": 16,
+  "tool_errors": 0,
+  "recovered_errors": 0,
+  "approvals_asked": 4,
+  "seconds": 21.54,
+  "tokens": 80361,
+  "stop_reason": "finish",
+  "note": "",
+  "answer": {
+    "Accessories": 16.0,
+    "Electronics": 13.0,
+    "Furniture": 10.0,
+    "Office Supplies": 23.0
+  },
+  "extra": {
+    "final_summary": "The data had several issues affecting the question 'How many orders are there in each category?':\n\n1. 2 exact duplicate rows (12, 51) were removed to avoid double-counting.\n2. A case/space variant in 'Category' ('office supplies' \u2192 'Office Supplies') was normalized.\n3. Misspellings in 'Region' ('Eats' \u2192 'East', 'Suoth' \u2192 'South') were corrected.\n4. One inconsistent 'Revenue' value (row 28) was fixed by recomputing it as Quantity * Price.\n5. Two missing 'Region' values (rows 18, 57) were marked as missing.\n\nAfter these fixes, the analysis shows 23 orders in 'Office Supplies', 16 in 'Accessories', 13 in 'Electronics', and 10 in 'Furniture'.",
+    "changes": [
+      {
+        "version": 1,
+        "tool": "drop_duplicates",
+        "args": {
+          "reason": "Found 2 exact duplicate rows (12, 51) that are identical to earlier rows; keeping only the first occurrence."
+        },
+        "reason": "Found 2 exact duplicate rows (12, 51) that are identical to earlier rows; keeping only the first occurrence.",
+        "risk": "medium",
+        "approval": "approved",
+        "rows_removed": [
+          12,
+          51
+        ],
+        "cells_changed": 0,
+        "summary": "removed 2 exact duplicate row(s)",
+        "code": "df = df.drop_duplicates(keep='first')"
+      },
+      {
+        "version": 2,
+        "tool": "normalize_labels",
+        "args": {
+          "column": "Category",
+          "mapping": {
+            "office supplies": "Office Supplies"
+          },
+          "reason": "Merge 'office supplies' (row 58) into the allowed label 'Office Supplies' to fix case/space variant."
+        },
+        "reason": "Merge 'office supplies' (row 58) into the allowed label 'Office Supplies' to fix case/space variant.",
+        "risk": "low",
+        "approval": "auto",
+        "rows_removed": [],
+        "cells_changed": 1,
+        "summary": "Category: merged 1 label variant(s), 1 cells",
+        "code": "df['Category'] = df['Category'].replace({'office supplies': 'Office Supplies'})"
+      },
+      {
+        "version": 3,
+        "tool": "normalize_labels",
+        "args": {
+          "column": "Region",
+          "mapping": {
+            "Eats": "East",
+            "Suoth": "South"
+          },
+          "reason": "Fix misspellings: 'Eats' \u2192 'East' (row 9), 'Suoth' \u2192 'South' (row 6) to match allowed labels."
+        },
+        "reason": "Fix misspellings: 'Eats' \u2192 'East' (row 9), 'Suoth' \u2192 'South' (row 6) to match allowed labels.",
+        "risk": "high",
+        "approval": "approved",
+        "rows_removed": [],
+        "cells_changed": 2,
+        "summary": "Region: merged 2 label variant(s), 2 cells",
+        "code": "df['Region'] = df['Region'].replace({'Eats': 'East', 'Suoth': 'South'})"
+      },
+      {
+        "version": 4,
+        "tool": "recompute_column",
+        "args": {
+          "column": "Revenue",
+          "expression": "Quantity * Price",
+          "rows": [
+            28
+          ],
+          "reason": "Revenue value (1055) is inconsistent with Quantity (10) * Price (10.5); correct it to 105."
+        },
+        "reason": "Revenue value (1055) is inconsistent with Quantity (10) * Price (10.5); correct it to 105.",
+        "risk": "high",
+        "approval": "approved",
+        "rows_removed": [],
+        "cells_changed": 1,
+        "summary": "Revenue: recomputed as Quantity * Price on 1 row(s)",
+        "code": "df.loc[[28], 'Revenue'] = [105.0]  # Revenue = Quantity * Price"
+      },
+      {
+        "version": 5,
+        "tool": "set_missing",
+        "args": {
+          "column": "Region",
+          "rows": [
+            18,
+            57
+          ],
+          "reason": "Region is missing for two orders (rows 18, 57); mark as missing since no valid value can be inferred."
+        },
+        "reason": "Region is missing for two orders (rows 18, 57); mark as missing since no valid value can be inferred.",
+        "risk": "high",
+        "approval": "approved",
+        "rows_removed": [],
+        "cells_changed": 0,
+        "summary": "Region: set 2 value(s) to missing",
+        "code": "df.loc[[18, 57], 'Region'] = pd.NA"
+      }
+    ],
+    "rejected": [],
+    "oracle_decisions": [
+      {
+        "tool": "drop_duplicates",
+        "risk": "medium",
+        "approved": true,
+        "why": "moves data toward the reference"
+      },
+      {
+        "tool": "normalize_labels",
+        "risk": "high",
+        "approved": true,
+        "why": "moves data toward the reference"
+      },
+      {
+        "tool": "recompute_column",
+        "risk": "high",
+        "approved": true,
+        "why": "moves data toward the reference"
+      },
+      {
+        "tool": "set_missing",
+        "risk": "high",
+        "approved": true,
+        "why": "moves data toward the reference"
+      }
+    ],
+    "coverage_refusals": 0,
+    "model_turns": 16
+  },
+  "corrections": 8,
+  "planted": 11,
+  "damaged_rows": 0,
+  "damaged_cells": 0,
+  "cleaned_available": true,
+  "system": "datasage-m3",
+  "dataset": "sales-heldout",
+  "question": "How many orders are there in each category?",
+  "reference_answer": {
+    "Accessories": 16.0,
+    "Electronics": 13.0,
+    "Furniture": 10.0,
+    "Office Supplies": 23.0
+  },
+  "issues_reported": [
+    [
+      "cross_column",
+      "Revenue"
+    ],
+    [
+      "duplicates",
+      "*"
+    ],
+    [
+      "label_variant",
+      "Category"
+    ],
+    [
+      "label_variant",
+      "Region"
+    ],
+    [
+      "missing",
+      "Region"
+    ]
+  ]
+}

@@ -1,0 +1,73 @@
+{
+  "tasks": [
+    [
+      "penguinsh_03_q1",
+      [
+        "checked label_variant on other columns but not the one with the error",
+        "never ran a check for missing",
+        "never ran a check for out_of_range"
+      ]
+    ],
+    [
+      "penguinsh_06_q0",
+      [
+        "checked out_of_range on other columns but not the one with the error"
+      ]
+    ],
+    [
+      "penguinsh_06_q1",
+      [
+        "checked out_of_range on other columns but not the one with the error"
+      ]
+    ],
+    [
+      "penguinst_00_q1",
+      [
+        "rule-violating rows left in the table",
+        "never ran a check for missing",
+        "never ran a check for out_of_range"
+      ]
+    ],
+    [
+      "penguinst_03_q0",
+      [
+        "checked out_of_range on other columns but not the one with the error"
+      ]
+    ],
+    [
+      "penguinst_06_q1",
+      [
+        "rule-violating rows left in the table",
+        "never ran a check for out_of_range",
+        "never ran a check for missing",
+        "never ran a check for text_number"
+      ]
+    ]
+  ],
+  "counts": [
+    [
+      "never ran a check for missing",
+      3
+    ],
+    [
+      "never ran a check for out_of_range",
+      3
+    ],
+    [
+      "checked out_of_range on other columns but not the one with the error",
+      3
+    ],
+    [
+      "rule-violating rows left in the table",
+      2
+    ],
+    [
+      "checked label_variant on other columns but not the one with the error",
+      1
+    ],
+    [
+      "never ran a check for text_number",
+      1
+    ]
+  ]
+}

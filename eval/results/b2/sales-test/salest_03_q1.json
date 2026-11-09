@@ -1,0 +1,57 @@
+{
+  "task_id": "salest_03_q1",
+  "analysis_correct": true,
+  "completed": true,
+  "detect_tp": 4,
+  "detect_fp": 0,
+  "detect_fn": 2,
+  "tool_calls": 0,
+  "tool_errors": 0,
+  "recovered_errors": 0,
+  "approvals_asked": 0,
+  "seconds": 33.56,
+  "tokens": 2335,
+  "stop_reason": "done",
+  "note": "",
+  "answer": {
+    "East": 52.0,
+    "North": 87.0,
+    "South": 45.0,
+    "West": 74.0
+  },
+  "extra": {
+    "code": "import pandas as pd\n\ndef clean(df):\n    # Remove duplicate rows\n    df = df.drop_duplicates().reset_index(drop=True)\n    \n    # Fix label variant in Category (remove leading space)\n    df['Category'] = df['Category'].str.strip()\n    \n    # Convert Price from text to numeric, removing non-numeric characters like $\n    df['Price'] = df['Price'].replace('[^\\\\d.]', '', regex=True).astype(float)\n    \n    # Recompute Revenue to ensure consistency: Revenue = Quantity * Price\n    df['Revenue'] = df['Quantity'] * df['Price']\n    \n    # Keep only non-missing Region rows for grouping (drop missing)\n    df = df.dropna(subset=['Region']).reset_index(drop=True)\n    \n    return df\n\ndef answer(df):\n    df_clean = clean(df)\n    result = df_clean.groupby('Region')['Quantity'].sum().astype(int).to_dict()\n    return result"
+  },
+  "corrections": 7,
+  "planted": 11,
+  "damaged_rows": 1,
+  "damaged_cells": 0,
+  "cleaned_available": true,
+  "system": "b2",
+  "dataset": "sales-test",
+  "question": "How many units were sold in each region?",
+  "reference_answer": {
+    "East": 52.0,
+    "North": 87.0,
+    "South": 45.0,
+    "West": 74.0
+  },
+  "issues_reported": [
+    [
+      "duplicates",
+      "*"
+    ],
+    [
+      "label_variant",
+      "Category"
+    ],
+    [
+      "missing",
+      "Region"
+    ],
+    [
+      "text_number",
+      "Price"
+    ]
+  ]
+}

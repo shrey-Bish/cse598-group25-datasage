@@ -1,0 +1,104 @@
+{
+  "id_column": "penguin_id",
+  "errors": [
+    {
+      "type": "text_number",
+      "subtype": "text_number",
+      "column": "body_mass_g",
+      "id": "P9787339",
+      "resolution": "restore",
+      "clean_value": 5350.0,
+      "messy_value": "5,350"
+    },
+    {
+      "type": "text_number",
+      "subtype": "text_number",
+      "column": "body_mass_g",
+      "id": "P1740832",
+      "resolution": "restore",
+      "clean_value": 4350.0,
+      "messy_value": "4,350"
+    },
+    {
+      "type": "negative",
+      "subtype": "negative",
+      "column": "flipper_length_mm",
+      "id": "P2992919",
+      "resolution": "exclude",
+      "clean_value": 187.0,
+      "messy_value": -187.0
+    },
+    {
+      "type": "out_of_range",
+      "subtype": "out_of_range",
+      "column": "body_mass_g",
+      "id": "P1986704",
+      "resolution": "exclude",
+      "clean_value": 3150.0,
+      "messy_value": 3150000.0
+    },
+    {
+      "type": "out_of_range",
+      "subtype": "out_of_range",
+      "column": "body_mass_g",
+      "id": "P7024010",
+      "resolution": "exclude",
+      "clean_value": 3700.0,
+      "messy_value": 3700000.0
+    },
+    {
+      "type": "out_of_range",
+      "subtype": "out_of_range",
+      "column": "body_mass_g",
+      "id": "P8681901",
+      "resolution": "exclude",
+      "clean_value": 3800.0,
+      "messy_value": 3800000.0
+    },
+    {
+      "type": "label_variant",
+      "subtype": "label_space",
+      "column": "island",
+      "id": "P2306946",
+      "resolution": "restore",
+      "clean_value": "Biscoe",
+      "messy_value": "Biscoe "
+    },
+    {
+      "type": "label_variant",
+      "subtype": "label_space",
+      "column": "island",
+      "id": "P8177440",
+      "resolution": "restore",
+      "clean_value": "Biscoe",
+      "messy_value": " Biscoe"
+    },
+    {
+      "type": "label_variant",
+      "subtype": "label_space",
+      "column": "island",
+      "id": "P5039735",
+      "resolution": "restore",
+      "clean_value": "Biscoe",
+      "messy_value": "Biscoe "
+    },
+    {
+      "type": "duplicates",
+      "subtype": "duplicates",
+      "column": "*",
+      "id": "P1687706",
+      "resolution": "drop_copy",
+      "clean_value": null,
+      "messy_value": null
+    },
+    {
+      "type": "duplicates",
+      "subtype": "duplicates",
+      "column": "*",
+      "id": "P9988709",
+      "resolution": "drop_copy",
+      "clean_value": null,
+      "messy_value": null
+    }
+  ]
+}

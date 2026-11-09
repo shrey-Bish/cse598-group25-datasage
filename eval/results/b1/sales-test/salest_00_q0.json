@@ -1,0 +1,55 @@
+{
+  "task_id": "salest_00_q0",
+  "analysis_correct": true,
+  "completed": true,
+  "detect_tp": 3,
+  "detect_fp": 1,
+  "detect_fn": 0,
+  "tool_calls": 0,
+  "tool_errors": 0,
+  "recovered_errors": 0,
+  "approvals_asked": 0,
+  "seconds": 0.007,
+  "tokens": 0,
+  "stop_reason": "done",
+  "note": "",
+  "answer": {
+    "Accessories": 37.1429,
+    "Electronics": 369.0,
+    "Furniture": 169.1667,
+    "Office Supplies": 13.6364
+  },
+  "extra": {},
+  "corrections": 7,
+  "planted": 8,
+  "damaged_rows": 0,
+  "damaged_cells": 0,
+  "cleaned_available": true,
+  "system": "b1",
+  "dataset": "sales-test",
+  "question": "What is the average unit price in each category?",
+  "reference_answer": {
+    "Accessories": 37.1429,
+    "Electronics": 369.0,
+    "Furniture": 169.1667,
+    "Office Supplies": 13.6364
+  },
+  "issues_reported": [
+    [
+      "invalid_date",
+      "Date"
+    ],
+    [
+      "label_variant",
+      "Region"
+    ],
+    [
+      "missing",
+      "Date"
+    ],
+    [
+      "text_number",
+      "Price"
+    ]
+  ]
+}

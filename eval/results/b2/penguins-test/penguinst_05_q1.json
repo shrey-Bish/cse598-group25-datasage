@@ -1,0 +1,62 @@
+{
+  "task_id": "penguinst_05_q1",
+  "analysis_correct": false,
+  "completed": true,
+  "detect_tp": 3,
+  "detect_fp": 3,
+  "detect_fn": 1,
+  "tool_calls": 0,
+  "tool_errors": 0,
+  "recovered_errors": 0,
+  "approvals_asked": 0,
+  "seconds": 52.46,
+  "tokens": 2567,
+  "stop_reason": "done",
+  "note": "",
+  "answer": {
+    "female": 3745.0,
+    "female ": 3450.0,
+    "male": 4550.892857142857
+  },
+  "extra": {
+    "code": "import pandas as pd\n\ndef clean(df):\n    # Remove exact duplicate rows\n    df = df.drop_duplicates()\n    \n    # Fix label variants in 'island': 'Bisco' -> 'Biscoe'\n    df = df.copy()\n    df['island'] = df['island'].replace({'Bisco': 'Biscoe'})\n    \n    # Fix label variant in 'sex': 'female ' (with trailing space) -> 'female'\n    df['sex'] = df['sex'].str.strip() if df['sex'].dtype == 'object' else df['sex']\n    \n    # Convert text columns that should be numeric\n    df['flipper_length_mm'] = pd.to_numeric(df['flipper_length_mm'], errors='coerce')\n    df['body_mass_g'] = pd.to_numeric(df['body_mass_g'], errors='coerce')\n    df['year'] = pd.to_numeric(df['year'], errors='coerce')\n    \n    return df\n\ndef answer(df):\n    # Group by 'sex' and calculate average body_mass_g\n    result = df.groupby('sex')['body_mass_g'].mean().dropna().to_dict()\n    return result"
+  },
+  "corrections": 6,
+  "planted": 7,
+  "damaged_rows": 0,
+  "damaged_cells": 0,
+  "cleaned_available": true,
+  "system": "b2",
+  "dataset": "penguins-test",
+  "question": "What is the average body mass for each sex?",
+  "reference_answer": {
+    "female": 3733.6538,
+    "male": 4550.8929
+  },
+  "issues_reported": [
+    [
+      "duplicates",
+      "*"
+    ],
+    [
+      "label_variant",
+      "island"
+    ],
+    [
+      "label_variant",
+      "sex"
+    ],
+    [
+      "text_number",
+      "body_mass_g"
+    ],
+    [
+      "text_number",
+      "flipper_length_mm"
+    ],
+    [
+      "text_number",
+      "year"
+    ]
+  ]
+}

@@ -1,0 +1,53 @@
+{
+  "task_id": "salest_05_q0",
+  "analysis_correct": true,
+  "completed": true,
+  "detect_tp": 3,
+  "detect_fp": 0,
+  "detect_fn": 1,
+  "tool_calls": 0,
+  "tool_errors": 0,
+  "recovered_errors": 0,
+  "approvals_asked": 0,
+  "seconds": 38.35,
+  "tokens": 2226,
+  "stop_reason": "done",
+  "note": "",
+  "answer": {
+    "East": 1140.0,
+    "North": 260.0,
+    "South": 4800.0,
+    "West": 2700.0
+  },
+  "extra": {
+    "code": "import pandas as pd\n\ndef clean(df):\n    df = df.copy()\n    \n    # Fix Category: remove leading/trailing spaces\n    df['Category'] = df['Category'].str.strip()\n    \n    # Fix Region: correct typos and standardize\n    region_mapping = {'Suoth': 'South', 'Nort': 'North'}\n    df['Region'] = df['Region'].replace(region_mapping)\n    \n    # Keep only rows where Category is 'Electronics' for the question\n    # But do not filter yet in clean() as we need to preserve all for potential other uses\n    \n    return df\n\ndef answer(df):\n    # Clean the data\n    df = clean(df)\n    \n    # Filter for Electronics\n    electronics_df = df[df['Category'] == 'Electronics']\n    \n    # Group by Region and sum Revenue\n    result = electronics_df.groupby('Region')['Revenue'].sum().round(2)\n    \n    # Convert to dict, skip missing regions\n    return {k: v for k, v in result.items() if pd.notna(k)}"
+  },
+  "corrections": 7,
+  "planted": 10,
+  "damaged_rows": 0,
+  "damaged_cells": 0,
+  "cleaned_available": true,
+  "system": "b2",
+  "dataset": "sales-test",
+  "question": "What is the total revenue by region for Electronics?",
+  "reference_answer": {
+    "East": 1140.0,
+    "North": 260.0,
+    "South": 4800.0,
+    "West": 2700.0
+  },
+  "issues_reported": [
+    [
+      "label_variant",
+      "Category"
+    ],
+    [
+      "label_variant",
+      "Region"
+    ],
+    [
+      "missing",
+      "Region"
+    ]
+  ]
+}

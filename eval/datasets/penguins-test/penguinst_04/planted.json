@@ -1,0 +1,86 @@
+{
+  "id_column": "penguin_id",
+  "errors": [
+    {
+      "type": "text_number",
+      "subtype": "text_number",
+      "column": "body_mass_g",
+      "id": "P7187520",
+      "resolution": "restore",
+      "clean_value": 3075.0,
+      "messy_value": "3,075"
+    },
+    {
+      "type": "negative",
+      "subtype": "negative",
+      "column": "flipper_length_mm",
+      "id": "P5685158",
+      "resolution": "exclude",
+      "clean_value": 187.0,
+      "messy_value": -187.0
+    },
+    {
+      "type": "negative",
+      "subtype": "negative",
+      "column": "flipper_length_mm",
+      "id": "P6065208",
+      "resolution": "exclude",
+      "clean_value": 200.0,
+      "messy_value": -200.0
+    },
+    {
+      "type": "label_variant",
+      "subtype": "label_case",
+      "column": "sex",
+      "id": "P1499317",
+      "resolution": "restore",
+      "clean_value": "female",
+      "messy_value": "FEMALE"
+    },
+    {
+      "type": "label_variant",
+      "subtype": "label_case",
+      "column": "sex",
+      "id": "P9280754",
+      "resolution": "restore",
+      "clean_value": "male",
+      "messy_value": "MALE"
+    },
+    {
+      "type": "label_variant",
+      "subtype": "label_case",
+      "column": "sex",
+      "id": "P9944941",
+      "resolution": "restore",
+      "clean_value": "male",
+      "messy_value": "MALE"
+    },
+    {
+      "type": "missing",
+      "subtype": "missing",
+      "column": "sex",
+      "id": "P7748846",
+      "resolution": "keep_missing",
+      "clean_value": null,
+      "messy_value": ""
+    },
+    {
+      "type": "missing",
+      "subtype": "missing",
+      "column": "sex",
+      "id": "P2900347",
+      "resolution": "keep_missing",
+      "clean_value": null,
+      "messy_value": ""
+    },
+    {
+      "type": "duplicates",
+      "subtype": "duplicates",
+      "column": "*",
+      "id": "P6355060",
+      "resolution": "drop_copy",
+      "clean_value": null,
+      "messy_value": null
+    }
+  ]
+}

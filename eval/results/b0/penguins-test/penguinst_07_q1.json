@@ -1,0 +1,49 @@
+{
+  "task_id": "penguinst_07_q1",
+  "analysis_correct": false,
+  "completed": true,
+  "detect_tp": 3,
+  "detect_fp": 0,
+  "detect_fn": 1,
+  "tool_calls": 0,
+  "tool_errors": 0,
+  "recovered_errors": 0,
+  "approvals_asked": 0,
+  "seconds": 0.021,
+  "tokens": 0,
+  "stop_reason": "done",
+  "note": "",
+  "answer": {
+    "Biscoe": 40.9333,
+    "Dream": 39.26,
+    "Torgersen": 40.2333
+  },
+  "extra": {},
+  "corrections": 5,
+  "planted": 13,
+  "damaged_rows": 0,
+  "damaged_cells": 0,
+  "cleaned_available": true,
+  "system": "b0",
+  "dataset": "penguins-test",
+  "question": "What is the average bill length by island for Adelie penguins?",
+  "reference_answer": {
+    "Biscoe": 40.9333,
+    "Dream": 38.75,
+    "Torgersen": 40.7
+  },
+  "issues_reported": [
+    [
+      "label_variant",
+      "species"
+    ],
+    [
+      "missing",
+      "sex"
+    ],
+    [
+      "negative",
+      "flipper_length_mm"
+    ]
+  ]
+}

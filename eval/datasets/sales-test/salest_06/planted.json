@@ -1,0 +1,59 @@
+{
+  "id_column": "Order_ID",
+  "errors": [
+    {
+      "type": "label_variant",
+      "subtype": "label_typo",
+      "column": "Region",
+      "id": "2013",
+      "resolution": "restore",
+      "clean_value": "North",
+      "messy_value": "Nort"
+    },
+    {
+      "type": "cross_column",
+      "subtype": "cross_column",
+      "column": "Revenue",
+      "id": "2049",
+      "resolution": "restore",
+      "clean_value": 180.0,
+      "messy_value": 18000.0
+    },
+    {
+      "type": "cross_column",
+      "subtype": "cross_column",
+      "column": "Revenue",
+      "id": "2028",
+      "resolution": "restore",
+      "clean_value": 50.0,
+      "messy_value": 500.0
+    },
+    {
+      "type": "cross_column",
+      "subtype": "cross_column",
+      "column": "Revenue",
+      "id": "2021",
+      "resolution": "restore",
+      "clean_value": 24.0,
+      "messy_value": 2405.0
+    },
+    {
+      "type": "negative",
+      "subtype": "negative",
+      "column": "Quantity",
+      "id": "2044",
+      "resolution": "exclude",
+      "clean_value": 2.0,
+      "messy_value": -2.0
+    },
+    {
+      "type": "duplicates",
+      "subtype": "duplicates",
+      "column": "*",
+      "id": "2046",
+      "resolution": "drop_copy",
+      "clean_value": null,
+      "messy_value": null
+    }
+  ]
+}

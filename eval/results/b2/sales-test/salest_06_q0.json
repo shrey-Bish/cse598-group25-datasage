@@ -1,0 +1,61 @@
+{
+  "task_id": "salest_06_q0",
+  "analysis_correct": false,
+  "completed": true,
+  "detect_tp": 3,
+  "detect_fp": 2,
+  "detect_fn": 1,
+  "tool_calls": 0,
+  "tool_errors": 0,
+  "recovered_errors": 0,
+  "approvals_asked": 0,
+  "seconds": 29.21,
+  "tokens": 2211,
+  "stop_reason": "done",
+  "note": "",
+  "answer": {
+    "Accessories": 32.5,
+    "Electronics": 357.69,
+    "Furniture": 177.86,
+    "Office Supplies": 14.0
+  },
+  "extra": {
+    "code": "import pandas as pd\n\ndef clean(df):\n    # Remove exact duplicate rows\n    df = df.drop_duplicates().reset_index(drop=True)\n    \n    # Fix label variant in Region: 'Nort' -> 'North'\n    df['Region'] = df['Region'].replace('Nort', 'North')\n    \n    # Convert Quantity to numeric, coerce errors to NaN (though it's already numeric)\n    # But we need to handle negative Quantity: set to absolute value since quantity can't be negative\n    df['Quantity'] = pd.to_numeric(df['Quantity'], errors='coerce')\n    df.loc[df['Quantity'] < 0, 'Quantity'] = abs(df['Quantity'])\n    \n    # Recompute Revenue = Quantity * Price to fix any inconsistencies (e.g., negative revenue)\n    df['Revenue'] = df['Quantity'] * df['Price']\n    \n    return df\n\ndef answer(df):\n    # Group by Category and compute average unit price\n    result = df.groupby('Category')['Price'].mean().round(2).to_dict()\n    return result"
+  },
+  "corrections": 5,
+  "planted": 6,
+  "damaged_rows": 0,
+  "damaged_cells": 0,
+  "cleaned_available": true,
+  "system": "b2",
+  "dataset": "sales-test",
+  "question": "What is the average unit price in each category?",
+  "reference_answer": {
+    "Accessories": 32.5,
+    "Electronics": 382.5,
+    "Furniture": 177.8571,
+    "Office Supplies": 14.0
+  },
+  "issues_reported": [
+    [
+      "duplicates",
+      "*"
+    ],
+    [
+      "label_variant",
+      "Region"
+    ],
+    [
+      "negative",
+      "Quantity"
+    ],
+    [
+      "negative",
+      "Revenue"
+    ],
+    [
+      "text_number",
+      "Quantity"
+    ]
+  ]
+}

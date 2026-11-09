@@ -73,6 +73,7 @@ class Session:
         self.rejected: list[dict] = []
         self.issues: dict[tuple[str, str], dict] = {}
         self.analyses: list[dict] = []
+        self.checks_run: list[dict] = []  # {"tool", "column", "version", "by"}; by = "model" or "coverage"
 
     @property
     def current(self) -> pd.DataFrame:
@@ -95,13 +96,21 @@ class Session:
         if count > 0:
             self.issues[(issue_type, column)] = {"type": issue_type, "column": column, "count": count, **details}
 
+    def checked(self, tool: str, column: str | None = None) -> bool:
+        return any(c["tool"] == tool and (column is None or c["column"] == column) for c in self.checks_run)
+
     def summary(self) -> dict:
-        """Compact state summary. Not yet sent to the model, which currently sees the chat history."""
+        """Compact state summary. In compact memory mode the model sees this instead of old tool results."""
         df = self.current
+        latest: dict[str, str] = {}  # latest result of each distinct check call
+        for c in self.checks_run:
+            args = ", ".join(f"{k}={v}" for k, v in (c.get("args") or {}).items() if v is not None)
+            latest[f"{c['tool']}({args})"] = f"on v{c['version']}: {c.get('found', '?')}"
         return {
-            "version": self.version,
+            "current_version": self.version,
             "rows": len(df),
-            "changes": [f"v{c.version} {c.tool}({c.summary}) [{c.approval}]" for c in self.changes],
-            "rejected_fixes": [r["tool"] for r in self.rejected],
-            "open_issue_types": sorted({f"{t}:{c}" for t, c in self.issues}),
+            "checks_done_latest_result": latest,
+            "changes_applied": [f"v{c.version} {c.tool}: {c.summary} [{c.approval}]" for c in self.changes],
+            "rejected_fixes_do_not_retry": [f"{r['tool']}: {r['summary']}" for r in self.rejected],
+            "analyses": [{k: a.get(k) for k in ("group_by", "metric", "agg", "rows_used", "result")} for a in self.analyses],
         }

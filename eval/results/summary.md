@@ -12,6 +12,7 @@
 | DataSage (235B) + exclusion rule | 20 | 100% | 100% | 0.87 | 0.87 | 97% | 0 | 100% | n/a | 3.0 | 192.9 | 57,032 |
 | DataSage (30B) + exclusion rule | 20 | 95% | 100% | 0.81 | 0.76 | 89% | 0 | 100% | n/a | 2.0 | 15.2 | 56,089 |
 | DataSage (30B) + rule, strict approver | 20 | 100% | 100% | 0.83 | 0.79 | 92% | 0 | 100% | n/a | 2.0 | 14.3 | 54,481 |
+| DataSage M3 (30B, default) | 20 | 100% | 100% | 0.82 | 0.80 | 91% | 0 | 100% | n/a | 2.0 | 15.1 | 61,636 |
 
 ## penguins
 
@@ -27,6 +28,7 @@
 | DataSage (235B) + exclusion rule | 20 | 100% | 100% | 0.88 | 0.77 | 96% | 0 | 100% | n/a | 2.0 | 215.0 | 52,428 |
 | DataSage (30B) + exclusion rule | 20 | 85% | 100% | 0.88 | 0.77 | 92% | 0 | 100% | n/a | 2.0 | 15.1 | 55,282 |
 | DataSage (30B) + rule, strict approver | 20 | 85% | 100% | 0.88 | 0.77 | 91% | 0 | 100% | n/a | 2.0 | 13.2 | 57,418 |
+| DataSage M3 (30B, default) | 20 | 100% | 100% | 0.88 | 0.79 | 94% | 0 | 100% | n/a | 2.0 | 16.6 | 63,755 |
 
 ## sales-heldout
 
@@ -40,6 +42,7 @@
 | DataSage (235B) + exclusion rule | 20 | 80% | 95% | 0.89 | 0.77 | 86% | 0 | 99% | 100% | 2.5 | 156.3 | 54,037 |
 | DataSage (30B) + exclusion rule | 20 | 90% | 100% | 0.88 | 0.89 | 88% | 0 | 100% | n/a | 2.0 | 15.1 | 65,225 |
 | DataSage (30B) + rule, strict approver | 20 | 90% | 100% | 0.88 | 0.89 | 88% | 0 | 100% | n/a | 2.0 | 17.3 | 68,653 |
+| DataSage M3 (30B, default) | 20 | 100% | 100% | 0.88 | 0.80 | 89% | 0 | 100% | n/a | 3.0 | 19.0 | 62,978 |
 
 ## penguins-heldout
 
@@ -53,3 +56,24 @@
 | DataSage (235B) + exclusion rule | 20 | 95% | 100% | 0.82 | 0.70 | 97% | 0 | 100% | n/a | 2.0 | 150.8 | 52,608 |
 | DataSage (30B) + exclusion rule | 20 | 80% | 100% | 0.79 | 0.61 | 85% | 0 | 100% | 100% | 2.0 | 13.2 | 55,258 |
 | DataSage (30B) + rule, strict approver | 20 | 65% | 100% | 0.78 | 0.60 | 83% | 0 | 100% | n/a | 2.0 | 12.7 | 51,670 |
+| DataSage M3 (30B, default) | 20 | 85% | 100% | 0.82 | 0.73 | 92% | 0 | 100% | n/a | 2.0 | 16.2 | 58,389 |
+
+## sales-test
+
+| System | n | Answer correct | Completed | Detect P | Detect R | Errors handled | Damage | Tool-call OK | Recovery | Approvals (med) | Latency s (med) | Tokens (med) |
+|---|---:|---:|---:|---:|---:|---:|---:|---:|---:|---:|---:|---:|
+| B0 stakeholder baseline | 20 | 10% | 85% | 0.82 | 0.51 | 22% | 0 | n/a | n/a | n/a | 0.0 | 0 |
+| B1 fixed script | 20 | 55% | 100% | 0.78 | 0.78 | 76% | 0 | n/a | n/a | n/a | 0.0 | 0 |
+| B2 single LLM call | 20 | 45% | 90% | 0.74 | 0.72 | 78% | 4 | n/a | n/a | n/a | 30.0 | 2,283 |
+| DataSage (30B) + exclusion rule | 20 | 100% | 100% | 0.84 | 0.84 | 93% | 0 | 100% | n/a | 2.5 | 16.3 | 63,062 |
+| DataSage M3 (30B, default) | 20 | 100% | 100% | 0.85 | 0.84 | 91% | 0 | 100% | n/a | 2.0 | 16.1 | 61,980 |
+
+## penguins-test
+
+| System | n | Answer correct | Completed | Detect P | Detect R | Errors handled | Damage | Tool-call OK | Recovery | Approvals (med) | Latency s (med) | Tokens (med) |
+|---|---:|---:|---:|---:|---:|---:|---:|---:|---:|---:|---:|---:|
+| B0 stakeholder baseline | 20 | 0% | 50% | 1.00 | 0.51 | 32% | 0 | n/a | n/a | n/a | 0.0 | 0 |
+| B1 fixed script | 20 | 35% | 100% | 1.00 | 0.84 | 74% | 0 | n/a | n/a | n/a | 0.0 | 0 |
+| B2 single LLM call | 20 | 50% | 95% | 0.92 | 0.80 | 82% | 0 | n/a | n/a | n/a | 42.5 | 2,524 |
+| DataSage (30B) + exclusion rule | 20 | 85% | 100% | 0.89 | 0.78 | 92% | 0 | 100% | n/a | 2.0 | 14.3 | 53,600 |
+| DataSage M3 (30B, default) | 20 | 85% | 100% | 0.89 | 0.74 | 93% | 0 | 100% | n/a | 2.0 | 15.0 | 56,854 |

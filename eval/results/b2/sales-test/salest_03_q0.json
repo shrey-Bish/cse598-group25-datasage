@@ -1,0 +1,50 @@
+{
+  "task_id": "salest_03_q0",
+  "analysis_correct": false,
+  "completed": false,
+  "detect_tp": 3,
+  "detect_fp": 0,
+  "detect_fn": 3,
+  "tool_calls": 0,
+  "tool_errors": 0,
+  "recovered_errors": 0,
+  "approvals_asked": 0,
+  "seconds": 24.72,
+  "tokens": 2348,
+  "stop_reason": "code_error",
+  "note": "    - passing `format='mixed'`, and the format will be inferred for each element individually. You might want to use `dayfirst` alongside this.",
+  "answer": null,
+  "extra": {
+    "code": "import pandas as pd\n\ndef clean(df):\n    # Remove exact duplicate rows\n    df = df.drop_duplicates().reset_index(drop=True)\n    \n    # Fix label variant in Category (remove leading space)\n    df['Category'] = df['Category'].str.strip()\n    \n    # Convert Price from text to numeric, removing non-numeric characters like '$' and converting to float\n    df['Price'] = df['Price'].astype(str).str.replace(r'[^0-9.]', '', regex=True).astype(float)\n    \n    # Recompute Revenue as Quantity * Price to ensure correctness\n    df['Revenue'] = df['Quantity'] * df['Price']\n    \n    # Convert Date to datetime\n    df['Date'] = pd.to_datetime(df['Date'], format='%Y-%m-%d')\n    \n    return df\n\ndef answer(df):\n    df = clean(df)\n    df['Month'] = df['Date'].dt.to_period('M').astype(str)\n    result = df.groupby('Month')['Revenue'].sum().round(2).to_dict()\n    return result"
+  },
+  "corrections": 0,
+  "planted": 11,
+  "damaged_rows": 0,
+  "damaged_cells": 0,
+  "cleaned_available": false,
+  "system": "b2",
+  "dataset": "sales-test",
+  "question": "What is the total revenue per month?",
+  "reference_answer": {
+    "2026-01": 9858.0,
+    "2026-02": 23613.0,
+    "2026-03": 8246.0,
+    "2026-04": 1391.0,
+    "2026-05": 2346.0,
+    "2026-06": 4690.0
+  },
+  "issues_reported": [
+    [
+      "duplicates",
+      "*"
+    ],
+    [
+      "label_variant",
+      "Category"
+    ],
+    [
+      "text_number",
+      "Price"
+    ]
+  ]
+}

@@ -1,0 +1,68 @@
+{
+  "id_column": "penguin_id",
+  "errors": [
+    {
+      "type": "missing",
+      "subtype": "missing",
+      "column": "sex",
+      "id": "P6457139",
+      "resolution": "keep_missing",
+      "clean_value": null,
+      "messy_value": ""
+    },
+    {
+      "type": "label_variant",
+      "subtype": "label_typo",
+      "column": "island",
+      "id": "P6160214",
+      "resolution": "restore",
+      "clean_value": "Biscoe",
+      "messy_value": "Bisco"
+    },
+    {
+      "type": "label_variant",
+      "subtype": "label_typo",
+      "column": "island",
+      "id": "P4816136",
+      "resolution": "restore",
+      "clean_value": "Biscoe",
+      "messy_value": "Bisco"
+    },
+    {
+      "type": "label_variant",
+      "subtype": "label_typo",
+      "column": "island",
+      "id": "P3341333",
+      "resolution": "restore",
+      "clean_value": "Biscoe",
+      "messy_value": "Bisco"
+    },
+    {
+      "type": "label_variant",
+      "subtype": "label_space",
+      "column": "sex",
+      "id": "P8795801",
+      "resolution": "restore",
+      "clean_value": "female",
+      "messy_value": "female "
+    },
+    {
+      "type": "duplicates",
+      "subtype": "duplicates",
+      "column": "*",
+      "id": "P4043329",
+      "resolution": "drop_copy",
+      "clean_value": null,
+      "messy_value": null
+    },
+    {
+      "type": "duplicates",
+      "subtype": "duplicates",
+      "column": "*",
+      "id": "P5461330",
+      "resolution": "drop_copy",
+      "clean_value": null,
+      "messy_value": null
+    }
+  ]
+}

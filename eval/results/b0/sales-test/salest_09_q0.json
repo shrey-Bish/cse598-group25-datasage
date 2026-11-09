@@ -1,0 +1,54 @@
+{
+  "task_id": "salest_09_q0",
+  "analysis_correct": false,
+  "completed": true,
+  "detect_tp": 2,
+  "detect_fp": 1,
+  "detect_fn": 2,
+  "tool_calls": 0,
+  "tool_errors": 0,
+  "recovered_errors": 0,
+  "approvals_asked": 0,
+  "seconds": 0.021,
+  "tokens": 0,
+  "stop_reason": "done",
+  "note": "",
+  "answer": {
+    " Electronics": 1.0,
+    " Furniture": 1.0,
+    "Accessories": 10.0,
+    "Electronics": 11.0,
+    "Furniture": 13.0,
+    "Office Supplies": 11.0,
+    "Office Supplies ": 1.0
+  },
+  "extra": {},
+  "corrections": 2,
+  "planted": 7,
+  "damaged_rows": 0,
+  "damaged_cells": 0,
+  "cleaned_available": true,
+  "system": "b0",
+  "dataset": "sales-test",
+  "question": "How many orders are there in each category?",
+  "reference_answer": {
+    "Accessories": 9.0,
+    "Electronics": 11.0,
+    "Furniture": 14.0,
+    "Office Supplies": 12.0
+  },
+  "issues_reported": [
+    [
+      "duplicates",
+      "*"
+    ],
+    [
+      "negative",
+      "Quantity"
+    ],
+    [
+      "negative",
+      "Revenue"
+    ]
+  ]
+}

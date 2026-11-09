@@ -1,0 +1,49 @@
+{
+  "task_id": "penguinst_01_q0",
+  "analysis_correct": true,
+  "completed": true,
+  "detect_tp": 3,
+  "detect_fp": 0,
+  "detect_fn": 1,
+  "tool_calls": 0,
+  "tool_errors": 0,
+  "recovered_errors": 0,
+  "approvals_asked": 0,
+  "seconds": 36.76,
+  "tokens": 2437,
+  "stop_reason": "done",
+  "note": "",
+  "answer": {
+    "female": 3765.62,
+    "male": 4312.5
+  },
+  "extra": {
+    "code": "import pandas as pd\n\ndef clean(df):\n    df = df.copy()\n    # Fix species with extra spaces\n    df['species'] = df['species'].str.strip()\n    # Fix island with case inconsistency\n    df['island'] = df['island'].str.capitalize()\n    # Convert body_mass_g from text to number (remove commas)\n    df['body_mass_g'] = df['body_mass_g'].str.replace(',', '').astype(float)\n    return df\n\ndef answer(df):\n    # Group by sex and calculate average body mass\n    result = df.groupby('sex')['body_mass_g'].mean().round(2).to_dict()\n    return result"
+  },
+  "corrections": 7,
+  "planted": 7,
+  "damaged_rows": 0,
+  "damaged_cells": 0,
+  "cleaned_available": true,
+  "system": "b2",
+  "dataset": "penguins-test",
+  "question": "What is the average body mass for each sex?",
+  "reference_answer": {
+    "female": 3765.625,
+    "male": 4312.5
+  },
+  "issues_reported": [
+    [
+      "label_variant",
+      "island"
+    ],
+    [
+      "label_variant",
+      "species"
+    ],
+    [
+      "text_number",
+      "body_mass_g"
+    ]
+  ]
+}

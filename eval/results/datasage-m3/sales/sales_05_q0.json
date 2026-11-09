@@ -1,0 +1,192 @@
+{
+  "task_id": "sales_05_q0",
+  "analysis_correct": true,
+  "completed": true,
+  "detect_tp": 5,
+  "detect_fp": 1,
+  "detect_fn": 0,
+  "tool_calls": 14,
+  "tool_errors": 0,
+  "recovered_errors": 0,
+  "approvals_asked": 4,
+  "seconds": 20.05,
+  "tokens": 70295,
+  "stop_reason": "finish",
+  "note": "",
+  "answer": {
+    "Accessories": 20.0,
+    "Electronics": 13.0,
+    "Furniture": 11.0,
+    "Office Supplies": 11.0
+  },
+  "extra": {
+    "final_summary": "The data had several issues affecting the count of orders by category: 1 exact duplicate row (row 40) was removed; 5 label variants in 'Category' and 3 in 'Region' were normalized to standard values; 2 rows with negative 'Quantity' (rows 28, 50) were excluded as they violate the rule that Quantity must be at least 1; and 1 row (row 31) had an incorrect 'Revenue' value that was recomputed as Quantity * Price. After these fixes, the analysis shows 20 orders in Accessories, 13 in Electronics, 11 in Furniture, and 11 in Office Supplies.",
+    "changes": [
+      {
+        "version": 1,
+        "tool": "drop_duplicates",
+        "args": {
+          "reason": "Found one exact duplicate row (row 40), which is a later copy of an earlier row. Removing it to avoid double-counting in the analysis."
+        },
+        "reason": "Found one exact duplicate row (row 40), which is a later copy of an earlier row. Removing it to avoid double-counting in the analysis.",
+        "risk": "medium",
+        "approval": "approved",
+        "rows_removed": [
+          40
+        ],
+        "cells_changed": 0,
+        "summary": "removed 1 exact duplicate row(s)",
+        "code": "df = df.drop_duplicates(keep='first')"
+      },
+      {
+        "version": 2,
+        "tool": "normalize_labels",
+        "args": {
+          "column": "Category",
+          "mapping": {
+            "Furniture ": "Furniture",
+            "Office Supplies ": "Office Supplies",
+            "furniture": "Furniture",
+            "office supplies": "Office Supplies"
+          },
+          "reason": "Standardize category labels to match the allowed values in the rules file. These are case or space variants, not misspellings."
+        },
+        "reason": "Standardize category labels to match the allowed values in the rules file. These are case or space variants, not misspellings.",
+        "risk": "low",
+        "approval": "auto",
+        "rows_removed": [],
+        "cells_changed": 5,
+        "summary": "Category: merged 4 label variant(s), 5 cells",
+        "code": "df['Category'] = df['Category'].replace({'Furniture ': 'Furniture', 'Office Supplies ': 'Office Supplies', 'furniture': 'Furniture', 'office supplies': 'Office Supplies'})"
+      },
+      {
+        "version": 3,
+        "tool": "normalize_labels",
+        "args": {
+          "column": "Region",
+          "mapping": {
+            "Suoth": "South",
+            "Wst": "West"
+          },
+          "reason": "Correct misspelled region labels: 'Suoth' is a misspelling of 'South', and 'Wst' is a misspelling of 'West'. These are not case or space variants, so merging them requires approval."
+        },
+        "reason": "Correct misspelled region labels: 'Suoth' is a misspelling of 'South', and 'Wst' is a misspelling of 'West'. These are not case or space variants, so merging them requires approval.",
+        "risk": "high",
+        "approval": "approved",
+        "rows_removed": [],
+        "cells_changed": 3,
+        "summary": "Region: merged 2 label variant(s), 3 cells",
+        "code": "df['Region'] = df['Region'].replace({'Suoth': 'South', 'Wst': 'West'})"
+      },
+      {
+        "version": 4,
+        "tool": "exclude_rows",
+        "args": {
+          "rows": [
+            28,
+            50
+          ],
+          "reason": "Quantity is negative (row 28: -8, row 50: -4), but the rules state Quantity must be at least 1. These rows violate the data quality rule and cannot be fixed by normalization or recalculation. Excluding them to ensure accurate order counts by category."
+        },
+        "reason": "Quantity is negative (row 28: -8, row 50: -4), but the rules state Quantity must be at least 1. These rows violate the data quality rule and cannot be fixed by normalization or recalculation. Excluding them to ensure accurate order counts by category.",
+        "risk": "high",
+        "approval": "approved",
+        "rows_removed": [
+          28,
+          50
+        ],
+        "cells_changed": 0,
+        "summary": "excluded 2 row(s): [28, 50]",
+        "code": "df = df.drop(index=[28, 50])"
+      },
+      {
+        "version": 5,
+        "tool": "recompute_column",
+        "args": {
+          "column": "Revenue",
+          "expression": "Quantity * Price",
+          "rows": [
+            31
+          ],
+          "reason": "Revenue value (800) does not match Quantity (10) * Price (8), which should be 80. Recomputing Revenue for this row to fix the inconsistency."
+        },
+        "reason": "Revenue value (800) does not match Quantity (10) * Price (8), which should be 80. Recomputing Revenue for this row to fix the inconsistency.",
+        "risk": "high",
+        "approval": "approved",
+        "rows_removed": [],
+        "cells_changed": 1,
+        "summary": "Revenue: recomputed as Quantity * Price on 1 row(s)",
+        "code": "df.loc[[31], 'Revenue'] = [80.0]  # Revenue = Quantity * Price"
+      }
+    ],
+    "rejected": [],
+    "oracle_decisions": [
+      {
+        "tool": "drop_duplicates",
+        "risk": "medium",
+        "approved": true,
+        "why": "moves data toward the reference"
+      },
+      {
+        "tool": "normalize_labels",
+        "risk": "high",
+        "approved": true,
+        "why": "moves data toward the reference"
+      },
+      {
+        "tool": "exclude_rows",
+        "risk": "high",
+        "approved": true,
+        "why": "moves data toward the reference"
+      },
+      {
+        "tool": "recompute_column",
+        "risk": "high",
+        "approved": true,
+        "why": "moves data toward the reference"
+      }
+    ],
+    "coverage_refusals": 0,
+    "model_turns": 14
+  },
+  "corrections": 12,
+  "planted": 12,
+  "damaged_rows": 0,
+  "damaged_cells": 0,
+  "cleaned_available": true,
+  "system": "datasage-m3",
+  "dataset": "sales",
+  "question": "How many orders are there in each category?",
+  "reference_answer": {
+    "Accessories": 20.0,
+    "Electronics": 13.0,
+    "Furniture": 11.0,
+    "Office Supplies": 11.0
+  },
+  "issues_reported": [
+    [
+      "cross_column",
+      "Revenue"
+    ],
+    [
+      "duplicates",
+      "*"
+    ],
+    [
+      "label_variant",
+      "Category"
+    ],
+    [
+      "label_variant",
+      "Region"
+    ],
+    [
+      "negative",
+      "Quantity"
+    ],
+    [
+      "out_of_range",
+      "Quantity"
+    ]
+  ]
+}

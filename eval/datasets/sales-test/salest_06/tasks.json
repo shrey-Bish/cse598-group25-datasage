@@ -1,0 +1,36 @@
+[
+  {
+    "task_id": "salest_06_q0",
+    "question": "What is the average unit price in each category?",
+    "spec": {
+      "group_by": [
+        "Category"
+      ],
+      "metric": "Price",
+      "agg": "mean"
+    },
+    "reference_answer": {
+      "Accessories": 32.5,
+      "Electronics": 382.5,
+      "Furniture": 177.8571,
+      "Office Supplies": 14.0
+    }
+  },
+  {
+    "task_id": "salest_06_q1",
+    "question": "How many units were sold in each region?",
+    "spec": {
+      "group_by": [
+        "Region"
+      ],
+      "metric": "Quantity",
+      "agg": "sum"
+    },
+    "reference_answer": {
+      "East": 46.0,
+      "North": 90.0,
+      "South": 42.0,
+      "West": 62.0
+    }
+  }
+]

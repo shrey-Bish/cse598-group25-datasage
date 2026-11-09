@@ -1,0 +1,50 @@
+{
+  "task_id": "salest_08_q0",
+  "analysis_correct": false,
+  "completed": false,
+  "detect_tp": 2,
+  "detect_fp": 1,
+  "detect_fn": 2,
+  "tool_calls": 0,
+  "tool_errors": 0,
+  "recovered_errors": 0,
+  "approvals_asked": 0,
+  "seconds": 31.7,
+  "tokens": 2253,
+  "stop_reason": "code_error",
+  "note": "    - passing `format='mixed'`, and the format will be inferred for each element individually. You might want to use `dayfirst` alongside this.",
+  "answer": null,
+  "extra": {
+    "code": "import pandas as pd\n\ndef clean(df):\n    df = df.copy()\n    \n    # Fix Category label variants\n    category_mapping = {\n        'Accesories': 'Accessories',\n        'electronics': 'Electronics',\n        'Electornics': 'Electronics',\n        'office supplies': 'Office Supplies',\n        'Office Suplies': 'Office Supplies'\n    }\n    df['Category'] = df['Category'].replace(category_mapping)\n    \n    # Fix Region label variants (trim whitespace)\n    df['Region'] = df['Region'].str.strip()\n    \n    # Recompute Revenue to ensure consistency: Revenue = Quantity * Price\n    df['Revenue'] = df['Quantity'] * df['Price']\n    \n    # Convert Date to datetime\n    df['Date'] = pd.to_datetime(df['Date'], format='%Y-%m-%d')\n    \n    return df\n\ndef answer(df):\n    df = clean(df)\n    df['Month'] = df['Date'].dt.to_period('M').astype(str)\n    result = df.groupby('Month')['Revenue'].sum().round(2).to_dict()\n    return result"
+  },
+  "corrections": 0,
+  "planted": 11,
+  "damaged_rows": 0,
+  "damaged_cells": 0,
+  "cleaned_available": false,
+  "system": "b2",
+  "dataset": "sales-test",
+  "question": "What is the total revenue per month?",
+  "reference_answer": {
+    "2026-01": 3138.0,
+    "2026-02": 1908.0,
+    "2026-03": 1050.0,
+    "2026-04": 10290.0,
+    "2026-05": 4953.0,
+    "2026-06": 2688.0
+  },
+  "issues_reported": [
+    [
+      "cross_column",
+      "*"
+    ],
+    [
+      "label_variant",
+      "Category"
+    ],
+    [
+      "label_variant",
+      "Region"
+    ]
+  ]
+}

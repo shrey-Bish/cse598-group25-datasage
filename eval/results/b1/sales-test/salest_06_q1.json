@@ -1,0 +1,52 @@
+{
+  "task_id": "salest_06_q1",
+  "analysis_correct": false,
+  "completed": true,
+  "detect_tp": 2,
+  "detect_fp": 1,
+  "detect_fn": 2,
+  "tool_calls": 0,
+  "tool_errors": 0,
+  "recovered_errors": 0,
+  "approvals_asked": 0,
+  "seconds": 0.019,
+  "tokens": 0,
+  "stop_reason": "done",
+  "note": "",
+  "answer": {
+    "East": 46.0,
+    "Nort": 8.0,
+    "North": 82.0,
+    "South": 42.0,
+    "West": 62.0
+  },
+  "extra": {},
+  "corrections": 2,
+  "planted": 6,
+  "damaged_rows": 0,
+  "damaged_cells": 0,
+  "cleaned_available": true,
+  "system": "b1",
+  "dataset": "sales-test",
+  "question": "How many units were sold in each region?",
+  "reference_answer": {
+    "East": 46.0,
+    "North": 90.0,
+    "South": 42.0,
+    "West": 62.0
+  },
+  "issues_reported": [
+    [
+      "duplicates",
+      "*"
+    ],
+    [
+      "negative",
+      "Quantity"
+    ],
+    [
+      "negative",
+      "Revenue"
+    ]
+  ]
+}

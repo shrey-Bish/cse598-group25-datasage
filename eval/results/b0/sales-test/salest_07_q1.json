@@ -1,0 +1,57 @@
+{
+  "task_id": "salest_07_q1",
+  "analysis_correct": false,
+  "completed": true,
+  "detect_tp": 3,
+  "detect_fp": 1,
+  "detect_fn": 2,
+  "tool_calls": 0,
+  "tool_errors": 0,
+  "recovered_errors": 0,
+  "approvals_asked": 0,
+  "seconds": 0.02,
+  "tokens": 0,
+  "stop_reason": "done",
+  "note": "",
+  "answer": {
+    " Electronics": 900.0,
+    "Accessories": 1680.0,
+    "Electronics": 165780.0,
+    "Furniture": 14685.0,
+    "Office Supplies": 3635.0,
+    "Office Supplies ": 18.0
+  },
+  "extra": {},
+  "corrections": 1,
+  "planted": 9,
+  "damaged_rows": 0,
+  "damaged_cells": 0,
+  "cleaned_available": true,
+  "system": "b0",
+  "dataset": "sales-test",
+  "question": "What is the total revenue by category?",
+  "reference_answer": {
+    "Accessories": 1780.0,
+    "Electronics": 47580.0,
+    "Furniture": 14685.0,
+    "Office Supplies": 444.0
+  },
+  "issues_reported": [
+    [
+      "duplicates",
+      "*"
+    ],
+    [
+      "missing",
+      "Region"
+    ],
+    [
+      "negative",
+      "Quantity"
+    ],
+    [
+      "negative",
+      "Revenue"
+    ]
+  ]
+}

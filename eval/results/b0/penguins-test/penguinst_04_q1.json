@@ -1,0 +1,49 @@
+{
+  "task_id": "penguinst_04_q1",
+  "analysis_correct": false,
+  "completed": false,
+  "detect_tp": 4,
+  "detect_fp": 0,
+  "detect_fn": 1,
+  "tool_calls": 0,
+  "tool_errors": 0,
+  "recovered_errors": 0,
+  "approvals_asked": 0,
+  "seconds": 0.016,
+  "tokens": 0,
+  "stop_reason": "analysis_failed",
+  "note": "",
+  "answer": null,
+  "extra": {},
+  "corrections": 3,
+  "planted": 9,
+  "damaged_rows": 0,
+  "damaged_cells": 0,
+  "cleaned_available": true,
+  "system": "b0",
+  "dataset": "penguins-test",
+  "question": "What is the average body mass for each species?",
+  "reference_answer": {
+    "Adelie": 3692.4242,
+    "Chinstrap": 3896.6667,
+    "Gentoo": 5147.5
+  },
+  "issues_reported": [
+    [
+      "duplicates",
+      "*"
+    ],
+    [
+      "label_variant",
+      "sex"
+    ],
+    [
+      "missing",
+      "sex"
+    ],
+    [
+      "negative",
+      "flipper_length_mm"
+    ]
+  ]
+}

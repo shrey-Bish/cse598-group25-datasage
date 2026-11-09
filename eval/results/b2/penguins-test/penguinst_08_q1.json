@@ -1,0 +1,51 @@
+{
+  "task_id": "penguinst_08_q1",
+  "analysis_correct": true,
+  "completed": true,
+  "detect_tp": 3,
+  "detect_fp": 0,
+  "detect_fn": 1,
+  "tool_calls": 0,
+  "tool_errors": 0,
+  "recovered_errors": 0,
+  "approvals_asked": 0,
+  "seconds": 45.96,
+  "tokens": 2606,
+  "stop_reason": "done",
+  "note": "",
+  "answer": {
+    "Adelie": 3500.0,
+    "Chinstrap": 3907.81,
+    "Gentoo": 5248.33
+  },
+  "extra": {
+    "code": "import pandas as pd\n\ndef clean(df):\n    df = df.copy()\n    \n    # Fix species label variants\n    species_mapping = {'Adeile': 'Adelie', 'Gentto': 'Gentoo'}\n    df['species'] = df['species'].replace(species_mapping)\n    \n    # Fix island label variants (case)\n    df['island'] = df['island'].replace({'biscoe': 'Biscoe'})\n    \n    # Clean body_mass_g: remove commas and convert to numeric\n    df['body_mass_g'] = df['body_mass_g'].astype(str).str.replace(',', '').astype(float)\n    \n    # Filter out body_mass_g values outside valid range\n    df = df[(df['body_mass_g'] >= 2500) & (df['body_mass_g'] <= 6500)]\n    \n    # Ensure only valid species and island values remain\n    valid_species = ['Adelie', 'Chinstrap', 'Gentoo']\n    valid_island = ['Biscoe', 'Dream', 'Torgersen']\n    df = df[df['species'].isin(valid_species)]\n    df = df[df['island'].isin(valid_island)]\n    \n    return df\n\ndef answer(df):\n    result = df.groupby('species')['body_mass_g'].mean().round(2).to_dict()\n    return result"
+  },
+  "corrections": 8,
+  "planted": 8,
+  "damaged_rows": 0,
+  "damaged_cells": 0,
+  "cleaned_available": true,
+  "system": "b2",
+  "dataset": "penguins-test",
+  "question": "What is the average body mass for each species?",
+  "reference_answer": {
+    "Adelie": 3500.0,
+    "Chinstrap": 3907.8125,
+    "Gentoo": 5248.3333
+  },
+  "issues_reported": [
+    [
+      "label_variant",
+      "island"
+    ],
+    [
+      "label_variant",
+      "species"
+    ],
+    [
+      "text_number",
+      "body_mass_g"
+    ]
+  ]
+}

@@ -1,0 +1,169 @@
+{
+  "task_id": "salest_02_q0",
+  "analysis_correct": true,
+  "completed": true,
+  "detect_tp": 4,
+  "detect_fp": 1,
+  "detect_fn": 2,
+  "tool_calls": 14,
+  "tool_errors": 0,
+  "recovered_errors": 0,
+  "approvals_asked": 4,
+  "seconds": 19.53,
+  "tokens": 66494,
+  "stop_reason": "finish",
+  "note": "",
+  "answer": {
+    "Accessories": 32.5,
+    "Electronics": 275.7143,
+    "Furniture": 191.0526,
+    "Office Supplies": 11.3684
+  },
+  "extra": {
+    "final_summary": "The data had several issues affecting the question:\n- One exact duplicate row (row 5) was removed.\n- Two misspelled category labels ('Office Suplies', 'Furnture') were corrected to 'Office Supplies' and 'Furniture'.\n- Three rows with negative Quantity values (rows 1, 34, 51) were excluded, as Quantity must be at least 1.\n- One incorrect Revenue value (row 64) was corrected using the formula Revenue = Quantity * Price.\n\nAfter these fixes, the average unit price by category was calculated. The results are:\n- Accessories: $32.50\n- Electronics: $275.71\n- Furniture: $191.05\n- Office Supplies: $11.37",
+    "changes": [
+      {
+        "version": 1,
+        "tool": "drop_duplicates",
+        "args": {
+          "reason": "Found one exact duplicate row (row 5), likely a data entry error."
+        },
+        "reason": "Found one exact duplicate row (row 5), likely a data entry error.",
+        "risk": "medium",
+        "approval": "approved",
+        "rows_removed": [
+          5
+        ],
+        "cells_changed": 0,
+        "summary": "removed 1 exact duplicate row(s)",
+        "code": "df = df.drop_duplicates(keep='first')"
+      },
+      {
+        "version": 2,
+        "tool": "normalize_labels",
+        "args": {
+          "column": "Category",
+          "mapping": {
+            "Office Suplies": "Office Supplies",
+            "Furnture": "Furniture"
+          },
+          "reason": "Corrected misspellings in Category column: 'Office Suplies' and 'Furnture' are likely typos of 'Office Supplies' and 'Furniture'."
+        },
+        "reason": "Corrected misspellings in Category column: 'Office Suplies' and 'Furnture' are likely typos of 'Office Supplies' and 'Furniture'.",
+        "risk": "high",
+        "approval": "approved",
+        "rows_removed": [],
+        "cells_changed": 2,
+        "summary": "Category: merged 2 label variant(s), 2 cells",
+        "code": "df['Category'] = df['Category'].replace({'Office Suplies': 'Office Supplies', 'Furnture': 'Furniture'})"
+      },
+      {
+        "version": 3,
+        "tool": "exclude_rows",
+        "args": {
+          "rows": [
+            1,
+            34,
+            51
+          ],
+          "reason": "Quantity is negative in these rows (rows 1, 34, 51), but rules specify Quantity must be at least 1. These are invalid sales records and should be excluded."
+        },
+        "reason": "Quantity is negative in these rows (rows 1, 34, 51), but rules specify Quantity must be at least 1. These are invalid sales records and should be excluded.",
+        "risk": "high",
+        "approval": "approved",
+        "rows_removed": [
+          1,
+          34,
+          51
+        ],
+        "cells_changed": 0,
+        "summary": "excluded 3 row(s): [1, 34, 51]",
+        "code": "df = df.drop(index=[1, 34, 51])"
+      },
+      {
+        "version": 4,
+        "tool": "recompute_column",
+        "args": {
+          "column": "Revenue",
+          "expression": "Quantity * Price",
+          "rows": [
+            64
+          ],
+          "reason": "Revenue value in row 64 is incorrect: it should be Quantity (75) * Price (100) = 7500, but is recorded as 7505. Correcting this to match the formula."
+        },
+        "reason": "Revenue value in row 64 is incorrect: it should be Quantity (75) * Price (100) = 7500, but is recorded as 7505. Correcting this to match the formula.",
+        "risk": "high",
+        "approval": "approved",
+        "rows_removed": [],
+        "cells_changed": 1,
+        "summary": "Revenue: recomputed as Quantity * Price on 1 row(s)",
+        "code": "df.loc[[64], 'Revenue'] = [75.0]  # Revenue = Quantity * Price"
+      }
+    ],
+    "rejected": [],
+    "oracle_decisions": [
+      {
+        "tool": "drop_duplicates",
+        "risk": "medium",
+        "approved": true,
+        "why": "moves data toward the reference"
+      },
+      {
+        "tool": "normalize_labels",
+        "risk": "high",
+        "approved": true,
+        "why": "moves data toward the reference"
+      },
+      {
+        "tool": "exclude_rows",
+        "risk": "high",
+        "approved": true,
+        "why": "moves data toward the reference"
+      },
+      {
+        "tool": "recompute_column",
+        "risk": "high",
+        "approved": true,
+        "why": "moves data toward the reference"
+      }
+    ],
+    "coverage_refusals": 0,
+    "model_turns": 14
+  },
+  "corrections": 9,
+  "planted": 12,
+  "damaged_rows": 0,
+  "damaged_cells": 0,
+  "cleaned_available": true,
+  "system": "datasage-small-fix",
+  "dataset": "sales-test",
+  "question": "What is the average unit price in each category?",
+  "reference_answer": {
+    "Accessories": 32.5,
+    "Electronics": 275.7143,
+    "Furniture": 191.0526,
+    "Office Supplies": 11.3684
+  },
+  "issues_reported": [
+    [
+      "cross_column",
+      "Revenue"
+    ],
+    [
+      "duplicates",
+      "*"
+    ],
+    [
+      "label_variant",
+      "Category"
+    ],
+    [
+      "negative",
+      "Quantity"
+    ],
+    [
+      "out_of_range",
+      "Quantity"
+    ]
+  ]
+}

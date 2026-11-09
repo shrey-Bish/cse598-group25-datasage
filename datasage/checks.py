@@ -43,9 +43,16 @@ def check_duplicates(df: pd.DataFrame) -> dict:
     }
 
 
-def check_label_variants(df: pd.DataFrame, column: str) -> dict:
-    """Case/space variants (safe to merge) and close spellings of a more common label (risky)."""
+def check_label_variants(df: pd.DataFrame, column: str, allowed: list[str] | None = None) -> dict:
+    """Case/space variants (safe to merge) and close spellings of a more common label (risky).
+
+    With `allowed` (the rules file's labels for this column) every other value is matched to the
+    closest allowed label instead, so a misspelling is found even when it is not rarer than its
+    correct form. The result then carries a ready mapping for normalize_labels.
+    """
     _require_column(df, column)
+    if allowed:
+        return _check_against_allowed(df, column, [str(a) for a in allowed])
     values = df[column].dropna().astype(str)
     counts = values.value_counts()
     groups: dict[str, list[str]] = {}
@@ -79,6 +86,39 @@ def check_label_variants(df: pd.DataFrame, column: str) -> dict:
         "possible_misspellings": close,
         "note": "case/space variants are low risk to merge; misspellings need approval",
     }
+
+
+def _check_against_allowed(df: pd.DataFrame, column: str, allowed: list[str]) -> dict:
+    values = df[column].dropna().astype(str)
+    by_norm = {normalize_label(a): a for a in allowed}
+    case_space, close, unknown = {}, {}, []
+    for value in sorted(set(values)):
+        if value in allowed:
+            continue
+        if normalize_label(value) in by_norm:
+            case_space[value] = by_norm[normalize_label(value)]
+            continue
+        match = difflib.get_close_matches(normalize_label(value), list(by_norm), n=1, cutoff=0.75)
+        if match:
+            close[value] = by_norm[match[0]]
+        else:
+            unknown.append(value)
+    affected = values[values.isin(list(case_space) + list(close))]
+    result = {
+        "type": "label_variant",
+        "column": column,
+        "count": int(len(affected)),
+        "rows": _rows(affected.index),
+        "allowed_labels": allowed,
+        "case_or_space_variants": case_space,
+        "possible_misspellings": close,
+        "not_allowed_no_close_match": unknown,
+    }
+    if case_space or close:
+        result["suggested_fix"] = {"tool": "normalize_labels", "column": column, "mapping": {**case_space, **close}}
+        result["note"] = ("merge these into the allowed labels with one normalize_labels call using suggested_fix; "
+                          "it needs approval if it includes misspellings. Do not exclude these rows.")
+    return result
 
 
 def check_dates(df: pd.DataFrame, column: str) -> dict:

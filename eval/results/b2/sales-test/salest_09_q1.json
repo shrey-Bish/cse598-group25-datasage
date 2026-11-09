@@ -1,0 +1,65 @@
+{
+  "task_id": "salest_09_q1",
+  "analysis_correct": false,
+  "completed": true,
+  "detect_tp": 4,
+  "detect_fp": 2,
+  "detect_fn": 0,
+  "tool_calls": 0,
+  "tool_errors": 0,
+  "recovered_errors": 0,
+  "approvals_asked": 0,
+  "seconds": 22.11,
+  "tokens": 2384,
+  "stop_reason": "done",
+  "note": "",
+  "answer": {
+    "East": 35.0,
+    "North": 53.0,
+    "South": 68.0,
+    "West": 52.0
+  },
+  "extra": {
+    "code": "import pandas as pd\n\ndef clean(df):\n    # Remove exact duplicate rows\n    df = df.drop_duplicates().reset_index(drop=True)\n    \n    # Fix label variants in Category by stripping whitespace\n    df['Category'] = df['Category'].str.strip()\n    \n    # Fix Price: remove $ and convert to float, then to int (as it's whole dollars)\n    df['Price'] = df['Price'].astype(str).str.replace('$', '', regex=False).str.replace('.00', '', regex=False).astype(int)\n    \n    # Fix negative Quantity: take absolute value (assuming it's a data entry error)\n    df['Quantity'] = df['Quantity'].abs()\n    \n    # Recompute Revenue = Quantity * Price to fix any inconsistencies\n    df['Revenue'] = df['Quantity'] * df['Price']\n    \n    return df\n\ndef answer(df):\n    df_clean = clean(df)\n    result = df_clean.groupby('Region')['Quantity'].sum().astype(int).to_dict()\n    return result"
+  },
+  "corrections": 6,
+  "planted": 7,
+  "damaged_rows": 0,
+  "damaged_cells": 0,
+  "cleaned_available": true,
+  "system": "b2",
+  "dataset": "sales-test",
+  "question": "How many units were sold in each region?",
+  "reference_answer": {
+    "East": 35.0,
+    "North": 53.0,
+    "South": 68.0,
+    "West": 46.0
+  },
+  "issues_reported": [
+    [
+      "cross_column",
+      "Revenue"
+    ],
+    [
+      "duplicates",
+      "*"
+    ],
+    [
+      "label_variant",
+      "Category"
+    ],
+    [
+      "negative",
+      "Quantity"
+    ],
+    [
+      "negative",
+      "Revenue"
+    ],
+    [
+      "text_number",
+      "Price"
+    ]
+  ]
+}

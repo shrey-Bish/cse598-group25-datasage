@@ -1,0 +1,86 @@
+{
+  "id_column": "penguin_id",
+  "errors": [
+    {
+      "type": "out_of_range",
+      "subtype": "out_of_range",
+      "column": "body_mass_g",
+      "id": "P5289600",
+      "resolution": "exclude",
+      "clean_value": 3625.0,
+      "messy_value": 3625000.0
+    },
+    {
+      "type": "missing",
+      "subtype": "missing",
+      "column": "sex",
+      "id": "P7900320",
+      "resolution": "keep_missing",
+      "clean_value": null,
+      "messy_value": ""
+    },
+    {
+      "type": "missing",
+      "subtype": "missing",
+      "column": "sex",
+      "id": "P9403103",
+      "resolution": "keep_missing",
+      "clean_value": null,
+      "messy_value": ""
+    },
+    {
+      "type": "missing",
+      "subtype": "missing",
+      "column": "sex",
+      "id": "P3190118",
+      "resolution": "keep_missing",
+      "clean_value": null,
+      "messy_value": ""
+    },
+    {
+      "type": "label_variant",
+      "subtype": "label_space",
+      "column": "island",
+      "id": "P1501727",
+      "resolution": "restore",
+      "clean_value": "Biscoe",
+      "messy_value": " Biscoe"
+    },
+    {
+      "type": "text_number",
+      "subtype": "text_number",
+      "column": "body_mass_g",
+      "id": "P9396547",
+      "resolution": "restore",
+      "clean_value": 3950.0,
+      "messy_value": "3,950"
+    },
+    {
+      "type": "text_number",
+      "subtype": "text_number",
+      "column": "body_mass_g",
+      "id": "P3271210",
+      "resolution": "restore",
+      "clean_value": 3400.0,
+      "messy_value": "3,400"
+    },
+    {
+      "type": "text_number",
+      "subtype": "text_number",
+      "column": "body_mass_g",
+      "id": "P8679104",
+      "resolution": "restore",
+      "clean_value": 3900.0,
+      "messy_value": "3,900"
+    },
+    {
+      "type": "duplicates",
+      "subtype": "duplicates",
+      "column": "*",
+      "id": "P5101648",
+      "resolution": "drop_copy",
+      "clean_value": null,
+      "messy_value": null
+    }
+  ]
+}

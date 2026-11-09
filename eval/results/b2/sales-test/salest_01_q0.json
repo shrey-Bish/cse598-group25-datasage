@@ -1,0 +1,57 @@
+{
+  "task_id": "salest_01_q0",
+  "analysis_correct": false,
+  "completed": true,
+  "detect_tp": 3,
+  "detect_fp": 1,
+  "detect_fn": 1,
+  "tool_calls": 0,
+  "tool_errors": 0,
+  "recovered_errors": 0,
+  "approvals_asked": 0,
+  "seconds": 31.04,
+  "tokens": 2363,
+  "stop_reason": "done",
+  "note": "",
+  "answer": {
+    "Accessories": 36.25,
+    "Electronics": 396.43,
+    "Furniture": 161.07,
+    "Office Supplies": 12.0
+  },
+  "extra": {
+    "code": "import pandas as pd\n\ndef clean(df):\n    df = df.copy()\n    \n    # Fix Price: remove $ and convert to float\n    df['Price'] = df['Price'].astype(str).str.replace(r'\\$|\\.00', '', regex=True).astype(float)\n    \n    # Fix Region case variants\n    region_mapping = {'south': 'South', 'east': 'East'}\n    df['Region'] = df['Region'].replace(region_mapping)\n    \n    # Convert Quantity to integer (it's currently text in some cases)\n    df['Quantity'] = pd.to_numeric(df['Quantity'], errors='coerce')\n    \n    # Recompute Revenue based on Quantity and Price to fix negatives and inconsistencies\n    df['Revenue'] = df['Quantity'] * df['Price']\n    \n    return df\n\ndef answer(df):\n    df_clean = clean(df)\n    result = df_clean.groupby('Category')['Price'].mean().round(2).to_dict()\n    return result"
+  },
+  "corrections": 5,
+  "planted": 8,
+  "damaged_rows": 0,
+  "damaged_cells": 0,
+  "cleaned_available": true,
+  "system": "b2",
+  "dataset": "sales-test",
+  "question": "What is the average unit price in each category?",
+  "reference_answer": {
+    "Accessories": 35.3333,
+    "Electronics": 396.4286,
+    "Furniture": 155.0,
+    "Office Supplies": 12.0
+  },
+  "issues_reported": [
+    [
+      "label_variant",
+      "Region"
+    ],
+    [
+      "negative",
+      "Quantity"
+    ],
+    [
+      "negative",
+      "Revenue"
+    ],
+    [
+      "text_number",
+      "Price"
+    ]
+  ]
+}

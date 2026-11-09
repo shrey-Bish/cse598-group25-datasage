@@ -1,0 +1,40 @@
+{
+  "task_id": "penguinst_03_q1",
+  "analysis_correct": false,
+  "completed": false,
+  "detect_tp": 2,
+  "detect_fp": 0,
+  "detect_fn": 3,
+  "tool_calls": 0,
+  "tool_errors": 0,
+  "recovered_errors": 0,
+  "approvals_asked": 0,
+  "seconds": 0.01,
+  "tokens": 0,
+  "stop_reason": "analysis_failed",
+  "note": "",
+  "answer": null,
+  "extra": {},
+  "corrections": 2,
+  "planted": 11,
+  "damaged_rows": 0,
+  "damaged_cells": 0,
+  "cleaned_available": true,
+  "system": "b0",
+  "dataset": "penguins-test",
+  "question": "What is the average body mass for each sex?",
+  "reference_answer": {
+    "female": 4050.9259,
+    "male": 4962.5
+  },
+  "issues_reported": [
+    [
+      "duplicates",
+      "*"
+    ],
+    [
+      "negative",
+      "flipper_length_mm"
+    ]
+  ]
+}

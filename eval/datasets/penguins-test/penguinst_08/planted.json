@@ -1,0 +1,77 @@
+{
+  "id_column": "penguin_id",
+  "errors": [
+    {
+      "type": "label_variant",
+      "subtype": "label_typo",
+      "column": "species",
+      "id": "P2281002",
+      "resolution": "restore",
+      "clean_value": "Adelie",
+      "messy_value": "Adeile"
+    },
+    {
+      "type": "label_variant",
+      "subtype": "label_typo",
+      "column": "species",
+      "id": "P2070540",
+      "resolution": "restore",
+      "clean_value": "Gentoo",
+      "messy_value": "Gentto"
+    },
+    {
+      "type": "label_variant",
+      "subtype": "label_typo",
+      "column": "species",
+      "id": "P6330427",
+      "resolution": "restore",
+      "clean_value": "Gentoo",
+      "messy_value": "Gentto"
+    },
+    {
+      "type": "text_number",
+      "subtype": "text_number",
+      "column": "body_mass_g",
+      "id": "P4601252",
+      "resolution": "restore",
+      "clean_value": 3800.0,
+      "messy_value": "3,800"
+    },
+    {
+      "type": "out_of_range",
+      "subtype": "out_of_range",
+      "column": "body_mass_g",
+      "id": "P2878817",
+      "resolution": "exclude",
+      "clean_value": 3500.0,
+      "messy_value": 3500000.0
+    },
+    {
+      "type": "out_of_range",
+      "subtype": "out_of_range",
+      "column": "body_mass_g",
+      "id": "P1104000",
+      "resolution": "exclude",
+      "clean_value": 3650.0,
+      "messy_value": 3650000.0
+    },
+    {
+      "type": "out_of_range",
+      "subtype": "out_of_range",
+      "column": "body_mass_g",
+      "id": "P1695534",
+      "resolution": "exclude",
+      "clean_value": 6000.0,
+      "messy_value": 6000000.0
+    },
+    {
+      "type": "label_variant",
+      "subtype": "label_case",
+      "column": "island",
+      "id": "P1558130",
+      "resolution": "restore",
+      "clean_value": "Biscoe",
+      "messy_value": "biscoe"
+    }
+  ]
+}

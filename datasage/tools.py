@@ -137,13 +137,33 @@ ALL_TOOLS = {**CHECK_TOOLS, **FIX_TOOLS, **OTHER_TOOLS}
 TOOL_SCHEMAS = [_schema(name, desc, model) for name, (model, desc) in ALL_TOOLS.items()]
 
 
+def _found(name: str, result: dict) -> str:
+    """One-line result of a check for the state summary."""
+    if name == "check_numeric":
+        parts = [f"{k}={result[k]['count']} rows {result[k]['rows']}" for k in ("text_numbers", "not_numbers", "negatives")
+                 if result[k]["count"]]
+        return "; ".join(parts) or "nothing found"
+    if not result.get("count"):
+        return "nothing found"
+    text = f"{result['count']} rows {result.get('rows', [])}"
+    if result.get("suggested_fix"):
+        text += f"; suggested_fix mapping {result['suggested_fix']['mapping']}"
+    elif result.get("possible_misspellings") or result.get("case_or_space_variants"):
+        text += f"; variants {result.get('case_or_space_variants')}, misspellings {result.get('possible_misspellings')}"
+    return text
+
+
 class Dispatcher:
-    def __init__(self, session: Session, approver, use_validator: bool = True, trace=None):
+    def __init__(self, session: Session, approver, use_validator: bool = True, trace=None, coverage: bool = False):
         self.session = session
         self.approver = approver
         self.use_validator = use_validator
         self.trace = trace
+        self.coverage = coverage  # Milestone 3: coverage check and unresolved-finding check before analyze
         self.approvals_asked = 0
+        self.coverage_refusals = 0
+        self.quiet_checks = 0  # checks in a row by the model that found nothing new
+        self.flagged: set[tuple[str, str]] = set()
         self.finished = False
         self.final_summary = ""
 
@@ -166,20 +186,110 @@ class Dispatcher:
         except (ValueError, KeyError, TypeError) as err:
             return {"error": str(err)}, False
 
-    def _check(self, name: str, args: dict) -> dict:
-        df = self.session.current
+    def _check(self, name: str, args: dict, by: str = "model") -> dict:
+        session = self.session
+        df = session.current
+        column = args.get("column")
+        # A repeat: the same check with the same arguments, already run by the model, and no fix applied since.
+        repeat = any(c["tool"] == name and c.get("args") == args and c["by"] == "model" and c["version"] == session.version
+                     for c in session.checks_run)
+        stale = any(c["tool"] == name and c.get("args") == args and c["by"] == "model" for c in session.checks_run)
         if name == "check_duplicates":
             result = checks.check_duplicates(df)
         elif name == "check_out_of_range":
-            result = checks.check_out_of_range(df, args["column"], args["minimum"], args["maximum"])
+            result = checks.check_out_of_range(df, column, args["minimum"], args["maximum"])
         elif name == "check_cross_column":
-            result = checks.check_cross_column(df, args["column"], args["expression"])
+            result = checks.check_cross_column(df, column, args["expression"])
+        elif name == "check_label_variants":
+            allowed = self._rule(column).get("allowed") if self.coverage else None
+            result = checks.check_label_variants(df, column, allowed)
         else:
-            fn = {"check_missing": checks.check_missing, "check_label_variants": checks.check_label_variants,
-                  "check_dates": checks.check_dates, "check_numeric": checks.check_numeric}[name]
-            result = fn(df, args["column"])
-        checks.record_findings(self.session, result)
+            fn = {"check_missing": checks.check_missing, "check_dates": checks.check_dates,
+                  "check_numeric": checks.check_numeric}[name]
+            result = fn(df, column)
+        checks.record_findings(session, result)
+        session.checks_run.append({"tool": name, "column": column, "version": session.version, "args": args, "by": by,
+                                   "found": _found(name, result)})
+        if by == "model":
+            self.quiet_checks = 0 if (_found(name, result) != "nothing found" and not stale) else self.quiet_checks + 1
+        if self.coverage and by == "model" and self.quiet_checks >= 6:
+            result = {**result, "stall_warning": f"{self.quiet_checks} checks in a row found nothing new. Stop checking "
+                      "and call analyze now; it runs any required check you skipped and tells you if a problem is "
+                      "still open."}
+        elif repeat and by == "model":
+            result = {**result, "repeat_warning": "You already ran this exact check on this version and the data has "
+                      "not changed since. Act on the result (propose a fix) or move on; do not run it again."}
+        elif stale and by == "model":
+            result = {**result, "repeat_note": "You ran this check before; see checks_done_latest_result in the state. "
+                      "Re-run a check only to confirm a fix, then move on."}
         return result
+
+    def _rule(self, column: str | None) -> dict:
+        rule = self.session.rules.get(column) if column else None
+        return rule if isinstance(rule, dict) else {}
+
+    def required_checks(self, args: dict) -> list[tuple[str, dict]]:
+        """Checks every column the analysis uses must have had, derived in code from the rules file."""
+        used = [g.split(":")[0] for g in args["group_by"]] + [f["column"] for f in args["filters"]]
+        if args.get("metric"):
+            used.append(args["metric"])
+        needed: list[tuple[str, dict]] = [("check_duplicates", {})]
+        for column in dict.fromkeys(used):
+            rule = self._rule(column)
+            if rule.get("allowed"):
+                needed.append(("check_label_variants", {"column": column}))
+            if "min" in rule or "max" in rule:
+                needed.append(("check_out_of_range", {"column": column, "minimum": rule.get("min"), "maximum": rule.get("max")}))
+            if rule.get("format") or any(g == f"{column}:month" for g in args["group_by"]):
+                needed.append(("check_dates", {"column": column}))
+            if column == args.get("metric"):
+                needed.append(("check_numeric", {"column": column}))
+        return needed
+
+    def _unresolved(self, name: str, result: dict) -> dict | None:
+        """A finding on a question column that is still in the current data and no fix for it was rejected."""
+        column = result.get("column")
+        if name == "check_numeric":
+            count, rows = result["text_numbers"]["count"], result["text_numbers"]["rows"]
+        else:
+            count, rows = result.get("count", 0), result.get("rows", [])
+        if not count:
+            return None
+        for r in self.session.rejected:
+            if r["args"].get("column") == column and r["tool"] != "exclude_rows":
+                return None
+            if r["tool"] in ("exclude_rows", "set_missing") and set(r["args"].get("rows", [])) & set(rows):
+                return None
+            if r["tool"] == "drop_duplicates" and name == "check_duplicates":
+                return None
+        finding = {"check": name, "column": column, "count": count, "rows": rows}
+        if result.get("suggested_fix"):
+            finding["suggested_fix"] = result["suggested_fix"]
+        return finding
+
+    def _coverage_gate(self, args: dict) -> dict | None:
+        """Run any required check the model skipped, then refuse analyze once per open finding."""
+        session = self.session
+        if self.coverage_refusals >= 3:
+            return None
+        auto_run, open_findings = [], []
+        for name, check_args in self.required_checks(args):
+            if not session.checked(name, check_args.get("column")):
+                auto_run.append({"tool": name, **check_args})
+            result = self._check(name, check_args, by="coverage")
+            finding = self._unresolved(name, result)
+            if finding and (name, str(finding["column"])) not in self.flagged:
+                open_findings.append(finding)
+        if not open_findings:
+            return None
+        self.flagged.update((f["check"], str(f["column"])) for f in open_findings)
+        self.coverage_refusals += 1
+        return {"analyze_refused": True,
+                "checks_run_for_you": auto_run,
+                "open_findings": open_findings,
+                "message": "These problems are still in the columns the question uses. Propose a fix for each "
+                           "(use suggested_fix where given; exclude_rows for rows that break a rule), or if one "
+                           "should stay, say why in the summary. Then call analyze again."}
 
     def _fix(self, name: str, args: dict) -> tuple[dict, bool]:
         session = self.session
@@ -222,6 +332,10 @@ class Dispatcher:
         if name == "lookup_rules":
             return {"rules": session.rules or "no rules file was given"}
         if name == "analyze":
+            if self.coverage:
+                refusal = self._coverage_gate(args)
+                if refusal:
+                    return refusal
             result = run_analysis(session.current, args["group_by"], args["metric"], args["agg"],
                                   [{"column": f["column"], "value": f["value"]} for f in args["filters"]])
             result["version"] = session.version

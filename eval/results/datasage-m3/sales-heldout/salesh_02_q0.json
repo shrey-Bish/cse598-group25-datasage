@@ -1,0 +1,180 @@
+{
+  "task_id": "salesh_02_q0",
+  "analysis_correct": true,
+  "completed": true,
+  "detect_tp": 4,
+  "detect_fp": 3,
+  "detect_fn": 1,
+  "tool_calls": 17,
+  "tool_errors": 0,
+  "recovered_errors": 0,
+  "approvals_asked": 3,
+  "seconds": 20.34,
+  "tokens": 86323,
+  "stop_reason": "finish",
+  "note": "",
+  "answer": {
+    "Accessories": 2450.0,
+    "Electronics": 29070.0,
+    "Furniture": 16505.0,
+    "Office Supplies": 972.0
+  },
+  "extra": {
+    "final_summary": "The data had three main issues: (1) three rows with negative Quantity, Price, and Revenue values were excluded as they violate the rules (Quantity >= 1, Price >= 0, Revenue >= 0); (2) Region labels had case and space variants (e.g., ' South', 'North ') which were normalized to standard values; (3) three rows had incorrect Revenue values that did not match Quantity * Price; these were corrected using the formula. After fixes, the total revenue by category is: Accessories $2,450.00, Electronics $29,070.00, Furniture $16,505.00, Office Supplies $972.00.",
+    "changes": [
+      {
+        "version": 1,
+        "tool": "exclude_rows",
+        "args": {
+          "rows": [
+            5,
+            14,
+            65
+          ],
+          "reason": "Negative Quantity, Price, and Revenue values violate the rules: Quantity must be >= 1, Price >= 0, Revenue >= 0."
+        },
+        "reason": "Negative Quantity, Price, and Revenue values violate the rules: Quantity must be >= 1, Price >= 0, Revenue >= 0.",
+        "risk": "high",
+        "approval": "approved",
+        "rows_removed": [
+          5,
+          14,
+          65
+        ],
+        "cells_changed": 0,
+        "summary": "excluded 3 row(s): [5, 14, 65]",
+        "code": "df = df.drop(index=[5, 14, 65])"
+      },
+      {
+        "version": 2,
+        "tool": "normalize_labels",
+        "args": {
+          "column": "Region",
+          "mapping": {
+            " South": "South",
+            "North ": "North",
+            "east": "East",
+            "north": "North",
+            "west": "West"
+          },
+          "reason": "Standardize region labels to match allowed values: 'South', 'North', 'East', 'West'."
+        },
+        "reason": "Standardize region labels to match allowed values: 'South', 'North', 'East', 'West'.",
+        "risk": "low",
+        "approval": "auto",
+        "rows_removed": [],
+        "cells_changed": 6,
+        "summary": "Region: merged 5 label variant(s), 6 cells",
+        "code": "df['Region'] = df['Region'].replace({' South': 'South', 'North ': 'North', 'east': 'East', 'north': 'North', 'west': 'West'})"
+      },
+      {
+        "version": 3,
+        "tool": "set_missing",
+        "args": {
+          "column": "Region",
+          "rows": [
+            36,
+            40,
+            49
+          ],
+          "reason": "Region is missing in these rows; cannot infer from other data."
+        },
+        "reason": "Region is missing in these rows; cannot infer from other data.",
+        "risk": "high",
+        "approval": "approved",
+        "rows_removed": [],
+        "cells_changed": 0,
+        "summary": "Region: set 3 value(s) to missing",
+        "code": "df.loc[[36, 40, 49], 'Region'] = pd.NA"
+      },
+      {
+        "version": 4,
+        "tool": "recompute_column",
+        "args": {
+          "column": "Revenue",
+          "expression": "Quantity * Price",
+          "rows": [
+            10,
+            19,
+            61
+          ],
+          "reason": "Revenue does not match Quantity * Price; correct it using the formula."
+        },
+        "reason": "Revenue does not match Quantity * Price; correct it using the formula.",
+        "risk": "high",
+        "approval": "approved",
+        "rows_removed": [],
+        "cells_changed": 3,
+        "summary": "Revenue: recomputed as Quantity * Price on 3 row(s)",
+        "code": "df.loc[[10, 19, 61], 'Revenue'] = [240.0, 24.0, 48.0]  # Revenue = Quantity * Price"
+      }
+    ],
+    "rejected": [],
+    "oracle_decisions": [
+      {
+        "tool": "exclude_rows",
+        "risk": "high",
+        "approved": true,
+        "why": "moves data toward the reference"
+      },
+      {
+        "tool": "set_missing",
+        "risk": "high",
+        "approved": true,
+        "why": "moves data toward the reference"
+      },
+      {
+        "tool": "recompute_column",
+        "risk": "high",
+        "approved": true,
+        "why": "moves data toward the reference"
+      }
+    ],
+    "coverage_refusals": 0,
+    "model_turns": 17
+  },
+  "corrections": 15,
+  "planted": 18,
+  "damaged_rows": 0,
+  "damaged_cells": 0,
+  "cleaned_available": true,
+  "system": "datasage-m3",
+  "dataset": "sales-heldout",
+  "question": "What is the total revenue by category?",
+  "reference_answer": {
+    "Accessories": 2450.0,
+    "Electronics": 29070.0,
+    "Furniture": 16505.0,
+    "Office Supplies": 972.0
+  },
+  "issues_reported": [
+    [
+      "cross_column",
+      "Revenue"
+    ],
+    [
+      "label_variant",
+      "Region"
+    ],
+    [
+      "missing",
+      "Region"
+    ],
+    [
+      "negative",
+      "Quantity"
+    ],
+    [
+      "negative",
+      "Revenue"
+    ],
+    [
+      "out_of_range",
+      "Quantity"
+    ],
+    [
+      "out_of_range",
+      "Revenue"
+    ]
+  ]
+}

@@ -1,0 +1,104 @@
+{
+  "id_column": "Order_ID",
+  "errors": [
+    {
+      "type": "invalid_date",
+      "subtype": "invalid_date",
+      "column": "Date",
+      "id": "2016",
+      "resolution": "set_missing",
+      "clean_value": "2026-06-10",
+      "messy_value": "TBD"
+    },
+    {
+      "type": "label_variant",
+      "subtype": "label_space",
+      "column": "Region",
+      "id": "2031",
+      "resolution": "restore",
+      "clean_value": "North",
+      "messy_value": " North"
+    },
+    {
+      "type": "label_variant",
+      "subtype": "label_space",
+      "column": "Region",
+      "id": "2040",
+      "resolution": "restore",
+      "clean_value": "North",
+      "messy_value": "North "
+    },
+    {
+      "type": "label_variant",
+      "subtype": "label_space",
+      "column": "Region",
+      "id": "2003",
+      "resolution": "restore",
+      "clean_value": "East",
+      "messy_value": "East "
+    },
+    {
+      "type": "label_variant",
+      "subtype": "label_case",
+      "column": "Category",
+      "id": "2035",
+      "resolution": "restore",
+      "clean_value": "Office Supplies",
+      "messy_value": "office supplies"
+    },
+    {
+      "type": "label_variant",
+      "subtype": "label_case",
+      "column": "Category",
+      "id": "2024",
+      "resolution": "restore",
+      "clean_value": "Electronics",
+      "messy_value": "electronics"
+    },
+    {
+      "type": "cross_column",
+      "subtype": "cross_column",
+      "column": "Revenue",
+      "id": "2030",
+      "resolution": "restore",
+      "clean_value": 15.0,
+      "messy_value": 1500.0
+    },
+    {
+      "type": "cross_column",
+      "subtype": "cross_column",
+      "column": "Revenue",
+      "id": "2014",
+      "resolution": "restore",
+      "clean_value": 45.0,
+      "messy_value": 450.0
+    },
+    {
+      "type": "label_variant",
+      "subtype": "label_typo",
+      "column": "Category",
+      "id": "2038",
+      "resolution": "restore",
+      "clean_value": "Office Supplies",
+      "messy_value": "Office Suplies"
+    },
+    {
+      "type": "label_variant",
+      "subtype": "label_typo",
+      "column": "Category",
+      "id": "2008",
+      "resolution": "restore",
+      "clean_value": "Accessories",
+      "messy_value": "Accesories"
+    },
+    {
+      "type": "label_variant",
+      "subtype": "label_typo",
+      "column": "Category",
+      "id": "2026",
+      "resolution": "restore",
+      "clean_value": "Electronics",
+      "messy_value": "Electornics"
+    }
+  ]
+}

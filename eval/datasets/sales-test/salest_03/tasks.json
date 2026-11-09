@@ -1,0 +1,38 @@
+[
+  {
+    "task_id": "salest_03_q0",
+    "question": "What is the total revenue per month?",
+    "spec": {
+      "group_by": [
+        "Date:month"
+      ],
+      "metric": "Revenue",
+      "agg": "sum"
+    },
+    "reference_answer": {
+      "2026-01": 9858.0,
+      "2026-02": 23613.0,
+      "2026-03": 8246.0,
+      "2026-04": 1391.0,
+      "2026-05": 2346.0,
+      "2026-06": 4690.0
+    }
+  },
+  {
+    "task_id": "salest_03_q1",
+    "question": "How many units were sold in each region?",
+    "spec": {
+      "group_by": [
+        "Region"
+      ],
+      "metric": "Quantity",
+      "agg": "sum"
+    },
+    "reference_answer": {
+      "East": 52.0,
+      "North": 87.0,
+      "South": 45.0,
+      "West": 74.0
+    }
+  }
+]
