@@ -112,16 +112,16 @@ def build_messages(head: list[dict], turns: list[list[dict]], session: Session, 
     """
     if memory == "full" or len(turns) <= keep:
         return head + [m for turn in turns for m in turn]
-    system, first = head
     state = json.dumps(session.summary(), default=str)
-    note = (f"\n\nState so far (built by code; {len(turns) - keep} earlier turns are summarized here, the last "
-            f"{keep} follow in full): {state}")
-    return [system, {"role": "user", "content": first["content"] + note}] + [m for turn in turns[-keep:] for m in turn]
+    note = (f"State of the run so far, built by code ({len(turns) - keep} earlier turns are not shown; this replaces "
+            f"them): {state}\nDecide the next step from this state. Do not re-run a check whose latest result is "
+            f"on the current version.")
+    return head + [m for turn in turns[-keep:] for m in turn] + [{"role": "user", "content": note}]
 
 
 def run_agent(path: str | Path, request: str, approver: Approver, *, rules_path=None, model: str = DEFAULT_MODEL,
               client=None, max_tool_calls: int = 30, use_validator: bool = True, verbose: bool = False,
-              trace_path: str | Path | None = None, system_prompt: str = SYSTEM_PROMPT_V3, memory: str = "compact",
+              trace_path: str | Path | None = None, system_prompt: str = SYSTEM_PROMPT_V3, memory: str = "full",
               coverage: bool = True) -> RunResult:
     client = client or make_client()
     session = Session(load_table(path), source=str(path), request=request, rules=load_rules(rules_path))

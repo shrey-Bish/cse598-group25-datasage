@@ -5,8 +5,8 @@ Usage:
   python -m eval.run_eval --system b2 --dataset penguins
 Systems: b0, b1, b2, datasage, datasage-small, datasage-reject, datasage-novalidator,
          datasage-fix, datasage-fix-strict, datasage-small-fix, datasage-small-fix-strict,
-         datasage-m3 (small model, default agent) and datasage-m3-large
-Datasets: sales, penguins (dev) and sales-heldout, penguins-heldout
+         datasage-m3 (small model, the default agent), datasage-m3-compact, datasage-m3-large
+Datasets: sales, penguins (dev), sales-heldout, penguins-heldout, and sales-test, penguins-test (seed 202)
 """
 
 from __future__ import annotations
@@ -41,6 +41,8 @@ SYSTEMS = {
                                                                            approver="oracle-strict", client=c, trace_path=trace),
     # Milestone 3 (Section 6, items 1 and 2): compact memory, coverage check, spelling merges.
     "datasage-m3": lambda b, t, c, trace: systems.run_datasage(b, t, model=SMALL_MODEL, m3=True, client=c, trace_path=trace),
+    "datasage-m3-compact": lambda b, t, c, trace: systems.run_datasage(b, t, model=SMALL_MODEL, m3=True, memory="compact",
+                                                                     client=c, trace_path=trace),
     "datasage-m3-large": lambda b, t, c, trace: systems.run_datasage(b, t, m3=True, client=c, trace_path=trace),
 }
 
@@ -78,7 +80,7 @@ def run(system: str, dataset: str, workers: int, limit: int | None, results_dir:
 def main() -> None:
     parser = argparse.ArgumentParser()
     parser.add_argument("--system", required=True, choices=list(SYSTEMS))
-    parser.add_argument("--dataset", required=True, choices=["sales", "penguins", "sales-heldout", "penguins-heldout"])
+    parser.add_argument("--dataset", required=True, choices=["sales", "penguins", "sales-heldout", "penguins-heldout", "sales-test", "penguins-test"])
     parser.add_argument("--workers", type=int, default=4)
     parser.add_argument("--limit", type=int)
     parser.add_argument("--only", default="", help="comma list of task ids to run")

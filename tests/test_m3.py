@@ -95,7 +95,7 @@ def test_compact_memory_keeps_recent_turns_and_adds_state():
               {"role": "tool", "tool_call_id": f"c{i}", "content": "x" * 1000}] for i in range(6)]
     full = build_messages(head, turns, session, "full")
     compact = build_messages(head, turns, session, "compact", keep=3)
-    assert len(full) == 2 + 12 and len(compact) == 2 + 6
-    assert compact[1]["content"].startswith("first") and "State so far" in compact[1]["content"]
+    assert len(full) == 2 + 12 and len(compact) == 2 + 6 + 1
+    assert compact[:2] == head and compact[-1]["role"] == "user" and "State of the run" in compact[-1]["content"]
     assert compact[2]["tool_calls"][0]["id"] == "c3"  # whole turns kept: each tool result follows its call
     assert build_messages(head, turns[:2], session, "compact", keep=3) == head + [m for t in turns[:2] for m in t]

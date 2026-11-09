@@ -102,16 +102,14 @@ class Session:
     def summary(self) -> dict:
         """Compact state summary. In compact memory mode the model sees this instead of old tool results."""
         df = self.current
-        checks_done: dict[str, list[str]] = {}
+        latest: dict[str, str] = {}  # latest result of each distinct check call
         for c in self.checks_run:
-            checks_done.setdefault(c["column"] or "*", [])
-            if c["tool"] not in checks_done[c["column"] or "*"]:
-                checks_done[c["column"] or "*"].append(c["tool"])
+            args = ", ".join(f"{k}={v}" for k, v in (c.get("args") or {}).items() if v is not None)
+            latest[f"{c['tool']}({args})"] = f"on v{c['version']}: {c.get('found', '?')}"
         return {
-            "version": self.version,
+            "current_version": self.version,
             "rows": len(df),
-            "checks_done": checks_done,
-            "findings": [{k: v for k, v in issue.items()} for issue in self.issues.values()],
+            "checks_done_latest_result": latest,
             "changes_applied": [f"v{c.version} {c.tool}: {c.summary} [{c.approval}]" for c in self.changes],
             "rejected_fixes_do_not_retry": [f"{r['tool']}: {r['summary']}" for r in self.rejected],
             "analyses": [{k: a.get(k) for k in ("group_by", "metric", "agg", "rows_used", "result")} for a in self.analyses],

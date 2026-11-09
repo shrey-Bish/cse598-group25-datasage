@@ -137,6 +137,22 @@ ALL_TOOLS = {**CHECK_TOOLS, **FIX_TOOLS, **OTHER_TOOLS}
 TOOL_SCHEMAS = [_schema(name, desc, model) for name, (model, desc) in ALL_TOOLS.items()]
 
 
+def _found(name: str, result: dict) -> str:
+    """One-line result of a check for the state summary."""
+    if name == "check_numeric":
+        parts = [f"{k}={result[k]['count']} rows {result[k]['rows']}" for k in ("text_numbers", "not_numbers", "negatives")
+                 if result[k]["count"]]
+        return "; ".join(parts) or "nothing found"
+    if not result.get("count"):
+        return "nothing found"
+    text = f"{result['count']} rows {result.get('rows', [])}"
+    if result.get("suggested_fix"):
+        text += f"; suggested_fix mapping {result['suggested_fix']['mapping']}"
+    elif result.get("possible_misspellings") or result.get("case_or_space_variants"):
+        text += f"; variants {result.get('case_or_space_variants')}, misspellings {result.get('possible_misspellings')}"
+    return text
+
+
 class Dispatcher:
     def __init__(self, session: Session, approver, use_validator: bool = True, trace=None, coverage: bool = False):
         self.session = session
@@ -146,6 +162,7 @@ class Dispatcher:
         self.coverage = coverage  # Milestone 3: coverage check and unresolved-finding check before analyze
         self.approvals_asked = 0
         self.coverage_refusals = 0
+        self.quiet_checks = 0  # checks in a row by the model that found nothing new
         self.flagged: set[tuple[str, str]] = set()
         self.finished = False
         self.final_summary = ""
@@ -173,8 +190,10 @@ class Dispatcher:
         session = self.session
         df = session.current
         column = args.get("column")
-        repeat = any(c["tool"] == name and c["column"] == column and c["version"] == session.version
-                     and c.get("args") == args and c["by"] == "model" for c in session.checks_run)
+        # A repeat: the same check with the same arguments, already run by the model, and no fix applied since.
+        repeat = any(c["tool"] == name and c.get("args") == args and c["by"] == "model" and c["version"] == session.version
+                     for c in session.checks_run)
+        stale = any(c["tool"] == name and c.get("args") == args and c["by"] == "model" for c in session.checks_run)
         if name == "check_duplicates":
             result = checks.check_duplicates(df)
         elif name == "check_out_of_range":
@@ -189,10 +208,20 @@ class Dispatcher:
                   "check_numeric": checks.check_numeric}[name]
             result = fn(df, column)
         checks.record_findings(session, result)
-        session.checks_run.append({"tool": name, "column": column, "version": session.version, "args": args, "by": by})
-        if repeat and by == "model":
+        session.checks_run.append({"tool": name, "column": column, "version": session.version, "args": args, "by": by,
+                                   "found": _found(name, result)})
+        if by == "model":
+            self.quiet_checks = 0 if (_found(name, result) != "nothing found" and not stale) else self.quiet_checks + 1
+        if self.coverage and by == "model" and self.quiet_checks >= 6:
+            result = {**result, "stall_warning": f"{self.quiet_checks} checks in a row found nothing new. Stop checking "
+                      "and call analyze now; it runs any required check you skipped and tells you if a problem is "
+                      "still open."}
+        elif repeat and by == "model":
             result = {**result, "repeat_warning": "You already ran this exact check on this version and the data has "
                       "not changed since. Act on the result (propose a fix) or move on; do not run it again."}
+        elif stale and by == "model":
+            result = {**result, "repeat_note": "You ran this check before; see checks_done_latest_result in the state. "
+                      "Re-run a check only to confirm a fix, then move on."}
         return result
 
     def _rule(self, column: str | None) -> dict:

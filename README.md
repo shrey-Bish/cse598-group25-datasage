@@ -48,8 +48,9 @@ python -m pytest -q tests
 ```
 
 The agent calls an OpenAI-compatible endpoint. We use ASU Research Computing
-(`RC_LLM_BASE_URL=https://openai.rc.asu.edu/v1`) with `qwen3-235b-a22b-instruct-2507` (default) and
-`qwen3-30b-a3b-instruct-2507` (small model). `.env` is ignored by git.
+(`RC_LLM_BASE_URL=https://openai.rc.asu.edu/v1`) with `qwen3-30b-a3b-instruct-2507` (the default since
+Milestone 3, about 15 s per question) and `qwen3-235b-a22b-instruct-2507` (pass `--model` to use it).
+`.env` is ignored by git.
 
 ## Run DataSage
 
@@ -70,6 +71,7 @@ modes: `--approve auto`, `--approve reject`, and `--approve tools --allow drop_d
 ```bash
 python -m eval.generate --tables 10 --seed 7          # dev split: 20 sales + 20 penguin tasks
 python -m eval.generate --tables 10 --seed 101 --split heldout   # held-out split (sales-heldout, penguins-heldout)
+python -m eval.generate --tables 10 --seed 202 --split test      # test split made for Milestone 3 (sales-test, penguins-test)
 python -m eval.run_eval --system b0 --dataset sales   # repeat for each system and dataset
 python -m eval.run_eval --system datasage --dataset penguins --workers 4
 python -m eval.run_eval --system datasage-reject --dataset sales --limit 10   # Table 8 ablations: first 10 tasks;
@@ -85,8 +87,11 @@ Table 3 (rows, tasks and planted errors) is counted from the generated files: ro
 
 Systems: `b0`, `b1`, `b2`, `datasage`, `datasage-small`, `datasage-reject`, `datasage-novalidator`, and the
 Milestone 2 fix variants `datasage-fix`, `datasage-small-fix`, `datasage-small-fix-strict` (exclusion rule in the
-prompt; `-strict` also uses a stricter approval oracle). Datasets: `sales`, `penguins`, `sales-heldout`,
-`penguins-heldout`. Results are cached per task, so an interrupted run can be restarted.
+prompt; `-strict` also uses a stricter approval oracle). Milestone 3: `datasage-m3` is the default agent (30B,
+coverage check before `analyze`, spelling merges into the rules' allowed labels); `datasage-m3-compact` is the
+same with compact memory, and `datasage-m3-large` uses the 235B model. Datasets: `sales`, `penguins`,
+`sales-heldout`, `penguins-heldout`, `sales-test`, `penguins-test`. Results are cached per task, so an
+interrupted run can be restarted.
 
 ## Run the stakeholder baseline on its own
 
