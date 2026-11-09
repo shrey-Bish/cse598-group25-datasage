@@ -4,7 +4,8 @@ Usage:
   python -m eval.run_eval --system datasage --dataset sales --workers 4
   python -m eval.run_eval --system b2 --dataset penguins
 Systems: b0, b1, b2, datasage, datasage-small, datasage-reject, datasage-novalidator,
-         datasage-fix, datasage-fix-strict, datasage-small-fix, datasage-small-fix-strict
+         datasage-fix, datasage-fix-strict, datasage-small-fix, datasage-small-fix-strict,
+         datasage-m3 (small model, default agent) and datasage-m3-large
 Datasets: sales, penguins (dev) and sales-heldout, penguins-heldout
 """
 
@@ -17,11 +18,10 @@ from concurrent.futures import ThreadPoolExecutor, as_completed
 from pathlib import Path
 
 from baselines import systems
-from datasage.agent import make_client
+from datasage.agent import SMALL_MODEL, make_client
 from eval.scoring import SystemOutput, all_bundles, score
 
 ROOT = Path(__file__).resolve().parent
-SMALL_MODEL = "qwen3-30b-a3b-instruct-2507"
 
 SYSTEMS = {
     "b0": lambda b, t, c, trace: systems.run_b0(b, t),
@@ -39,6 +39,9 @@ SYSTEMS = {
                                                                     client=c, trace_path=trace),
     "datasage-small-fix-strict": lambda b, t, c, trace: systems.run_datasage(b, t, model=SMALL_MODEL, prompt_fix=True,
                                                                            approver="oracle-strict", client=c, trace_path=trace),
+    # Milestone 3 (Section 6, items 1 and 2): compact memory, coverage check, spelling merges.
+    "datasage-m3": lambda b, t, c, trace: systems.run_datasage(b, t, model=SMALL_MODEL, m3=True, client=c, trace_path=trace),
+    "datasage-m3-large": lambda b, t, c, trace: systems.run_datasage(b, t, m3=True, client=c, trace_path=trace),
 }
 
 
