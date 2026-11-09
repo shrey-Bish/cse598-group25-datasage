@@ -72,9 +72,16 @@ python -m eval.generate --tables 10 --seed 7          # dev split: 20 sales + 20
 python -m eval.generate --tables 10 --seed 101 --split heldout   # held-out split (sales-heldout, penguins-heldout)
 python -m eval.run_eval --system b0 --dataset sales   # repeat for each system and dataset
 python -m eval.run_eval --system datasage --dataset penguins --workers 4
+python -m eval.run_eval --system datasage-reject --dataset sales --limit 10   # Table 8 ablations: first 10 tasks;
+python -m eval.run_eval --system datasage-novalidator --dataset sales --limit 10   # repeat both for penguins
 python -m eval.summarize                              # writes eval/results/summary.md
 python -m eval.failures --system datasage             # likely cause of each wrong task, from its trace
 ```
+
+Table 3 (rows, tasks and planted errors) is counted from the generated files: rows in each table's
+`messy.csv`, tasks in `tasks.json`, and planted errors in the `errors` list of `planted.json`, under
+`eval/datasets/<dataset>/`. Table 8's ordinary 235B rows are the same first 10 task files from
+`eval/results/datasage/`, not the 20-task averages in `summary.md`.
 
 Systems: `b0`, `b1`, `b2`, `datasage`, `datasage-small`, `datasage-reject`, `datasage-novalidator`, and the
 Milestone 2 fix variants `datasage-fix`, `datasage-small-fix`, `datasage-small-fix-strict` (exclusion rule in the
