@@ -1,0 +1,44 @@
+Order_ID,Date,Product,Category,Quantity,Price,Region,Revenue
+2001,2026-01-04,Desk,Furniture,6,350,East,2100
+2002,2026-06-13,Chair,Furniture,4,180,North,720
+2003,2026-02-04,Desk,Furniture,3,350,South,1050
+2004,2026-03-09,Webcam,Electronics,3,60,North,180
+2005,2026-06-02,Hub,Accessories,2,40,South,80
+2006,2026-05-07,Monitor,Electronics,3,300,East,900
+2007,2026-04-26,Hub,Accessories,8,40,West,320
+2008,2026-01-22,Stapler,Office Supplies,1,18,West,18
+2009,2026-06-26,Desk,Furniture,5,350,South,1750
+2010,2026-01-20,Headset,Electronics,1,80,North,80
+2011,2026-01-19,Tablet,Electronics,6,450,South,2700
+2012,2026-01-07,Lamp,Furniture,8,45,South,360
+2013,2026-03-26,Lamp,Furniture,6,45,North,270
+2014,2026-06-28,Headset,Electronics,3,80,East,240
+2015,,Hub,Accessories,6,40,East,240
+2016,2026-03-10,Monitor,Electronics,6,300,,1800
+2017,2026-06-04,Mouse,Accessories,2,25,East,50
+2018,2026-03-09,Hub,Accessories,7,40,,280
+2019,,Notebook,Office Supplies,2,6,East,12
+2020,2026-04-08,Lamp,Furniture,6,45,East,270
+2021,2026-02-13,Tablet,Electronics,4,450,South,1800
+2022,2026-02-24,Webcam,Electronics,1,60,South,60
+2023,2026-02-11,Laptop,Electronics,2,900,West,1800
+2024,2026-02-09,Cable,Accessories,5,15,East,75
+2025,2026-06-18,Desk,Furniture,8,350,West,2800
+2026,2026-03-02,Mouse,Accessories,1,25,South,25
+2027,2026-02-08,Keyboard,Accessories,8,50,South,400
+2028,2026-03-25,Pen Pack,Office Supplies,7,12,South,84
+2029,2026-06-27,Webcam,Electronics,4,60,South,240
+2030,2026-04-17,Hub,Accessories,5,40,North,200
+2031,2026-03-14,Hub,Accessories,6,40,East,240
+2032,2026-06-07,Pen Pack,Office Supplies,8,12,West,96
+2033,2026-05-21,Mouse,Accessories,5,25,North,125
+2034,2026-06-27,Keyboard,Accessories,6,50,North,300
+2035,2026-03-11,Lamp,Furniture,6,45,North,270
+2036,2026-05-08,Hub,Accessories,6,40,East,240
+2037,,Pen Pack,Office Supplies,1,12,East,12
+2038,2026-06-17,Cable,Accessories,8,15,North,120
+2039,2026-02-15,Cable,Accessories,6,15,North,90
+2040,2026-05-03,Cable,Accessories,8,15,West,120
+2041,2026-01-04,Monitor,Electronics,3,300,West,900
+2042,2026-06-08,Keyboard,Accessories,7,50,South,350
+2043,2026-02-13,Lamp,Furniture,1,45,North,45

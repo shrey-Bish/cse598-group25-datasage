@@ -1,0 +1,137 @@
+{
+  "task_id": "sales_06_q1",
+  "analysis_correct": true,
+  "completed": true,
+  "detect_tp": 3,
+  "detect_fp": 1,
+  "detect_fn": 2,
+  "tool_calls": 11,
+  "tool_errors": 0,
+  "recovered_errors": 0,
+  "approvals_asked": 3,
+  "seconds": 12.16,
+  "tokens": 50533,
+  "stop_reason": "finish",
+  "note": "",
+  "answer": {
+    "Accessories": 17.0,
+    "Electronics": 5.0,
+    "Furniture": 14.0,
+    "Office Supplies": 17.0
+  },
+  "extra": {
+    "final_summary": "The data had 2 exact duplicate rows (40, 51) and 1 row with invalid Quantity (-4), which were removed. The 'Region' column had label variants: ' East' (space) and 'Suoth' (misspelling of 'South'), which were normalized. The 'Category' column was already clean. The analysis shows 17 orders in Accessories, 5 in Electronics, 14 in Furniture, and 17 in Office Supplies.",
+    "changes": [
+      {
+        "version": 1,
+        "tool": "drop_duplicates",
+        "args": {
+          "reason": "Found 2 exact duplicate rows (row ids 40 and 51), keeping the first occurrence."
+        },
+        "reason": "Found 2 exact duplicate rows (row ids 40 and 51), keeping the first occurrence.",
+        "risk": "medium",
+        "approval": "approved",
+        "rows_removed": [
+          40,
+          51
+        ],
+        "cells_changed": 0,
+        "summary": "removed 2 exact duplicate row(s)",
+        "code": "df = df.drop_duplicates(keep='first')"
+      },
+      {
+        "version": 2,
+        "tool": "exclude_rows",
+        "args": {
+          "rows": [
+            21
+          ],
+          "reason": "Quantity = -4 is invalid (must be at least 1 per rules)."
+        },
+        "reason": "Quantity = -4 is invalid (must be at least 1 per rules).",
+        "risk": "high",
+        "approval": "approved",
+        "rows_removed": [
+          21
+        ],
+        "cells_changed": 0,
+        "summary": "excluded 1 row(s): [21]",
+        "code": "df = df.drop(index=[21])"
+      },
+      {
+        "version": 3,
+        "tool": "normalize_labels",
+        "args": {
+          "column": "Region",
+          "mapping": {
+            " East": "East",
+            "Suoth": "South"
+          },
+          "reason": "Merge case and space variants and correct misspelling 'Suoth' to 'South' as per allowed labels."
+        },
+        "reason": "Merge case and space variants and correct misspelling 'Suoth' to 'South' as per allowed labels.",
+        "risk": "high",
+        "approval": "approved",
+        "rows_removed": [],
+        "cells_changed": 2,
+        "summary": "Region: merged 2 label variant(s), 2 cells",
+        "code": "df['Region'] = df['Region'].replace({' East': 'East', 'Suoth': 'South'})"
+      }
+    ],
+    "rejected": [],
+    "oracle_decisions": [
+      {
+        "tool": "drop_duplicates",
+        "risk": "medium",
+        "approved": true,
+        "why": "moves data toward the reference"
+      },
+      {
+        "tool": "exclude_rows",
+        "risk": "high",
+        "approved": true,
+        "why": "moves data toward the reference"
+      },
+      {
+        "tool": "normalize_labels",
+        "risk": "high",
+        "approved": true,
+        "why": "moves data toward the reference"
+      }
+    ],
+    "coverage_refusals": 0,
+    "model_turns": 11
+  },
+  "corrections": 6,
+  "planted": 9,
+  "damaged_rows": 0,
+  "damaged_cells": 0,
+  "cleaned_available": true,
+  "system": "datasage-m3",
+  "dataset": "sales",
+  "question": "How many orders are there in each category?",
+  "reference_answer": {
+    "Accessories": 17.0,
+    "Electronics": 5.0,
+    "Furniture": 14.0,
+    "Office Supplies": 17.0
+  },
+  "issues_reported": [
+    [
+      "duplicates",
+      "*"
+    ],
+    [
+      "label_variant",
+      "Region"
+    ],
+    [
+      "negative",
+      "Quantity"
+    ],
+    [
+      "out_of_range",
+      "Quantity"
+    ]
+  ]
+}

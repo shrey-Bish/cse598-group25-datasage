@@ -1,0 +1,51 @@
+{
+  "task_id": "penguinst_09_q0",
+  "analysis_correct": true,
+  "completed": true,
+  "detect_tp": 3,
+  "detect_fp": 0,
+  "detect_fn": 1,
+  "tool_calls": 0,
+  "tool_errors": 0,
+  "recovered_errors": 0,
+  "approvals_asked": 0,
+  "seconds": 27.37,
+  "tokens": 2545,
+  "stop_reason": "done",
+  "note": "",
+  "answer": {
+    "Adelie": 193.17,
+    "Chinstrap": 196.92,
+    "Gentoo": 216.68
+  },
+  "extra": {
+    "code": "import pandas as pd\n\ndef clean(df):\n    # Fix species label variants\n    species_mapping = {\n        'adelie': 'Adelie',\n        'gentoo': 'Gentoo',\n        'Gentto': 'Gentoo',\n        'chinstrap': 'Chinstrap'\n    }\n    df = df.copy()\n    df['species'] = df['species'].str.strip().str.capitalize().replace(species_mapping)\n    \n    # Fix body_mass_g: remove commas and convert to numeric\n    df['body_mass_g'] = df['body_mass_g'].astype(str).str.replace(',', '').astype(float)\n    \n    # Fix negative flipper_length_mm values (invalid per rules: min 170)\n    df.loc[df['flipper_length_mm'] < 170, 'flipper_length_mm'] = pd.NA\n    \n    return df\n\ndef answer(df):\n    # Group by species and compute average flipper length\n    result = df.groupby('species')['flipper_length_mm'].mean().dropna().round(2).to_dict()\n    return result"
+  },
+  "corrections": 6,
+  "planted": 9,
+  "damaged_rows": 0,
+  "damaged_cells": 0,
+  "cleaned_available": true,
+  "system": "b2",
+  "dataset": "penguins-test",
+  "question": "What is the average flipper length for each species?",
+  "reference_answer": {
+    "Adelie": 193.1667,
+    "Chinstrap": 197.0909,
+    "Gentoo": 216.6842
+  },
+  "issues_reported": [
+    [
+      "label_variant",
+      "species"
+    ],
+    [
+      "negative",
+      "flipper_length_mm"
+    ],
+    [
+      "text_number",
+      "body_mass_g"
+    ]
+  ]
+}

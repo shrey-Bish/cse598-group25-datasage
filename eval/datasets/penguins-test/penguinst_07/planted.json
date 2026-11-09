@@ -1,0 +1,122 @@
+{
+  "id_column": "penguin_id",
+  "errors": [
+    {
+      "type": "negative",
+      "subtype": "negative",
+      "column": "flipper_length_mm",
+      "id": "P9769936",
+      "resolution": "exclude",
+      "clean_value": 200.0,
+      "messy_value": -200.0
+    },
+    {
+      "type": "label_variant",
+      "subtype": "label_case",
+      "column": "species",
+      "id": "P8872205",
+      "resolution": "restore",
+      "clean_value": "Adelie",
+      "messy_value": "adelie"
+    },
+    {
+      "type": "label_variant",
+      "subtype": "label_typo",
+      "column": "species",
+      "id": "P5339728",
+      "resolution": "restore",
+      "clean_value": "Gentoo",
+      "messy_value": "Gentto"
+    },
+    {
+      "type": "label_variant",
+      "subtype": "label_typo",
+      "column": "species",
+      "id": "P4158433",
+      "resolution": "restore",
+      "clean_value": "Chinstrap",
+      "messy_value": "Chinstarp"
+    },
+    {
+      "type": "label_variant",
+      "subtype": "label_typo",
+      "column": "species",
+      "id": "P3335907",
+      "resolution": "restore",
+      "clean_value": "Adelie",
+      "messy_value": "Adeile"
+    },
+    {
+      "type": "text_number",
+      "subtype": "text_number",
+      "column": "body_mass_g",
+      "id": "P7263812",
+      "resolution": "restore",
+      "clean_value": 3000.0,
+      "messy_value": "3,000"
+    },
+    {
+      "type": "text_number",
+      "subtype": "text_number",
+      "column": "body_mass_g",
+      "id": "P4470903",
+      "resolution": "restore",
+      "clean_value": 3750.0,
+      "messy_value": "3,750"
+    },
+    {
+      "type": "text_number",
+      "subtype": "text_number",
+      "column": "body_mass_g",
+      "id": "P2863625",
+      "resolution": "restore",
+      "clean_value": 4725.0,
+      "messy_value": "4,725"
+    },
+    {
+      "type": "label_variant",
+      "subtype": "label_space",
+      "column": "species",
+      "id": "P4482326",
+      "resolution": "restore",
+      "clean_value": "Gentoo",
+      "messy_value": "Gentoo "
+    },
+    {
+      "type": "label_variant",
+      "subtype": "label_space",
+      "column": "species",
+      "id": "P3245735",
+      "resolution": "restore",
+      "clean_value": "Chinstrap",
+      "messy_value": "Chinstrap "
+    },
+    {
+      "type": "label_variant",
+      "subtype": "label_space",
+      "column": "species",
+      "id": "P8958713",
+      "resolution": "restore",
+      "clean_value": "Gentoo",
+      "messy_value": "Gentoo "
+    },
+    {
+      "type": "missing",
+      "subtype": "missing",
+      "column": "sex",
+      "id": "P6056701",
+      "resolution": "keep_missing",
+      "clean_value": null,
+      "messy_value": ""
+    },
+    {
+      "type": "missing",
+      "subtype": "missing",
+      "column": "sex",
+      "id": "P5159321",
+      "resolution": "keep_missing",
+      "clean_value": null,
+      "messy_value": ""
+    }
+  ]
+}

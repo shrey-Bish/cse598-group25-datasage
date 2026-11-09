@@ -1,0 +1,86 @@
+{
+  "id_column": "penguin_id",
+  "errors": [
+    {
+      "type": "negative",
+      "subtype": "negative",
+      "column": "flipper_length_mm",
+      "id": "P3065050",
+      "resolution": "exclude",
+      "clean_value": 195.0,
+      "messy_value": -195.0
+    },
+    {
+      "type": "negative",
+      "subtype": "negative",
+      "column": "flipper_length_mm",
+      "id": "P1893602",
+      "resolution": "exclude",
+      "clean_value": 190.0,
+      "messy_value": -190.0
+    },
+    {
+      "type": "text_number",
+      "subtype": "text_number",
+      "column": "body_mass_g",
+      "id": "P3230224",
+      "resolution": "restore",
+      "clean_value": 4600.0,
+      "messy_value": "4,600"
+    },
+    {
+      "type": "text_number",
+      "subtype": "text_number",
+      "column": "body_mass_g",
+      "id": "P7715009",
+      "resolution": "restore",
+      "clean_value": 3900.0,
+      "messy_value": "3,900"
+    },
+    {
+      "type": "label_variant",
+      "subtype": "label_typo",
+      "column": "species",
+      "id": "P3524137",
+      "resolution": "restore",
+      "clean_value": "Gentoo",
+      "messy_value": "Gentto"
+    },
+    {
+      "type": "label_variant",
+      "subtype": "label_case",
+      "column": "species",
+      "id": "P2174617",
+      "resolution": "restore",
+      "clean_value": "Adelie",
+      "messy_value": "adelie"
+    },
+    {
+      "type": "label_variant",
+      "subtype": "label_case",
+      "column": "species",
+      "id": "P9416036",
+      "resolution": "restore",
+      "clean_value": "Gentoo",
+      "messy_value": "gentoo"
+    },
+    {
+      "type": "label_variant",
+      "subtype": "label_case",
+      "column": "species",
+      "id": "P3456446",
+      "resolution": "restore",
+      "clean_value": "Chinstrap",
+      "messy_value": "chinstrap"
+    },
+    {
+      "type": "out_of_range",
+      "subtype": "out_of_range",
+      "column": "body_mass_g",
+      "id": "P9390239",
+      "resolution": "exclude",
+      "clean_value": 4150.0,
+      "messy_value": 4150000.0
+    }
+  ]
+}

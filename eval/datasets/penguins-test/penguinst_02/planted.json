@@ -1,0 +1,86 @@
+{
+  "id_column": "penguin_id",
+  "errors": [
+    {
+      "type": "label_variant",
+      "subtype": "label_typo",
+      "column": "island",
+      "id": "P9707217",
+      "resolution": "restore",
+      "clean_value": "Torgersen",
+      "messy_value": "Torgerson"
+    },
+    {
+      "type": "label_variant",
+      "subtype": "label_typo",
+      "column": "island",
+      "id": "P2304839",
+      "resolution": "restore",
+      "clean_value": "Biscoe",
+      "messy_value": "Bisco"
+    },
+    {
+      "type": "text_number",
+      "subtype": "text_number",
+      "column": "body_mass_g",
+      "id": "P7859410",
+      "resolution": "restore",
+      "clean_value": 3800.0,
+      "messy_value": "3,800"
+    },
+    {
+      "type": "text_number",
+      "subtype": "text_number",
+      "column": "body_mass_g",
+      "id": "P9284530",
+      "resolution": "restore",
+      "clean_value": 5000.0,
+      "messy_value": "5,000"
+    },
+    {
+      "type": "text_number",
+      "subtype": "text_number",
+      "column": "body_mass_g",
+      "id": "P6922003",
+      "resolution": "restore",
+      "clean_value": 3300.0,
+      "messy_value": "3,300"
+    },
+    {
+      "type": "label_variant",
+      "subtype": "label_case",
+      "column": "sex",
+      "id": "P7852935",
+      "resolution": "restore",
+      "clean_value": "female",
+      "messy_value": "FEMALE"
+    },
+    {
+      "type": "label_variant",
+      "subtype": "label_space",
+      "column": "island",
+      "id": "P7477512",
+      "resolution": "restore",
+      "clean_value": "Dream",
+      "messy_value": "Dream "
+    },
+    {
+      "type": "duplicates",
+      "subtype": "duplicates",
+      "column": "*",
+      "id": "P1543905",
+      "resolution": "drop_copy",
+      "clean_value": null,
+      "messy_value": null
+    },
+    {
+      "type": "duplicates",
+      "subtype": "duplicates",
+      "column": "*",
+      "id": "P9213014",
+      "resolution": "drop_copy",
+      "clean_value": null,
+      "messy_value": null
+    }
+  ]
+}

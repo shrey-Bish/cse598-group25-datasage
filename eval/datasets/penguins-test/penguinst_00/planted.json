@@ -1,0 +1,59 @@
+{
+  "id_column": "penguin_id",
+  "errors": [
+    {
+      "type": "missing",
+      "subtype": "missing",
+      "column": "sex",
+      "id": "P7243555",
+      "resolution": "keep_missing",
+      "clean_value": null,
+      "messy_value": ""
+    },
+    {
+      "type": "label_variant",
+      "subtype": "label_case",
+      "column": "species",
+      "id": "P1409356",
+      "resolution": "restore",
+      "clean_value": "Chinstrap",
+      "messy_value": "chinstrap"
+    },
+    {
+      "type": "label_variant",
+      "subtype": "label_space",
+      "column": "island",
+      "id": "P6629317",
+      "resolution": "restore",
+      "clean_value": "Torgersen",
+      "messy_value": " Torgersen"
+    },
+    {
+      "type": "out_of_range",
+      "subtype": "out_of_range",
+      "column": "body_mass_g",
+      "id": "P6991219",
+      "resolution": "exclude",
+      "clean_value": 3600.0,
+      "messy_value": 3600000.0
+    },
+    {
+      "type": "out_of_range",
+      "subtype": "out_of_range",
+      "column": "body_mass_g",
+      "id": "P9390629",
+      "resolution": "exclude",
+      "clean_value": 3650.0,
+      "messy_value": 3650000.0
+    },
+    {
+      "type": "out_of_range",
+      "subtype": "out_of_range",
+      "column": "body_mass_g",
+      "id": "P3424724",
+      "resolution": "exclude",
+      "clean_value": 3350.0,
+      "messy_value": 3350000.0
+    }
+  ]
+}

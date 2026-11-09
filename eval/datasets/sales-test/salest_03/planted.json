@@ -1,0 +1,104 @@
+{
+  "id_column": "Order_ID",
+  "errors": [
+    {
+      "type": "missing",
+      "subtype": "missing",
+      "column": "Region",
+      "id": "2045",
+      "resolution": "keep_missing",
+      "clean_value": null,
+      "messy_value": ""
+    },
+    {
+      "type": "invalid_date",
+      "subtype": "invalid_date",
+      "column": "Date",
+      "id": "2038",
+      "resolution": "set_missing",
+      "clean_value": "2026-03-09",
+      "messy_value": "2026-02-30"
+    },
+    {
+      "type": "invalid_date",
+      "subtype": "invalid_date",
+      "column": "Date",
+      "id": "2034",
+      "resolution": "set_missing",
+      "clean_value": "2026-04-06",
+      "messy_value": "2026-02-30"
+    },
+    {
+      "type": "invalid_date",
+      "subtype": "invalid_date",
+      "column": "Date",
+      "id": "2009",
+      "resolution": "set_missing",
+      "clean_value": "2026-01-20",
+      "messy_value": "2026-14-01"
+    },
+    {
+      "type": "text_number",
+      "subtype": "text_number",
+      "column": "Price",
+      "id": "2035",
+      "resolution": "restore",
+      "clean_value": 180.0,
+      "messy_value": "$180.00"
+    },
+    {
+      "type": "text_number",
+      "subtype": "text_number",
+      "column": "Price",
+      "id": "2010",
+      "resolution": "restore",
+      "clean_value": 180.0,
+      "messy_value": "$180.00"
+    },
+    {
+      "type": "label_variant",
+      "subtype": "label_space",
+      "column": "Category",
+      "id": "2046",
+      "resolution": "restore",
+      "clean_value": "Furniture",
+      "messy_value": " Furniture"
+    },
+    {
+      "type": "cross_column",
+      "subtype": "cross_column",
+      "column": "Revenue",
+      "id": "2030",
+      "resolution": "restore",
+      "clean_value": 2700.0,
+      "messy_value": 270000.0
+    },
+    {
+      "type": "cross_column",
+      "subtype": "cross_column",
+      "column": "Revenue",
+      "id": "2047",
+      "resolution": "restore",
+      "clean_value": 108.0,
+      "messy_value": 1080.0
+    },
+    {
+      "type": "duplicates",
+      "subtype": "duplicates",
+      "column": "*",
+      "id": "2051",
+      "resolution": "drop_copy",
+      "clean_value": null,
+      "messy_value": null
+    },
+    {
+      "type": "duplicates",
+      "subtype": "duplicates",
+      "column": "*",
+      "id": "2055",
+      "resolution": "drop_copy",
+      "clean_value": null,
+      "messy_value": null
+    }
+  ]
+}

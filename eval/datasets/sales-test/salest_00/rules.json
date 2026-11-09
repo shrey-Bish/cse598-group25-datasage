@@ -1,0 +1,33 @@
+{
+  "Order_ID": "unique order number",
+  "Date": {
+    "format": "YYYY-MM-DD"
+  },
+  "Category": {
+    "allowed": [
+      "Electronics",
+      "Accessories",
+      "Furniture",
+      "Office Supplies"
+    ]
+  },
+  "Region": {
+    "allowed": [
+      "North",
+      "South",
+      "East",
+      "West"
+    ]
+  },
+  "Quantity": {
+    "min": 1,
+    "note": "units sold; always a positive whole number"
+  },
+  "Price": {
+    "min": 0,
+    "note": "unit price in dollars"
+  },
+  "Revenue": {
+    "formula": "Revenue = Quantity * Price"
+  }
+}

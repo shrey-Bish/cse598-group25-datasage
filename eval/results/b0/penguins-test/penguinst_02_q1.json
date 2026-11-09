@@ -1,0 +1,48 @@
+{
+  "task_id": "penguinst_02_q1",
+  "analysis_correct": false,
+  "completed": true,
+  "detect_tp": 2,
+  "detect_fp": 0,
+  "detect_fn": 2,
+  "tool_calls": 0,
+  "tool_errors": 0,
+  "recovered_errors": 0,
+  "approvals_asked": 0,
+  "seconds": 0.004,
+  "tokens": 0,
+  "stop_reason": "done",
+  "note": "",
+  "answer": {
+    "Bisco": 1.0,
+    "Biscoe": 29.0,
+    "Dream": 15.0,
+    "Dream ": 1.0,
+    "Torgersen": 7.0,
+    "Torgerson": 1.0
+  },
+  "extra": {},
+  "corrections": 3,
+  "planted": 9,
+  "damaged_rows": 0,
+  "damaged_cells": 0,
+  "cleaned_available": true,
+  "system": "b0",
+  "dataset": "penguins-test",
+  "question": "How many penguins were measured on each island?",
+  "reference_answer": {
+    "Biscoe": 28.0,
+    "Dream": 16.0,
+    "Torgersen": 8.0
+  },
+  "issues_reported": [
+    [
+      "duplicates",
+      "*"
+    ],
+    [
+      "label_variant",
+      "sex"
+    ]
+  ]
+}

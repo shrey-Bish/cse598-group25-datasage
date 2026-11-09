@@ -1,0 +1,68 @@
+{
+  "id_column": "penguin_id",
+  "errors": [
+    {
+      "type": "label_variant",
+      "subtype": "label_space",
+      "column": "species",
+      "id": "P4396401",
+      "resolution": "restore",
+      "clean_value": "Adelie",
+      "messy_value": " Adelie"
+    },
+    {
+      "type": "label_variant",
+      "subtype": "label_space",
+      "column": "species",
+      "id": "P9439512",
+      "resolution": "restore",
+      "clean_value": "Adelie",
+      "messy_value": "Adelie "
+    },
+    {
+      "type": "text_number",
+      "subtype": "text_number",
+      "column": "body_mass_g",
+      "id": "P7661800",
+      "resolution": "restore",
+      "clean_value": 3450.0,
+      "messy_value": "3,450"
+    },
+    {
+      "type": "text_number",
+      "subtype": "text_number",
+      "column": "body_mass_g",
+      "id": "P4827403",
+      "resolution": "restore",
+      "clean_value": 4500.0,
+      "messy_value": "4,500"
+    },
+    {
+      "type": "text_number",
+      "subtype": "text_number",
+      "column": "body_mass_g",
+      "id": "P2840525",
+      "resolution": "restore",
+      "clean_value": 4475.0,
+      "messy_value": "4,475"
+    },
+    {
+      "type": "missing",
+      "subtype": "missing",
+      "column": "sex",
+      "id": "P1111147",
+      "resolution": "keep_missing",
+      "clean_value": null,
+      "messy_value": ""
+    },
+    {
+      "type": "label_variant",
+      "subtype": "label_case",
+      "column": "island",
+      "id": "P8330921",
+      "resolution": "restore",
+      "clean_value": "Biscoe",
+      "messy_value": "biscoe"
+    }
+  ]
+}

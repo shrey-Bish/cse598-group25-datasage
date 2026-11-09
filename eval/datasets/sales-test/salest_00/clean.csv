@@ -1,0 +1,48 @@
+Order_ID,Date,Product,Category,Quantity,Price,Region,Revenue
+2001,2026-04-13,Keyboard,Accessories,5,50,South,250
+2002,2026-02-23,Pen Pack,Office Supplies,1,12,South,12
+2003,2026-04-11,Monitor,Electronics,3,300,South,900
+2004,2026-01-22,Hub,Accessories,8,40,East,320
+2005,2026-02-25,Keyboard,Accessories,3,50,South,150
+2006,2026-04-23,Headset,Electronics,5,80,North,400
+2007,2026-02-07,Hub,Accessories,7,40,East,280
+2008,2026-05-17,Headset,Electronics,7,80,East,560
+2009,2026-03-25,Keyboard,Accessories,2,50,West,100
+2010,2026-01-15,Headset,Electronics,7,80,East,560
+2011,2026-06-07,Pen Pack,Office Supplies,2,12,West,24
+2012,2026-04-21,Lamp,Furniture,4,45,East,180
+2013,2026-05-02,Stapler,Office Supplies,5,18,East,90
+2014,2026-01-19,Monitor,Electronics,3,300,North,900
+2015,2026-04-11,Hub,Accessories,4,40,East,160
+2016,2026-02-06,Desk,Furniture,4,350,South,1400
+2017,2026-06-27,Desk,Furniture,1,350,East,350
+2018,2026-05-10,Lamp,Furniture,3,45,West,135
+2019,2026-05-28,Mouse,Accessories,7,25,East,175
+2020,2026-05-26,Cable,Accessories,5,15,North,75
+2021,2026-05-28,Desk,Furniture,7,350,South,2450
+2022,2026-05-23,Notebook,Office Supplies,5,6,South,30
+2023,2026-04-19,Stapler,Office Supplies,6,18,South,108
+2024,2026-03-01,Pen Pack,Office Supplies,5,12,North,60
+2025,2026-03-05,Monitor,Electronics,3,300,East,900
+2026,2026-05-16,Stapler,Office Supplies,8,18,East,144
+2027,2026-05-26,Chair,Furniture,1,180,West,180
+2028,2026-03-27,Laptop,Electronics,3,900,South,2700
+2029,2026-05-11,Lamp,Furniture,4,45,North,180
+2030,2026-01-02,Lamp,Furniture,8,45,North,360
+2031,2026-01-23,Pen Pack,Office Supplies,3,12,East,36
+2032,2026-03-10,Stapler,Office Supplies,6,18,East,108
+2033,2026-03-10,Desk,Furniture,6,350,North,2100
+2034,2026-04-18,Pen Pack,Office Supplies,8,12,West,96
+2035,2026-06-09,Keyboard,Accessories,7,50,South,350
+2036,2026-01-14,Hub,Accessories,6,40,South,240
+2037,2026-06-10,Hub,Accessories,2,40,East,80
+2038,2026-01-14,Lamp,Furniture,3,45,West,135
+2039,2026-03-27,Lamp,Furniture,2,45,West,90
+2040,2026-02-24,Tablet,Electronics,8,450,East,3600
+2041,2026-01-08,Laptop,Electronics,3,900,East,2700
+2042,2026-06-02,Cable,Accessories,5,15,North,75
+2043,2026-02-22,Hub,Accessories,1,40,West,40
+2044,2026-01-12,Pen Pack,Office Supplies,7,12,South,84
+2045,2026-06-12,Mouse,Accessories,1,25,East,25
+2046,2026-02-03,Chair,Furniture,7,180,East,1260
+2047,2026-05-01,Monitor,Electronics,2,300,North,600

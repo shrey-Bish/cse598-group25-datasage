@@ -1,0 +1,68 @@
+{
+  "id_column": "Order_ID",
+  "errors": [
+    {
+      "type": "label_variant",
+      "subtype": "label_space",
+      "column": "Category",
+      "id": "2029",
+      "resolution": "restore",
+      "clean_value": "Furniture",
+      "messy_value": " Furniture"
+    },
+    {
+      "type": "label_variant",
+      "subtype": "label_space",
+      "column": "Category",
+      "id": "2037",
+      "resolution": "restore",
+      "clean_value": "Electronics",
+      "messy_value": " Electronics"
+    },
+    {
+      "type": "label_variant",
+      "subtype": "label_space",
+      "column": "Category",
+      "id": "2014",
+      "resolution": "restore",
+      "clean_value": "Office Supplies",
+      "messy_value": "Office Supplies "
+    },
+    {
+      "type": "negative",
+      "subtype": "negative",
+      "column": "Quantity",
+      "id": "2040",
+      "resolution": "exclude",
+      "clean_value": 6.0,
+      "messy_value": -6.0
+    },
+    {
+      "type": "text_number",
+      "subtype": "text_number",
+      "column": "Price",
+      "id": "2042",
+      "resolution": "restore",
+      "clean_value": 300.0,
+      "messy_value": "$300.00"
+    },
+    {
+      "type": "text_number",
+      "subtype": "text_number",
+      "column": "Price",
+      "id": "2024",
+      "resolution": "restore",
+      "clean_value": 300.0,
+      "messy_value": "$300.00"
+    },
+    {
+      "type": "duplicates",
+      "subtype": "duplicates",
+      "column": "*",
+      "id": "2031",
+      "resolution": "drop_copy",
+      "clean_value": null,
+      "messy_value": null
+    }
+  ]
+}

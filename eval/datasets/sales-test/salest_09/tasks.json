@@ -1,0 +1,36 @@
+[
+  {
+    "task_id": "salest_09_q0",
+    "question": "How many orders are there in each category?",
+    "spec": {
+      "group_by": [
+        "Category"
+      ],
+      "metric": null,
+      "agg": "count"
+    },
+    "reference_answer": {
+      "Accessories": 9.0,
+      "Electronics": 11.0,
+      "Furniture": 14.0,
+      "Office Supplies": 12.0
+    }
+  },
+  {
+    "task_id": "salest_09_q1",
+    "question": "How many units were sold in each region?",
+    "spec": {
+      "group_by": [
+        "Region"
+      ],
+      "metric": "Quantity",
+      "agg": "sum"
+    },
+    "reference_answer": {
+      "East": 35.0,
+      "North": 53.0,
+      "South": 68.0,
+      "West": 46.0
+    }
+  }
+]

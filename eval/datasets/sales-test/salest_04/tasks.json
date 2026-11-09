@@ -1,0 +1,42 @@
+[
+  {
+    "task_id": "salest_04_q0",
+    "question": "What is the total revenue by region for Electronics?",
+    "spec": {
+      "group_by": [
+        "Region"
+      ],
+      "metric": "Revenue",
+      "agg": "sum",
+      "filters": [
+        {
+          "column": "Category",
+          "value": "Electronics"
+        }
+      ]
+    },
+    "reference_answer": {
+      "East": 1680.0,
+      "North": 4600.0,
+      "South": 19590.0,
+      "West": 1380.0
+    }
+  },
+  {
+    "task_id": "salest_04_q1",
+    "question": "What is the average unit price in each category?",
+    "spec": {
+      "group_by": [
+        "Category"
+      ],
+      "metric": "Price",
+      "agg": "mean"
+    },
+    "reference_answer": {
+      "Accessories": 31.7857,
+      "Electronics": 351.4286,
+      "Furniture": 153.25,
+      "Office Supplies": 9.6923
+    }
+  }
+]

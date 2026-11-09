@@ -1,0 +1,53 @@
+{
+  "task_id": "salest_00_q0",
+  "analysis_correct": true,
+  "completed": true,
+  "detect_tp": 3,
+  "detect_fp": 0,
+  "detect_fn": 0,
+  "tool_calls": 0,
+  "tool_errors": 0,
+  "recovered_errors": 0,
+  "approvals_asked": 0,
+  "seconds": 29.37,
+  "tokens": 2332,
+  "stop_reason": "done",
+  "note": "",
+  "answer": {
+    "Accessories": 37.14,
+    "Electronics": 369.0,
+    "Furniture": 169.17,
+    "Office Supplies": 13.64
+  },
+  "extra": {
+    "code": "import pandas as pd\n\ndef clean(df):\n    # Fix Price: remove $ and .00, convert to numeric\n    df = df.copy()\n    df['Price'] = df['Price'].astype(str).str.replace(r'\\$|\\.00', '', regex=True).astype(float)\n    \n    # Fix Region: strip whitespace and correct obvious typo\n    df['Region'] = df['Region'].astype(str).str.strip()\n    df['Region'] = df['Region'].replace({'Suoth': 'South'})\n    \n    # Fix Date: invalid dates like 'TBD' and 'not-a-date' will be set to NaT\n    df['Date'] = pd.to_datetime(df['Date'], errors='coerce').dt.strftime('%Y-%m-%d')\n    \n    return df\n\ndef answer(df):\n    df_clean = clean(df)\n    # Calculate average unit price per category\n    result = df_clean.groupby('Category')['Price'].mean().round(2).to_dict()\n    return result"
+  },
+  "corrections": 8,
+  "planted": 8,
+  "damaged_rows": 0,
+  "damaged_cells": 0,
+  "cleaned_available": true,
+  "system": "b2",
+  "dataset": "sales-test",
+  "question": "What is the average unit price in each category?",
+  "reference_answer": {
+    "Accessories": 37.1429,
+    "Electronics": 369.0,
+    "Furniture": 169.1667,
+    "Office Supplies": 13.6364
+  },
+  "issues_reported": [
+    [
+      "invalid_date",
+      "Date"
+    ],
+    [
+      "label_variant",
+      "Region"
+    ],
+    [
+      "text_number",
+      "Price"
+    ]
+  ]
+}

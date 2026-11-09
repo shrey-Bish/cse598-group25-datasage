@@ -149,6 +149,21 @@
       "approvals_median": 2.0,
       "latency_median_s": 14.27,
       "tokens_median": 54481.0
+    },
+    "datasage-m3": {
+      "tasks": 20,
+      "analysis_accuracy": 1.0,
+      "completion": 1.0,
+      "detect_precision": 0.8222222222222222,
+      "detect_recall": 0.8043478260869565,
+      "correction_accuracy": 0.90625,
+      "damaged_cells_rows": 0,
+      "tasks_with_damage": 0.0,
+      "tool_call_success": 1.0,
+      "recovery": null,
+      "approvals_median": 2.0,
+      "latency_median_s": 15.129999999999999,
+      "tokens_median": 61636.5
     }
   },
   "penguins": {
@@ -301,6 +316,21 @@
       "approvals_median": 2.0,
       "latency_median_s": 13.17,
       "tokens_median": 57418.0
+    },
+    "datasage-m3": {
+      "tasks": 20,
+      "analysis_accuracy": 1.0,
+      "completion": 1.0,
+      "detect_precision": 0.8809523809523809,
+      "detect_recall": 0.7872340425531915,
+      "correction_accuracy": 0.9421052631578948,
+      "damaged_cells_rows": 0,
+      "tasks_with_damage": 0.0,
+      "tool_call_success": 1.0,
+      "recovery": null,
+      "approvals_median": 2.0,
+      "latency_median_s": 16.55,
+      "tokens_median": 63755.0
     }
   },
   "sales-heldout": {
@@ -423,6 +453,21 @@
       "approvals_median": 2.0,
       "latency_median_s": 17.335,
       "tokens_median": 68653.0
+    },
+    "datasage-m3": {
+      "tasks": 20,
+      "analysis_accuracy": 1.0,
+      "completion": 1.0,
+      "detect_precision": 0.875,
+      "detect_recall": 0.7954545454545454,
+      "correction_accuracy": 0.8888888888888888,
+      "damaged_cells_rows": 0,
+      "tasks_with_damage": 0.0,
+      "tool_call_success": 1.0,
+      "recovery": null,
+      "approvals_median": 3.0,
+      "latency_median_s": 18.955,
+      "tokens_median": 62978.5
     }
   },
   "penguins-heldout": {
@@ -545,6 +590,175 @@
       "approvals_median": 2.0,
       "latency_median_s": 12.66,
       "tokens_median": 51670.5
+    },
+    "datasage-m3": {
+      "tasks": 20,
+      "analysis_accuracy": 0.85,
+      "completion": 1.0,
+      "detect_precision": 0.8205128205128205,
+      "detect_recall": 0.7272727272727273,
+      "correction_accuracy": 0.9204545454545454,
+      "damaged_cells_rows": 0,
+      "tasks_with_damage": 0.0,
+      "tool_call_success": 1.0,
+      "recovery": null,
+      "approvals_median": 2.0,
+      "latency_median_s": 16.189999999999998,
+      "tokens_median": 58389.0
+    }
+  },
+  "sales-test": {
+    "b0": {
+      "tasks": 20,
+      "analysis_accuracy": 0.1,
+      "completion": 0.85,
+      "detect_precision": 0.8214285714285714,
+      "detect_recall": 0.5111111111111111,
+      "correction_accuracy": 0.21739130434782608,
+      "damaged_cells_rows": 0,
+      "tasks_with_damage": 0.0,
+      "tool_call_success": null,
+      "recovery": null,
+      "approvals_median": null,
+      "latency_median_s": 0.015,
+      "tokens_median": 0.0
+    },
+    "b1": {
+      "tasks": 20,
+      "analysis_accuracy": 0.55,
+      "completion": 1.0,
+      "detect_precision": 0.7777777777777778,
+      "detect_recall": 0.7777777777777778,
+      "correction_accuracy": 0.7608695652173914,
+      "damaged_cells_rows": 0,
+      "tasks_with_damage": 0.0,
+      "tool_call_success": null,
+      "recovery": null,
+      "approvals_median": null,
+      "latency_median_s": 0.026000000000000002,
+      "tokens_median": 0.0
+    },
+    "b2": {
+      "tasks": 20,
+      "analysis_accuracy": 0.45,
+      "completion": 0.9,
+      "detect_precision": 0.7386363636363636,
+      "detect_recall": 0.7222222222222222,
+      "correction_accuracy": 0.7777777777777778,
+      "damaged_cells_rows": 4,
+      "tasks_with_damage": 0.1,
+      "tool_call_success": null,
+      "recovery": null,
+      "approvals_median": null,
+      "latency_median_s": 29.98,
+      "tokens_median": 2283.0
+    },
+    "datasage-small-fix": {
+      "tasks": 20,
+      "analysis_accuracy": 1.0,
+      "completion": 1.0,
+      "detect_precision": 0.8444444444444444,
+      "detect_recall": 0.8444444444444444,
+      "correction_accuracy": 0.9293478260869565,
+      "damaged_cells_rows": 0,
+      "tasks_with_damage": 0.0,
+      "tool_call_success": 1.0,
+      "recovery": null,
+      "approvals_median": 2.5,
+      "latency_median_s": 16.305,
+      "tokens_median": 63062.5
+    },
+    "datasage-m3": {
+      "tasks": 20,
+      "analysis_accuracy": 1.0,
+      "completion": 1.0,
+      "detect_precision": 0.8539325842696629,
+      "detect_recall": 0.8444444444444444,
+      "correction_accuracy": 0.907608695652174,
+      "damaged_cells_rows": 0,
+      "tasks_with_damage": 0.0,
+      "tool_call_success": 1.0,
+      "recovery": null,
+      "approvals_median": 2.0,
+      "latency_median_s": 16.134999999999998,
+      "tokens_median": 61980.0
+    }
+  },
+  "penguins-test": {
+    "b0": {
+      "tasks": 20,
+      "analysis_accuracy": 0.0,
+      "completion": 0.5,
+      "detect_precision": 1.0,
+      "detect_recall": 0.5116279069767442,
+      "correction_accuracy": 0.3181818181818182,
+      "damaged_cells_rows": 0,
+      "tasks_with_damage": 0.0,
+      "tool_call_success": null,
+      "recovery": null,
+      "approvals_median": null,
+      "latency_median_s": 0.016,
+      "tokens_median": 0.0
+    },
+    "b1": {
+      "tasks": 20,
+      "analysis_accuracy": 0.35,
+      "completion": 1.0,
+      "detect_precision": 1.0,
+      "detect_recall": 0.8372093023255814,
+      "correction_accuracy": 0.7386363636363636,
+      "damaged_cells_rows": 0,
+      "tasks_with_damage": 0.0,
+      "tool_call_success": null,
+      "recovery": null,
+      "approvals_median": null,
+      "latency_median_s": 0.0245,
+      "tokens_median": 0.0
+    },
+    "b2": {
+      "tasks": 20,
+      "analysis_accuracy": 0.5,
+      "completion": 0.95,
+      "detect_precision": 0.92,
+      "detect_recall": 0.8023255813953488,
+      "correction_accuracy": 0.8242424242424242,
+      "damaged_cells_rows": 0,
+      "tasks_with_damage": 0.0,
+      "tool_call_success": null,
+      "recovery": null,
+      "approvals_median": null,
+      "latency_median_s": 42.525000000000006,
+      "tokens_median": 2524.5
+    },
+    "datasage-small-fix": {
+      "tasks": 20,
+      "analysis_accuracy": 0.85,
+      "completion": 1.0,
+      "detect_precision": 0.8933333333333333,
+      "detect_recall": 0.7790697674418605,
+      "correction_accuracy": 0.9204545454545454,
+      "damaged_cells_rows": 0,
+      "tasks_with_damage": 0.0,
+      "tool_call_success": 1.0,
+      "recovery": null,
+      "approvals_median": 2.0,
+      "latency_median_s": 14.344999999999999,
+      "tokens_median": 53599.5
+    },
+    "datasage-m3": {
+      "tasks": 20,
+      "analysis_accuracy": 0.85,
+      "completion": 1.0,
+      "detect_precision": 0.8888888888888888,
+      "detect_recall": 0.7441860465116279,
+      "correction_accuracy": 0.9261363636363636,
+      "damaged_cells_rows": 0,
+      "tasks_with_damage": 0.0,
+      "tool_call_success": 1.0,
+      "recovery": null,
+      "approvals_median": 2.0,
+      "latency_median_s": 15.0,
+      "tokens_median": 56854.5
     }
   }
 }

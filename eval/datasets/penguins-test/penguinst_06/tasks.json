@@ -1,0 +1,33 @@
+[
+  {
+    "task_id": "penguinst_06_q0",
+    "question": "What is the average body mass for each sex?",
+    "spec": {
+      "group_by": [
+        "sex"
+      ],
+      "metric": "body_mass_g",
+      "agg": "mean"
+    },
+    "reference_answer": {
+      "female": 3876.0,
+      "male": 4485.2273
+    }
+  },
+  {
+    "task_id": "penguinst_06_q1",
+    "question": "How many penguins were measured on each island?",
+    "spec": {
+      "group_by": [
+        "island"
+      ],
+      "metric": null,
+      "agg": "count"
+    },
+    "reference_answer": {
+      "Biscoe": 21.0,
+      "Dream": 25.0,
+      "Torgersen": 4.0
+    }
+  }
+]
