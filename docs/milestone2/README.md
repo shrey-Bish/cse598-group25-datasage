@@ -54,12 +54,12 @@ python -m eval.summarize                                          # writes eval/
 
 | Table | Systems | Datasets | Where the numbers come from |
 |---|---|---|---|
-| 3: Datasets | (none) | all four | `eval/generate.py` writes `eval/datasets/<dataset>/<table>/`. Row and planted-error counts: TBD (Arsha), no script prints them |
+| 3: Datasets | (none) | all four | `eval/generate.py` writes `eval/datasets/<dataset>/<table>/`. Rows: data rows in each `messy.csv`; tasks: entries in `tasks.json`; planted errors: length of the `errors` list in `planted.json` (checked: 96, 95, 108 and 88) |
 | 4: Baselines | `b0`, `b1`, `b2` | (none) | Descriptions; code in `baselines/systems.py` (`run_b0`, `run_b1`, `run_b2`) |
 | 5: Metrics | (none) | (none) | Definitions in `eval/scoring.py`; totals in `aggregate()` in `eval/summarize.py` |
 | 6: Main results, dev | `b0`, `b1`, `b2`, `datasage`, `datasage-small` | `sales`, `penguins` | `summary.md`, sections `sales` and `penguins` |
 | 7: Answer accuracy | `b0`, `b1`, `b2`, `datasage`, `datasage-fix`, `datasage-small`, `datasage-small-fix`, `datasage-small-fix-strict` | all four | `summary.md`, column "Answer correct". "Held-out damage" is the Damage of `sales-heldout` plus `penguins-heldout` |
-| 8: Ablations | `datasage`, `datasage-reject`, `datasage-novalidator` | `sales`, `penguins` | Reject and no-validator rows: `summary.md` (n = 10). The 235B rows are the first 10 task files in `eval/results/datasage/<dataset>/`, which `summarize.py` does not compute. Command for the 10-task runs: TBD (Arsha) |
+| 8: Ablations | `datasage`, `datasage-reject`, `datasage-novalidator` | `sales`, `penguins` | Reject and no-validator rows: `summary.md` (n = 10). The 235B rows are the first 10 task files in `eval/results/datasage/<dataset>/`, which `summarize.py` does not compute. Command for the 10-task runs: `python -m eval.run_eval --system datasage-reject --dataset sales --limit 10`, and the same for `datasage-novalidator` and for `penguins` |
 
 How `eval/summarize.py` builds `summary.md`: `main()` loops `for dataset in ("sales", "penguins",
 "sales-heldout", "penguins-heldout")` and `for system in ORDER`, loads every task JSON with `load(system,
