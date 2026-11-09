@@ -107,8 +107,8 @@ These are the owners from Section 6 of the report.
 | 2 | Coverage check before `analyze`, and proposing merges for misspelled labels | Shrey |
 | 3 | Automatic date-format conversion (ask only on ambiguous dates) and an `allow_negative_quantities` rules key | Maulik |
 | 4 | Evaluation on real messy files, including Vyshanth's two once he agrees | Maulik, Vatsal |
-| 5 | Repeated runs (3 runs on the held-out tasks, report mean and range) | Arsha |
-| 6 | Vyshanth's ratings of 10 reports and the acceptance test (3 files, at least 90% accuracy, no corrupted data) | Arsha |
+| 5 | Repeated runs (3 runs on the held-out tasks, report mean and range) | Vatsal |
+| 6 | Vyshanth's ratings of 10 reports and the acceptance test (3 files, at least 90% accuracy, no corrupted data) | Arsha, Ritik |
 | 7 | Streamlit demo page and reusable cleaning recipes | Ritik, Arsha |
 | 8 | November 20 review, final report, presentation and Demo Day | All |
 
