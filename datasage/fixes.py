@@ -11,6 +11,7 @@ from dataclasses import dataclass, field
 import pandas as pd
 
 from .checks import _require_column, evaluate_expression
+from .rules import outside_range
 from .values import comparable, date_options, iso_date, is_missing, loose_number, normalize_label
 
 
@@ -122,7 +123,8 @@ def exclude_rows(df: pd.DataFrame, rows: list[int]) -> FixResult:
                      code=f"df = df.drop(index={rows!r})")
 
 
-def exclude_where(df: pd.DataFrame, column: str, minimum: float | None = None, maximum: float | None = None) -> FixResult:
+def exclude_where(df: pd.DataFrame, column: str, minimum: float | None = None, maximum: float | None = None,
+                  *, allow_negative_quantities: bool = False) -> FixResult:
     """Remove every row whose number in `column` is below `minimum` or above `maximum`.
 
     Unlike exclude_rows it does not need row ids, so it covers all rule-breaking rows however many there are.
@@ -131,20 +133,21 @@ def exclude_where(df: pd.DataFrame, column: str, minimum: float | None = None, m
     _require_column(df, column)
     if minimum is None and maximum is None:
         raise ValueError("give minimum, maximum or both")
-    values = pd.to_numeric(df[column], errors="coerce")
-    mask = pd.Series(False, index=df.index)
-    if minimum is not None:
-        mask |= values < minimum
-    if maximum is not None:
-        mask |= values > maximum
+    values = df[column].map(loose_number)
+    mask = outside_range(values, minimum, maximum, allow_negative_quantities=allow_negative_quantities)
     rows = [int(r) for r in df.index[mask]]
     new = df.drop(index=rows).copy()
     bound = " and ".join(p for p in (f"below {minimum:g}" if minimum is not None else "",
                                      f"above {maximum:g}" if maximum is not None else "") if p)
-    cond = " | ".join(c for c in (f"(v < {minimum!r})" if minimum is not None else "",
+    lower = (f"((v >= 0) & (v < {minimum!r}))" if allow_negative_quantities else f"(v < {minimum!r})")
+    cond = " | ".join(c for c in (lower if minimum is not None else "",
                                   f"(v > {maximum!r})" if maximum is not None else "") if c)
-    return FixResult(new, [], rows_removed=rows, summary=f"excluded {len(rows)} row(s) where {column} is {bound}",
-                     code=f"v = pd.to_numeric(df[{column!r}], errors='coerce')\ndf = df[~({cond})]")
+    return FixResult(new, [], rows_removed=rows, summary=f"excluded {len(rows)} row(s) where {column} is {bound}" +
+                     (" (negative quantities kept as refunds)" if allow_negative_quantities else ""),
+                     code=f"v = df[{column!r}].astype(str).str.strip().str.replace(r'[$, ]', '', regex=True)\n"
+                          f"numeric = df[{column!r}].map(lambda x: isinstance(x, (int, float)) and not isinstance(x, bool))\n"
+                          "v = pd.to_numeric(v.where(v.str.fullmatch(r'[-+]?\\d+(\\.\\d+)?') | numeric), errors='coerce')\n"
+                          f"df = df[~({cond}).fillna(False)]")
 
 
 def recompute_column(df: pd.DataFrame, column: str, expression: str, rows: list[int]) -> FixResult:

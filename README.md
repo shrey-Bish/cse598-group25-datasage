@@ -84,6 +84,30 @@ The agent calls an OpenAI-compatible endpoint. We use ASU Research Computing
 Milestone 3, about 15 s per question) and `qwen3-235b-a22b-instruct-2507` (pass `--model` to use it).
 `.env` is ignored by git.
 
+## Rules files
+
+Rules JSON maps column names to constraints such as `min`, `max`, `allowed`, `format` and `formula`.
+For a quantity column, opt in to refunds with a JSON boolean:
+
+```json
+{
+  "Quantity": {"min": 1, "max": 100, "allow_negative_quantities": true},
+  "Price": {"min": 0}
+}
+```
+
+Negative quantities are then valid refunds: numeric checks and coverage do not flag them, and
+`exclude_where` preserves them instead of applying the quantity minimum. Keeping refunds requires
+no approval. Zero and positive values below `min`, values above `max`, and other columns' constraints
+are still checked. A bulk range fix that would change nothing returns immediately without approval.
+A refund row can still have other genuine problems; the setting does not disable other checks.
+
+The top-level shorthand `"allow_negative_quantities": true` applies only to columns named `Quantity`
+or `Qty` (case insensitive). A per-column setting overrides it, and can also mark a differently named
+quantity column. Omitting the key or setting it to `false` retains the original behavior. Only JSON
+`true` enables refunds; strings and numbers do not. Rules, not model-provided arguments, control this
+policy, and range-fix audit/replay records preserve the effective setting.
+
 ## Run DataSage
 
 ```bash

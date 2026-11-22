@@ -14,6 +14,7 @@ from pydantic import BaseModel, ConfigDict, Field, ValidationError
 from . import checks, fixes
 from .analyze import run_analysis
 from .profile import profile, sample_rows
+from .rules import allows_negative_quantities
 from .session import Change, Session
 from .validator import validate
 
@@ -242,7 +243,11 @@ class Dispatcher:
         if name == "check_duplicates":
             result = checks.check_duplicates(df)
         elif name == "check_out_of_range":
-            result = checks.check_out_of_range(df, column, args["minimum"], args["maximum"])
+            result = checks.check_out_of_range(df, column, args["minimum"], args["maximum"],
+                                               allow_negative_quantities=allows_negative_quantities(session.rules, column))
+        elif name == "check_numeric":
+            result = checks.check_numeric(df, column,
+                                          allow_negative_quantities=allows_negative_quantities(session.rules, column))
         elif name == "check_cross_column":
             result = checks.check_cross_column(df, column, args["expression"])
         elif name == "check_label_variants":
@@ -285,6 +290,8 @@ class Dispatcher:
             if rule.get("allowed"):
                 needed.append(("check_label_variants", {"column": column}))
             if "min" in rule or "max" in rule:
+                # Keep the range check: refunds bypass only the lower bound. Zero, other values
+                # below min, and values above max must still be checked by the same policy as fixes.
                 needed.append(("check_out_of_range", {"column": column, "minimum": rule.get("min"), "maximum": rule.get("max")}))
             if rule.get("format") or any(g == f"{column}:month" for g in args["group_by"]):
                 needed.append(("check_dates", {"column": column}))
@@ -345,7 +352,15 @@ class Dispatcher:
         session = self.session
         before = session.current
         fix_args = {k: v for k, v in args.items() if k != "reason"}
+        if name == "exclude_where":
+            # This policy comes from the rules, never a model argument that could override them.
+            allowed = allows_negative_quantities(session.rules, args["column"])
+            fix_args["allow_negative_quantities"] = allowed
+            args = {**args, "allow_negative_quantities": allowed}
         result = fixes.FIXES[name](before, **fix_args)
+        if name == "exclude_where" and fix_args["allow_negative_quantities"] and not result.rows_removed:
+            return {"applied": False, "no_change": True, "risk": "low", "approval": "auto",
+                    "message": "No rows violate the range. Negative quantities are permitted refunds and were kept."}, True
         risk = fixes.risk_of(name, args, result)
         preview = {"summary": result.summary, "rows_removed": result.rows_removed, "cells_changed": result.cells_changed,
                    "before": before, "after": result.df,

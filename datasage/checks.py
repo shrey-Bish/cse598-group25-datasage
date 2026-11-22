@@ -12,6 +12,7 @@ import operator
 
 import pandas as pd
 
+from .rules import outside_range
 from .values import date_options, iso_date, loose_number, normalize_label, plain_number
 
 MAX_ROWS_SHOWN = 10
@@ -144,14 +145,15 @@ def check_dates(df: pd.DataFrame, column: str) -> dict:
     }
 
 
-def check_numeric(df: pd.DataFrame, column: str) -> dict:
+def check_numeric(df: pd.DataFrame, column: str, *, allow_negative_quantities: bool = False) -> dict:
     """Numbers stored as text, values that are not numbers at all, and negative numbers."""
     _require_column(df, column)
     values = df[column].dropna()
     text_numbers = values[[plain_number(v) is None and loose_number(v) is not None for v in values]]
     not_numbers = values[[loose_number(v) is None for v in values]]
     parsed = values.map(loose_number).dropna()
-    negatives = parsed[parsed < 0]
+    negative_values = parsed[parsed < 0]
+    negatives = negative_values.iloc[:0] if allow_negative_quantities else negative_values
     return {
         "type": "numeric",
         "column": column,
@@ -159,17 +161,17 @@ def check_numeric(df: pd.DataFrame, column: str) -> dict:
         "not_numbers": {"count": int(len(not_numbers)), "rows": _rows(not_numbers.index), "examples": [str(v) for v in not_numbers.head(3)]},
         "negatives": {"count": int(len(negatives)), "rows": _rows(negatives.index)},
         "column_is_numeric": bool(pd.api.types.is_numeric_dtype(df[column])),
+        **({"refunds": {"count": len(negative_values), "rows": _rows(negative_values.index)},
+            "note": "Negative quantities are permitted refunds; keep them without asking."}
+           if allow_negative_quantities else {}),
     }
 
 
-def check_out_of_range(df: pd.DataFrame, column: str, minimum: float | None, maximum: float | None) -> dict:
+def check_out_of_range(df: pd.DataFrame, column: str, minimum: float | None, maximum: float | None,
+                       *, allow_negative_quantities: bool = False) -> dict:
     _require_column(df, column)
     parsed = df[column].map(loose_number).dropna()
-    mask = pd.Series(False, index=parsed.index)
-    if minimum is not None:
-        mask |= parsed < minimum
-    if maximum is not None:
-        mask |= parsed > maximum
+    mask = outside_range(parsed, minimum, maximum, allow_negative_quantities=allow_negative_quantities)
     bad = parsed[mask]
     return {
         "type": "out_of_range",
@@ -178,6 +180,9 @@ def check_out_of_range(df: pd.DataFrame, column: str, minimum: float | None, max
         "count": int(len(bad)),
         "rows": _rows(bad.index),
         "examples": [float(v) for v in bad.head(5)],
+        **({"allow_negative_quantities": True,
+            "note": "Negative quantities are permitted refunds, exempt from the minimum; do not exclude them."}
+           if allow_negative_quantities else {}),
     }
 
 

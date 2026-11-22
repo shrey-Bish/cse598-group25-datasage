@@ -32,6 +32,9 @@ How to work:
 - For dates, use parse_dates without date_order first: it automatically normalizes clear formats and
   timestamps and blanks unreadable values. Ambiguous dates stay unchanged. Only then propose an
   explicit dmy or mdy date_order for ambiguous values; that interpretation needs approval.
+- If allow_negative_quantities is true in the quantity column's rules (or the top-level rules for
+  Quantity/Qty), keep negative quantities as refunds without asking. They are not minimum-rule
+  violations. Do not exclude or blank them just because they are negative; other rules still apply.
 - Some fixes need the user's approval. If a fix is rejected, do not retry it.
 - All numbers in your answer must come from tool results. Do not do arithmetic yourself.
 - When the data the question depends on is clean, call analyze once for the question, then finish
