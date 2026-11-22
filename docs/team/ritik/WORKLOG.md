@@ -7,6 +7,24 @@ interfaces each change touches, and what to know before pulling it. Newest entry
 
 ## Log
 
+### November 22, 2026: notes from the November 20 review (`ritik/nov20-review-notes`)
+
+Task R2 in `docs/TEAM_HANDOFF.md`. What changed (one new file, plus this entry):
+
+- `docs/meetings/2026-11-20-review.md`: my notes from the November 20 Zoom review with Vyshanth,
+  following the October 28 notes: the agenda, what we presented, his feedback on each agenda item, the
+  three decisions (keep checking only the question's columns, keep the recorded results, keep the
+  current interface and default model) and the action items.
+
+The notes add no new results. Each figure in "What we presented" names the file on `main` it comes
+from (`docs/TEAM_HANDOFF.md`, `eval/results/summary.md`, `docs/final/findings_scale_and_ablations.md`,
+`docs/final/findings_hard.md`).
+
+Interfaces: none; documentation only.
+
+Before pulling: nothing to do. I am sending the notes to Vyshanth to confirm; any corrections he sends
+will come as a follow-up commit.
+
 ### November 7, 2026: item 7 scaffold (`ritik/item7-scaffold`)
 
 What changed (all new files; no existing file is edited):
