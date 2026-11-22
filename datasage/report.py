@@ -116,6 +116,13 @@ def markdown_report(result: RunResult) -> str:
         out.append(f"| v{c.version} | {c.tool} | {c.risk} | {c.approval} | {c.summary} | {c.reason} |")
     for r in session.rejected:
         out.append(f"| - | {r['tool']} | {r['risk']} | rejected | {r['summary']} (not applied) | {r['args'].get('reason', '')} |")
+    for c in session.changes:
+        if c.cell_changes:
+            out += ["", f"### Date changes in v{c.version}", ""]
+            for cell in c.cell_changes:
+                before = json.dumps(cell['before'], ensure_ascii=False)
+                after = json.dumps(cell['after'], ensure_ascii=False) if cell['after'] is not None else "missing"
+                out.append(f"- Row {cell['row']}, `{cell['column']}`: {before} → {after}.")
     out += ["", "## Answer", ""]
     if session.analyses:
         a = session.analyses[-1]

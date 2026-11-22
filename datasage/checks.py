@@ -12,7 +12,7 @@ import operator
 
 import pandas as pd
 
-from .values import iso_date, loose_number, normalize_label, plain_number
+from .values import date_options, iso_date, loose_number, normalize_label, plain_number
 
 MAX_ROWS_SHOWN = 10
 
@@ -124,7 +124,9 @@ def _check_against_allowed(df: pd.DataFrame, column: str, allowed: list[str]) ->
 def check_dates(df: pd.DataFrame, column: str) -> dict:
     _require_column(df, column)
     values = df[column].dropna()
-    bad = values[[iso_date(v) is None for v in values]]
+    # Include clear but noncanonical values so the planner normalizes timestamps as well as bad dates.
+    bad = values[[iso_date(v) is None or str(v) != iso_date(v).isoformat() for v in values]]
+    ambiguous = values[[len(set(date_options(v).values())) > 1 for v in values]]
     return {
         "type": "invalid_date",
         "column": column,
@@ -132,6 +134,13 @@ def check_dates(df: pd.DataFrame, column: str) -> dict:
         "rows": _rows(bad.index),
         "examples": [str(v) for v in bad.head(5)],
         "valid_iso_dates": int(len(values) - len(bad)),
+        "ambiguous_count": len(ambiguous),
+        "ambiguous_rows": _rows(ambiguous.index),
+        "ambiguous_examples": [{"value": str(v), **{k: d.isoformat() for k, d in date_options(v).items()}}
+                               for v in ambiguous.head(5)],
+        "note": "Run parse_dates without date_order to normalize clear dates/timestamps and blank unreadable dates "
+                "automatically. Ambiguous dates stay unchanged. Converting them with date_order='dmy' or 'mdy' "
+                "requires approval; never infer their order from neighboring values.",
     }
 
 

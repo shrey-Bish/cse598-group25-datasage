@@ -50,6 +50,11 @@ class FixReasonArgs(_Args):
     reason: str
 
 
+class ParseDatesArgs(FixColumnArgs):
+    date_order: Literal["dmy", "mdy"] | None = Field(
+        default=None, description="Only to resolve ambiguous numeric dates, with approval. None preserves them.")
+
+
 class NormalizeArgs(_Args):
     column: str
     mapping: dict[str, str]
@@ -115,7 +120,7 @@ CHECK_TOOLS = {
     "check_missing": (ColumnArgs, "Count missing values in a column."),
     "check_duplicates": (NoArgs, "Find exact duplicate rows."),
     "check_label_variants": (ColumnArgs, "Find labels that differ only by case/spaces, and likely misspellings of a more common label."),
-    "check_dates": (ColumnArgs, "Find values in a date column that are not valid YYYY-MM-DD dates."),
+    "check_dates": (ColumnArgs, "Find unreadable, ambiguous and noncanonical dates, including ISO timestamps to normalize."),
     "check_numeric": (ColumnArgs, "Find numbers stored as text (e.g. '$1,200'), values that are not numbers, and negative numbers."),
     "check_out_of_range": (RangeArgs, "Find numbers outside [minimum, maximum]."),
     "check_cross_column": (CrossColumnArgs, "Find rows where a column does not equal an expression of other columns, e.g. Revenue vs 'Quantity * Price'."),
@@ -125,7 +130,8 @@ FIX_TOOLS = {
     "trim_whitespace": (FixColumnArgs, "Remove leading/trailing spaces from a text column. Low risk."),
     "normalize_labels": (NormalizeArgs, "Replace label variants with a canonical label, e.g. {'electronics': 'Electronics'}. Low risk if only case/spaces differ; misspelling merges need approval."),
     "drop_duplicates": (FixReasonArgs, "Remove exact duplicate rows, keeping the first. Needs approval."),
-    "parse_dates": (FixColumnArgs, "Keep valid YYYY-MM-DD dates and set invalid ones to missing. Needs approval if any value becomes missing."),
+    "parse_dates": (ParseDatesArgs, "Automatically normalize clear dates and ISO timestamps to YYYY-MM-DD and blank unreadable dates. "
+                    "Ambiguous dates like 03/04/2026 stay unchanged unless date_order is supplied; that conversion needs approval."),
     "cast_numeric": (FixColumnArgs, "Convert a column to numbers, reading text like '$1,200.00'. Needs approval if any value becomes missing."),
     "exclude_rows": (RowsArgs, "Remove specific rows (by row id) from the analysis copy. Needs approval."),
     "exclude_where": (ExcludeWhereArgs, "Remove every row whose number in a column is below minimum or above maximum "
@@ -342,7 +348,8 @@ class Dispatcher:
         result = fixes.FIXES[name](before, **fix_args)
         risk = fixes.risk_of(name, args, result)
         preview = {"summary": result.summary, "rows_removed": result.rows_removed, "cells_changed": result.cells_changed,
-                   "before": before, "after": result.df}
+                   "before": before, "after": result.df,
+                   "ambiguous_dates": sum(c.get("ambiguous", False) for c in result.cell_changes)}
 
         if risk == "low":
             approval = "auto"
@@ -364,7 +371,7 @@ class Dispatcher:
 
         change = Change(version=session.version + 1, tool=name, args=args, reason=args.get("reason", ""), risk=risk,
                         approval=approval, rows_removed=result.rows_removed, cells_changed=result.cells_changed,
-                        summary=result.summary, code=result.code)
+                        summary=result.summary, code=result.code, cell_changes=result.cell_changes)
         session.commit(result.df, change)
         return {"applied": True, "version": session.version, "risk": risk, "approval": approval,
                 "summary": result.summary, "validation": verdict}, True

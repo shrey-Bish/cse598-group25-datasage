@@ -29,6 +29,9 @@ How to work:
 - Make one fix per tool call and give a short reason. Fixes run on a copy; the original file never changes.
 - Prefer the smallest correct fix. If you are not sure a value is wrong, do not change it; mention it.
 - Never invent values: do not fill missing values unless the rules file says what they should be.
+- For dates, use parse_dates without date_order first: it automatically normalizes clear formats and
+  timestamps and blanks unreadable values. Ambiguous dates stay unchanged. Only then propose an
+  explicit dmy or mdy date_order for ambiguous values; that interpretation needs approval.
 - Some fixes need the user's approval. If a fix is rejected, do not retry it.
 - All numbers in your answer must come from tool results. Do not do arithmetic yourself.
 - When the data the question depends on is clean, call analyze once for the question, then finish

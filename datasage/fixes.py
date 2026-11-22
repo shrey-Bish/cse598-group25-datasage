@@ -11,7 +11,7 @@ from dataclasses import dataclass, field
 import pandas as pd
 
 from .checks import _require_column, evaluate_expression
-from .values import comparable, iso_date, loose_number, normalize_label
+from .values import comparable, date_options, iso_date, is_missing, loose_number, normalize_label
 
 
 @dataclass
@@ -23,6 +23,7 @@ class FixResult:
     new_missing: int = 0
     summary: str = ""
     code: str = ""
+    cell_changes: list[dict] = field(default_factory=list)
 
 
 def _count_changed(before: pd.Series, after: pd.Series) -> int:
@@ -67,16 +68,38 @@ def drop_duplicates(df: pd.DataFrame) -> FixResult:
                      code="df = df.drop_duplicates(keep='first')")
 
 
-def parse_dates(df: pd.DataFrame, column: str) -> FixResult:
-    """Keep valid YYYY-MM-DD dates; values that are not valid dates become missing."""
+def parse_dates(df: pd.DataFrame, column: str, date_order: str | None = None) -> FixResult:
+    """Normalize clear dates, blank unreadable ones, and leave ambiguity until an order is approved."""
     _require_column(df, column)
+    if date_order not in (None, "dmy", "mdy"):
+        raise ValueError("date_order must be dmy, mdy or None")
     new = df.copy()
-    new[column] = new[column].map(lambda v: iso_date(v).isoformat() if iso_date(v) else pd.NA)
+    new[column] = new[column].astype(object)
+    details, code = [], [f"df[{column!r}] = df[{column!r}].astype(object)"]
+    ambiguous_left = 0
+    for row, value in df[column].items():
+        if is_missing(value):
+            continue
+        ambiguous = len(set(date_options(value).values())) > 1
+        if ambiguous and date_order is None:
+            ambiguous_left += 1
+            continue
+        parsed = iso_date(value, date_order)
+        after = parsed.isoformat() if parsed else pd.NA
+        new.at[row, column] = after
+        if comparable(value) != comparable(after):
+            details.append({"row": int(row), "column": column, "before": str(value),
+                            "after": parsed.isoformat() if parsed else None, "ambiguous": ambiguous})
+            literal = repr(after) if parsed else "pd.NA"
+            code.append(f"df.at[{int(row)}, {column!r}] = {literal}")
     new_missing = int(new[column].isna().sum() - df[column].isna().sum())
     changed = _count_changed(df[column], new[column])
+    converted = sum(c["after"] is not None for c in details)
     return FixResult(new, [column], cells_changed=changed, new_missing=new_missing,
-                     summary=f"{column}: {new_missing} invalid date(s) set to missing",
-                     code=f"df[{column!r}] = pd.to_datetime(df[{column!r}], format='%Y-%m-%d', errors='coerce').dt.strftime('%Y-%m-%d')")
+                     summary=f"{column}: converted {converted} date(s), {new_missing} invalid date(s) set to missing; "
+                             f"{ambiguous_left} ambiguous date(s) left unchanged" +
+                             (f" (approved order: {date_order})" if any(c["ambiguous"] for c in details) else ""),
+                     code="\n".join(code), cell_changes=details)
 
 
 def cast_numeric(df: pd.DataFrame, column: str) -> FixResult:
@@ -184,7 +207,9 @@ def risk_of(tool: str, args: dict, result: FixResult) -> str:
     if tool == "normalize_labels":
         same = all(normalize_label(k) == normalize_label(v) for k, v in args["mapping"].items())
         return "low" if same else "high"
-    if tool in ("parse_dates", "cast_numeric"):
+    if tool == "parse_dates":
+        return "medium" if any(c["ambiguous"] for c in result.cell_changes) else "low"
+    if tool == "cast_numeric":
         return "low" if result.new_missing == 0 else "medium"
     if tool == "drop_duplicates":
         return "medium"

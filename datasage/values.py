@@ -14,6 +14,33 @@ MISSING_TOKENS = {"", "na", "n/a", "nan", "null", "none", "-"}
 
 _NUMBER = re.compile(r"^[-+]?\d+(\.\d+)?$")
 _ISO_DATE = re.compile(r"^(\d{4})-(\d{2})-(\d{2})$")
+_ISO_TIMESTAMP = re.compile(
+    r"^\d{4}-\d{2}-\d{2}[T ]\d{2}:\d{2}(?::\d{2}(?:\.\d+)?)?(?:Z|[+-]\d{2}:\d{2})?$"
+)
+_YEAR_FIRST = re.compile(r"^(\d{4})([/.-])(\d{1,2})\2(\d{1,2})$")
+_LOCAL_DATE = re.compile(r"^(\d{1,2})([/.-])(\d{1,2})\2(\d{4})$")
+_MONTHS = {name: n for n, pair in enumerate((
+    ("jan", "january"), ("feb", "february"), ("mar", "march"), ("apr", "april"),
+    ("may", "may"), ("jun", "june"), ("jul", "july"), ("aug", "august"),
+    ("sep", "september"), ("oct", "october"), ("nov", "november"), ("dec", "december"),
+), 1) for name in pair}
+
+
+def date_options(value) -> dict[str, date]:
+    """Calendar-valid interpretations of a numeric year-last date; never guess the order."""
+    if is_missing(value):
+        return {}
+    match = _LOCAL_DATE.fullmatch(str(value).strip())
+    if not match:
+        return {}
+    first, second, year = int(match[1]), int(match[3]), int(match[4])
+    options = {}
+    for order, month, day in (("dmy", second, first), ("mdy", first, second)):
+        try:
+            options[order] = date(year, month, day)
+        except ValueError:
+            pass
+    return options
 
 
 def is_missing(value) -> bool:
@@ -52,17 +79,42 @@ def loose_number(value) -> float | None:
     return float(text) if _NUMBER.match(text) else None
 
 
-def iso_date(value) -> date | None:
-    """Parse a YYYY-MM-DD value; anything else (including impossible dates) returns None."""
+def iso_date(value, date_order: str | None = None) -> date | None:
+    """Read clear dates/timestamps without inference; ambiguous dates need an explicit order.
+
+    Timestamps keep their written calendar date, without a timezone conversion. Numeric year-last
+    dates are clear only when exactly one interpretation is valid (or both give the same date).
+    """
+    if date_order not in (None, "dmy", "mdy"):
+        raise ValueError("date_order must be dmy, mdy or None")
     if is_missing(value):
         return None
-    match = _ISO_DATE.match(str(value).strip())
-    if not match:
-        return None
+    if isinstance(value, datetime):
+        return value.date()
+    if isinstance(value, date):
+        return value
+    text = str(value).strip()
+    match = _ISO_DATE.fullmatch(text)
     try:
-        return date(int(match.group(1)), int(match.group(2)), int(match.group(3)))
+        if match:
+            return date(int(match[1]), int(match[2]), int(match[3]))
+        year_first = _YEAR_FIRST.fullmatch(text)
+        if year_first:
+            return date(int(year_first[1]), int(year_first[3]), int(year_first[4]))
+        if _ISO_TIMESTAMP.fullmatch(text):
+            return datetime.fromisoformat(text.replace("Z", "+00:00")).date()
+        named = re.fullmatch(r"(\d{1,2})[- ]([A-Za-z]+)[- ](\d{4})", text)
+        if named and named[2].lower() in _MONTHS:
+            return date(int(named[3]), _MONTHS[named[2].lower()], int(named[1]))
+        named = re.fullmatch(r"([A-Za-z]+) (\d{1,2}),? (\d{4})", text)
+        if named and named[1].lower() in _MONTHS:
+            return date(int(named[3]), _MONTHS[named[1].lower()], int(named[2]))
     except ValueError:
         return None
+    options = date_options(value)
+    if len(set(options.values())) == 1:
+        return next(iter(options.values()))
+    return options.get(date_order)
 
 
 def normalize_label(value) -> str:

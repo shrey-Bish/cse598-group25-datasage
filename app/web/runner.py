@@ -241,6 +241,8 @@ def auto_needs_person(tool: str, preview: dict, session) -> str | None:
     date. So a row drop waits for a person when any dropped row has no recorded problem, or only blank or
     unreadable values. Rows that break a rule (negative, out of range, formula) are still dropped at once.
     """
+    if tool == "parse_dates" and preview.get("ambiguous_dates"):
+        return "Auto paused: these dates have more than one valid interpretation. Confirm the proposed date order."
     if tool not in ("exclude_rows", "exclude_where") or session is None:
         return None
     rows = [int(r) for r in (preview.get("rows_removed") or [])]

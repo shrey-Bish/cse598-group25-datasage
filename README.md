@@ -108,6 +108,18 @@ modes: `--approve auto`, `--approve reject`, and `--approve tools --allow drop_d
 `report.md`, `cleaned.csv` (the original file is never changed), `replay.py` (plain pandas), and
 `trace.jsonl` (every tool call).
 
+### Date handling
+
+`parse_dates` automatically converts clear dates and ISO timestamps (for example
+`2024-06-03T00:00:00.000` or `2024-06-03 14:05`) to `YYYY-MM-DD`, preserving the written calendar
+day without changing timezones. Year-first slash/dot dates and numeric day/month dates with only
+one valid interpretation are also clear. Unreadable or impossible dates become missing; rows are
+kept. These changes are low risk and each changed cell is recorded in the report and change log.
+
+Ambiguous numeric dates such as `03/04/2026` stay unchanged by default. A `parse_dates` call with
+`date_order: "dmy"` or `"mdy"` proposes an interpretation and requires approval (Auto mode also
+pauses for a person). DataSage does not infer the order from nearby dates or silently guess a locale.
+
 ## Run DataSage in the browser
 
 ```bash

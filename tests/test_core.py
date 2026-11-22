@@ -80,7 +80,7 @@ def test_risk_tiers_are_set_by_code(sales):
     assert fixes.risk_of("normalize_labels", {"mapping": {"electronics": "Electronics"}}, low) == "low"
     assert fixes.risk_of("normalize_labels", {"mapping": {"electronics": "Accessories"}}, high) == "high"
     assert fixes.risk_of("exclude_rows", {}, fixes.exclude_rows(sales, [6])) == "high"
-    assert fixes.risk_of("parse_dates", {}, fixes.parse_dates(sales, "Date")) == "medium"
+    assert fixes.risk_of("parse_dates", {}, fixes.parse_dates(sales, "Date")) == "low"
 
 
 def test_unknown_rows_are_refused(sales):

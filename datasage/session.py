@@ -101,6 +101,7 @@ class Change:
     cells_changed: int = 0
     summary: str = ""
     code: str = ""
+    cell_changes: list[dict] = field(default_factory=list)
 
     def to_dict(self) -> dict:
         return asdict(self)
