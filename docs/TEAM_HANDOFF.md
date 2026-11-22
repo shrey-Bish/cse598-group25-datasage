@@ -13,7 +13,7 @@ and PR authorship, so **each task should end in its own merged PR** under your o
 | A3 poster check (Arsha) | Open: check the redesigned poster and sign off to Shrey by Nov 22; Shrey submits Nov 23, 2 PM |
 | A1 ratings, A2 acceptance test (Arsha) | Not on `main` yet (`docs/final/ratings.md`, `docs/final/acceptance_test.md`) |
 | R1 recipe replay, R2 Nov 20 review notes (Ritik) | Not on `main` yet (`tests/test_recipes.py` replay test, `docs/meetings/2026-11-20-review.md`) |
-| M3 regression run (Maulik) | Waiting on M1 and M2 (PRs #38 and #39, reviewed, 162 tests pass, waiting for Shrey to merge). Then M3 needs the ASU API key in `.env` (see Setup) |
+| M3 regression run (Maulik) | Ready to start: M1 and M2 are merged (PRs #38, #39). Needs the ASU API key in `.env` (see Setup) |
 
 **For the final report (found by V2, `docs/final/real_files.md`):**
 
@@ -122,7 +122,7 @@ Every task ends in a PR into `main`. Put a short note of what you did in `docs/t
 
 | # | Task | Done when | Due |
 |---|---|---|---|
-| M3 | **No-regression run.** M1 and M2 are done (PRs #38, #39). After they merge, re-run `datasage-m3` on held-out and test into a new results folder and compare with the current numbers (the baseline to beat: 74/80 on Nov 16, 0 damaged cells, 0 tool errors). Also run `python scripts/smoke_e2e.py`. Expect the hard split's planted `06/15/2026` dates (15, all in tables without a date question) to be converted now instead of blanked: that changes errors-handled counts there, not answers, and the benchmark arguably mislabels them. | A short write-up in `docs/final/regression_check.md`; any drop explained from the traces. | Nov 27 |
+| M3 | **No-regression run.** M1 and M2 are merged (PRs #38, #39). Re-run `datasage-m3` on held-out and test into a new results folder and compare with the current numbers (the baseline to beat: 74/80 on Nov 16, 0 damaged cells, 0 tool errors). Also run `python scripts/smoke_e2e.py`. Expect the hard split's planted `06/15/2026` dates (15, all in tables without a date question) to be converted now instead of blanked: that changes errors-handled counts there, not answers, and the benchmark arguably mislabels them. | A short write-up in `docs/final/regression_check.md`; any drop explained from the traces. | Nov 27 |
 
 ### Vatsal
 
