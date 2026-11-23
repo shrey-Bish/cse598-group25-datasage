@@ -13,6 +13,7 @@ import subprocess
 import sys
 from pathlib import Path
 
+from app.report_view import load_run
 from eval import summarize
 
 REPO = Path(__file__).resolve().parent.parent
@@ -62,3 +63,23 @@ def test_demo_replay_reproduces_cleaned_csv(tmp_path):
     assert proc.returncode == 0, proc.stderr
 
     assert _csv_rows(tmp_path / "replayed.csv") == _csv_rows(DEMO / "cleaned.csv")
+
+
+def test_report_view_finds_every_change_in_the_final_demo():
+    """load_run and parse_change_log read the final demo folder and every row of its change log."""
+    view = load_run(DEMO)
+    assert view.report_md is not None
+    assert set(view.files) == {"cleaned.csv", "replay.py", "trace.jsonl"}
+
+    # Every fix the run asked for, from its trace: applied ones in version order, then rejected ones, as in report.md.
+    events = [json.loads(line) for line in _text(DEMO / "trace.jsonl").splitlines() if line.strip()]
+    fixes = [e for e in events if e.get("event") == "tool" and "approval" in (e.get("output") or {})]
+    applied = sorted((e for e in fixes if e["output"]["applied"]), key=lambda e: e["output"]["version"])
+    rejected = [e for e in fixes if not e["output"]["applied"]]
+    expected = [(f"v{e['output']['version']}", e["name"], e["output"]["risk"], e["output"]["approval"], e["args"]["reason"])
+                for e in applied] + [("-", e["name"], e["output"]["risk"], "rejected", e["args"]["reason"]) for e in rejected]
+
+    found = [(row["version"], row["fix"], row["risk"], row["approval"], row["reason"]) for row in view.changes]
+    assert len(expected) == 4
+    assert found == expected
+    assert all(row["what_changed"] for row in view.changes)
