@@ -1,0 +1,170 @@
+{
+  "task_id": "salest_08_q0",
+  "analysis_correct": true,
+  "completed": true,
+  "detect_tp": 4,
+  "detect_fp": 0,
+  "detect_fn": 0,
+  "tool_calls": 11,
+  "tool_errors": 0,
+  "recovered_errors": 0,
+  "approvals_asked": 2,
+  "seconds": 17.62,
+  "tokens": 58402,
+  "stop_reason": "finish",
+  "note": "",
+  "answer": {
+    "2026-01": 3138.0,
+    "2026-02": 1908.0,
+    "2026-03": 1050.0,
+    "2026-04": 10290.0,
+    "2026-05": 4953.0,
+    "2026-06": 2688.0
+  },
+  "extra": {
+    "final_summary": "The data had several issues affecting the question: (1) Category labels had case and spelling variants (e.g., 'electronics', 'Accesories') that were merged into the allowed labels using normalize_labels; (2) Region labels had extra spaces (e.g., ' East ', ' North ') that were normalized; (3) One Date value was 'TBD' and was set to missing using parse_dates; (4) Two Revenue values were incorrect and were recomputed as Quantity * Price using recompute_column. After these fixes, the total revenue per month was calculated. The total revenue per month is: January 2026: $3,138.00, February 2026: $1,908.00, March 2026: $1,050.00, April 2026: $10,290.00, May 2026: $4,953.00, June 2026: $2,688.00.",
+    "changes": [
+      {
+        "version": 1,
+        "tool": "normalize_labels",
+        "args": {
+          "column": "Category",
+          "mapping": {
+            "electronics": "Electronics",
+            "office supplies": "Office Supplies",
+            "Accesories": "Accessories",
+            "Electornics": "Electronics",
+            "Office Suplies": "Office Supplies"
+          },
+          "reason": "merge case and spelling variants into allowed labels as per rules"
+        },
+        "reason": "merge case and spelling variants into allowed labels as per rules",
+        "risk": "high",
+        "approval": "approved",
+        "rows_removed": [],
+        "cells_changed": 5,
+        "summary": "Category: merged 5 label variant(s), 5 cells",
+        "code": "df['Category'] = df['Category'].replace({'electronics': 'Electronics', 'office supplies': 'Office Supplies', 'Accesories': 'Accessories', 'Electornics': 'Electronics', 'Office Suplies': 'Office Supplies'})",
+        "cell_changes": []
+      },
+      {
+        "version": 2,
+        "tool": "normalize_labels",
+        "args": {
+          "column": "Region",
+          "mapping": {
+            " North": "North",
+            "East ": "East",
+            "North ": "North"
+          },
+          "reason": "merge case and space variants into allowed labels as per rules"
+        },
+        "reason": "merge case and space variants into allowed labels as per rules",
+        "risk": "low",
+        "approval": "auto",
+        "rows_removed": [],
+        "cells_changed": 3,
+        "summary": "Region: merged 3 label variant(s), 3 cells",
+        "code": "df['Region'] = df['Region'].replace({' North': 'North', 'East ': 'East', 'North ': 'North'})",
+        "cell_changes": []
+      },
+      {
+        "version": 3,
+        "tool": "parse_dates",
+        "args": {
+          "column": "Date",
+          "reason": "normalize clear ISO dates and blank unreadable dates like 'TBD'",
+          "date_order": null
+        },
+        "reason": "normalize clear ISO dates and blank unreadable dates like 'TBD'",
+        "risk": "low",
+        "approval": "auto",
+        "rows_removed": [],
+        "cells_changed": 1,
+        "summary": "Date: converted 0 date(s), 1 invalid date(s) set to missing; 0 ambiguous date(s) left unchanged",
+        "code": "df['Date'] = df['Date'].astype(object)\ndf.at[15, 'Date'] = pd.NA",
+        "cell_changes": [
+          {
+            "row": 15,
+            "column": "Date",
+            "before": "TBD",
+            "after": null,
+            "ambiguous": false
+          }
+        ]
+      },
+      {
+        "version": 4,
+        "tool": "recompute_column",
+        "args": {
+          "column": "Revenue",
+          "expression": "Quantity * Price",
+          "rows": [
+            13,
+            29
+          ],
+          "reason": "Revenue does not match Quantity * Price as required by rules"
+        },
+        "reason": "Revenue does not match Quantity * Price as required by rules",
+        "risk": "high",
+        "approval": "approved",
+        "rows_removed": [],
+        "cells_changed": 2,
+        "summary": "Revenue: recomputed as Quantity * Price on 2 row(s)",
+        "code": "df.loc[[13, 29], 'Revenue'] = pd.Series([45.0, 15.0], index=[13, 29])  # Revenue = Quantity * Price",
+        "cell_changes": []
+      }
+    ],
+    "rejected": [],
+    "oracle_decisions": [
+      {
+        "tool": "normalize_labels",
+        "risk": "high",
+        "approved": true,
+        "why": "moves data toward the reference"
+      },
+      {
+        "tool": "recompute_column",
+        "risk": "high",
+        "approved": true,
+        "why": "moves data toward the reference"
+      }
+    ],
+    "coverage_refusals": 0,
+    "model_turns": 11
+  },
+  "corrections": 11,
+  "planted": 11,
+  "damaged_rows": 0,
+  "damaged_cells": 0,
+  "cleaned_available": true,
+  "system": "datasage-m3",
+  "dataset": "sales-test",
+  "question": "What is the total revenue per month?",
+  "reference_answer": {
+    "2026-01": 3138.0,
+    "2026-02": 1908.0,
+    "2026-03": 1050.0,
+    "2026-04": 10290.0,
+    "2026-05": 4953.0,
+    "2026-06": 2688.0
+  },
+  "issues_reported": [
+    [
+      "cross_column",
+      "Revenue"
+    ],
+    [
+      "invalid_date",
+      "Date"
+    ],
+    [
+      "label_variant",
+      "Category"
+    ],
+    [
+      "label_variant",
+      "Region"
+    ]
+  ]
+}

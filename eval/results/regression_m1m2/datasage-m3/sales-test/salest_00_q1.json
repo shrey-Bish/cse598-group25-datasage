@@ -1,0 +1,145 @@
+{
+  "task_id": "salest_00_q1",
+  "analysis_correct": true,
+  "completed": true,
+  "detect_tp": 3,
+  "detect_fp": 0,
+  "detect_fn": 0,
+  "tool_calls": 10,
+  "tool_errors": 0,
+  "recovered_errors": 0,
+  "approvals_asked": 1,
+  "seconds": 20.19,
+  "tokens": 52252,
+  "stop_reason": "finish",
+  "note": "",
+  "answer": {
+    "2026-01": 5335.0,
+    "2026-02": 6462.0,
+    "2026-03": 6058.0,
+    "2026-04": 1694.0,
+    "2026-05": 4619.0,
+    "2026-06": 879.0
+  },
+  "extra": {
+    "final_summary": "The data had three invalid dates (TBD, not-a-date, and 13/45/2026) which were set to missing. The 'Region' column had a space variant ('North ') and a misspelling ('Suoth'), both corrected to 'North' and 'South' respectively. The 'Price' column contained dollar amounts as text, which were successfully converted to numbers. No rows were excluded, and the 'Revenue' column was consistent with the formula Quantity * Price. The total revenue per month is: January 2026: $5,335, February 2026: $6,462, March 2026: $6,058, April 2026: $1,694, May 2026: $4,619, June 2026: $879.",
+    "changes": [
+      {
+        "version": 1,
+        "tool": "parse_dates",
+        "args": {
+          "column": "Date",
+          "reason": "Automatically normalize clear ISO dates and blank unreadable dates; ambiguous dates stay unchanged.",
+          "date_order": null
+        },
+        "reason": "Automatically normalize clear ISO dates and blank unreadable dates; ambiguous dates stay unchanged.",
+        "risk": "low",
+        "approval": "auto",
+        "rows_removed": [],
+        "cells_changed": 3,
+        "summary": "Date: converted 0 date(s), 3 invalid date(s) set to missing; 0 ambiguous date(s) left unchanged",
+        "code": "df['Date'] = df['Date'].astype(object)\ndf.at[5, 'Date'] = pd.NA\ndf.at[6, 'Date'] = pd.NA\ndf.at[44, 'Date'] = pd.NA",
+        "cell_changes": [
+          {
+            "row": 5,
+            "column": "Date",
+            "before": "TBD",
+            "after": null,
+            "ambiguous": false
+          },
+          {
+            "row": 6,
+            "column": "Date",
+            "before": "not-a-date",
+            "after": null,
+            "ambiguous": false
+          },
+          {
+            "row": 44,
+            "column": "Date",
+            "before": "13/45/2026",
+            "after": null,
+            "ambiguous": false
+          }
+        ]
+      },
+      {
+        "version": 2,
+        "tool": "normalize_labels",
+        "args": {
+          "column": "Region",
+          "mapping": {
+            "North ": "North",
+            "Suoth": "South"
+          },
+          "reason": "Merge case and space variants and correct misspelling 'Suoth' to 'South' into allowed labels."
+        },
+        "reason": "Merge case and space variants and correct misspelling 'Suoth' to 'South' into allowed labels.",
+        "risk": "high",
+        "approval": "approved",
+        "rows_removed": [],
+        "cells_changed": 2,
+        "summary": "Region: merged 2 label variant(s), 2 cells",
+        "code": "df['Region'] = df['Region'].replace({'North ': 'North', 'Suoth': 'South'})",
+        "cell_changes": []
+      },
+      {
+        "version": 3,
+        "tool": "cast_numeric",
+        "args": {
+          "column": "Price",
+          "reason": "Convert text with dollar signs and decimals to numbers."
+        },
+        "reason": "Convert text with dollar signs and decimals to numbers.",
+        "risk": "low",
+        "approval": "auto",
+        "rows_removed": [],
+        "cells_changed": 0,
+        "summary": "Price: converted to numbers (47 text values, 0 became missing)",
+        "code": "df['Price'] = pd.to_numeric(df['Price'].astype(str).str.replace(r'[$, ]', '', regex=True), errors='coerce')",
+        "cell_changes": []
+      }
+    ],
+    "rejected": [],
+    "oracle_decisions": [
+      {
+        "tool": "normalize_labels",
+        "risk": "high",
+        "approved": true,
+        "why": "moves data toward the reference"
+      }
+    ],
+    "coverage_refusals": 0,
+    "model_turns": 10
+  },
+  "corrections": 8,
+  "planted": 8,
+  "damaged_rows": 0,
+  "damaged_cells": 0,
+  "cleaned_available": true,
+  "system": "datasage-m3",
+  "dataset": "sales-test",
+  "question": "What is the total revenue per month?",
+  "reference_answer": {
+    "2026-01": 5335.0,
+    "2026-02": 6462.0,
+    "2026-03": 6058.0,
+    "2026-04": 1694.0,
+    "2026-05": 4619.0,
+    "2026-06": 879.0
+  },
+  "issues_reported": [
+    [
+      "invalid_date",
+      "Date"
+    ],
+    [
+      "label_variant",
+      "Region"
+    ],
+    [
+      "text_number",
+      "Price"
+    ]
+  ]
+}

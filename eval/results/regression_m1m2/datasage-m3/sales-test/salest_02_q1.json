@@ -1,0 +1,249 @@
+{
+  "task_id": "salest_02_q1",
+  "analysis_correct": true,
+  "completed": true,
+  "detect_tp": 6,
+  "detect_fp": 1,
+  "detect_fn": 0,
+  "tool_calls": 18,
+  "tool_errors": 0,
+  "recovered_errors": 0,
+  "approvals_asked": 5,
+  "seconds": 33.88,
+  "tokens": 101112,
+  "stop_reason": "finish",
+  "note": "",
+  "answer": {
+    "2026-01": 4102.0,
+    "2026-02": 4325.0,
+    "2026-03": 3356.0,
+    "2026-04": 2981.0,
+    "2026-05": 5129.0,
+    "2026-06": 6668.0
+  },
+  "extra": {
+    "final_summary": "The data had several issues affecting the question 'What is the total revenue per month?':\n\n1. One exact duplicate row (row 5) was removed to prevent double-counting.\n2. Two misspelled category labels ('Furnture', 'Office Suplies') were corrected to 'Furniture' and 'Office Supplies'.\n3. Three whitespace variants in Region (' South', ' West', 'West ') were normalized to 'South', 'West', and 'West'.\n4. Two missing Region values were marked as missing.\n5. Three negative Quantity values (rows 1, 34, 51) were excluded because the rules require Quantity to be at least 1.\n6. One incorrect Revenue value (row 64) was fixed by recomputing it as Quantity * Price.\n\nAfter these fixes, the analysis was run on the cleaned data. The total revenue per month is:\n- 2026-01: $4,102.00\n- 2026-02: $4,325.00\n- 2026-03: $3,356.00\n- 2026-04: $2,981.00\n- 2026-05: $5,129.00\n- 2026-06: $6,668.00",
+    "changes": [
+      {
+        "version": 1,
+        "tool": "drop_duplicates",
+        "args": {
+          "reason": "Found one exact duplicate row (row 5) that is a copy of row 0; removing the duplicate to avoid double-counting."
+        },
+        "reason": "Found one exact duplicate row (row 5) that is a copy of row 0; removing the duplicate to avoid double-counting.",
+        "risk": "medium",
+        "approval": "approved",
+        "rows_removed": [
+          5
+        ],
+        "cells_changed": 0,
+        "summary": "removed 1 exact duplicate row(s)",
+        "code": "df = df.drop_duplicates(keep='first')",
+        "cell_changes": []
+      },
+      {
+        "version": 2,
+        "tool": "normalize_labels",
+        "args": {
+          "column": "Category",
+          "mapping": {
+            "Furnture": "Furniture",
+            "Office Suplies": "Office Supplies"
+          },
+          "reason": "Corrected misspellings in Category: 'Furnture' to 'Furniture' and 'Office Suplies' to 'Office Supplies' to match the allowed values in the rules."
+        },
+        "reason": "Corrected misspellings in Category: 'Furnture' to 'Furniture' and 'Office Suplies' to 'Office Supplies' to match the allowed values in the rules.",
+        "risk": "high",
+        "approval": "approved",
+        "rows_removed": [],
+        "cells_changed": 2,
+        "summary": "Category: merged 2 label variant(s), 2 cells",
+        "code": "df['Category'] = df['Category'].replace({'Furnture': 'Furniture', 'Office Suplies': 'Office Supplies'})",
+        "cell_changes": []
+      },
+      {
+        "version": 3,
+        "tool": "normalize_labels",
+        "args": {
+          "column": "Region",
+          "mapping": {
+            " South": "South",
+            " West": "West",
+            "West ": "West"
+          },
+          "reason": "Corrected whitespace variants in Region: ' South' to 'South', ' West' to 'West', and 'West ' to 'West' to match the allowed values in the rules."
+        },
+        "reason": "Corrected whitespace variants in Region: ' South' to 'South', ' West' to 'West', and 'West ' to 'West' to match the allowed values in the rules.",
+        "risk": "low",
+        "approval": "auto",
+        "rows_removed": [],
+        "cells_changed": 3,
+        "summary": "Region: merged 3 label variant(s), 3 cells",
+        "code": "df['Region'] = df['Region'].replace({' South': 'South', ' West': 'West', 'West ': 'West'})",
+        "cell_changes": []
+      },
+      {
+        "version": 4,
+        "tool": "set_missing",
+        "args": {
+          "column": "Region",
+          "rows": [
+            0,
+            24
+          ],
+          "reason": "Region is missing for two rows (0 and 24); marking as missing since no valid value can be inferred."
+        },
+        "reason": "Region is missing for two rows (0 and 24); marking as missing since no valid value can be inferred.",
+        "risk": "high",
+        "approval": "approved",
+        "rows_removed": [],
+        "cells_changed": 0,
+        "summary": "Region: set 2 value(s) to missing",
+        "code": "df.loc[[0, 24], 'Region'] = pd.NA",
+        "cell_changes": []
+      },
+      {
+        "version": 5,
+        "tool": "parse_dates",
+        "args": {
+          "column": "Date",
+          "reason": "Date column contains ISO-formatted dates (YYYY-MM-DD) and no ambiguous or unreadable dates; parsing to standard format.",
+          "date_order": null
+        },
+        "reason": "Date column contains ISO-formatted dates (YYYY-MM-DD) and no ambiguous or unreadable dates; parsing to standard format.",
+        "risk": "low",
+        "approval": "auto",
+        "rows_removed": [],
+        "cells_changed": 0,
+        "summary": "Date: converted 0 date(s), 0 invalid date(s) set to missing; 0 ambiguous date(s) left unchanged",
+        "code": "df['Date'] = df['Date'].astype(object)",
+        "cell_changes": []
+      },
+      {
+        "version": 6,
+        "tool": "exclude_rows",
+        "args": {
+          "rows": [
+            1,
+            34,
+            51
+          ],
+          "reason": "Quantity is negative in 3 rows (1, 34, 51), but rules require Quantity to be at least 1; these rows are invalid and must be excluded."
+        },
+        "reason": "Quantity is negative in 3 rows (1, 34, 51), but rules require Quantity to be at least 1; these rows are invalid and must be excluded.",
+        "risk": "high",
+        "approval": "approved",
+        "rows_removed": [
+          1,
+          34,
+          51
+        ],
+        "cells_changed": 0,
+        "summary": "excluded 3 row(s): [1, 34, 51]",
+        "code": "df = df.drop(index=[1, 34, 51])",
+        "cell_changes": []
+      },
+      {
+        "version": 7,
+        "tool": "recompute_column",
+        "args": {
+          "column": "Revenue",
+          "expression": "Quantity * Price",
+          "rows": [
+            64
+          ],
+          "reason": "Revenue value in row 64 is incorrect (7505.0) but should be Quantity * Price = 5 * 15 = 75.0; recomputing to fix the error."
+        },
+        "reason": "Revenue value in row 64 is incorrect (7505.0) but should be Quantity * Price = 5 * 15 = 75.0; recomputing to fix the error.",
+        "risk": "high",
+        "approval": "approved",
+        "rows_removed": [],
+        "cells_changed": 1,
+        "summary": "Revenue: recomputed as Quantity * Price on 1 row(s)",
+        "code": "df.loc[[64], 'Revenue'] = pd.Series([75.0], index=[64])  # Revenue = Quantity * Price",
+        "cell_changes": []
+      }
+    ],
+    "rejected": [],
+    "oracle_decisions": [
+      {
+        "tool": "drop_duplicates",
+        "risk": "medium",
+        "approved": true,
+        "why": "moves data toward the reference"
+      },
+      {
+        "tool": "normalize_labels",
+        "risk": "high",
+        "approved": true,
+        "why": "moves data toward the reference"
+      },
+      {
+        "tool": "set_missing",
+        "risk": "high",
+        "approved": true,
+        "why": "moves data toward the reference"
+      },
+      {
+        "tool": "exclude_rows",
+        "risk": "high",
+        "approved": true,
+        "why": "moves data toward the reference"
+      },
+      {
+        "tool": "recompute_column",
+        "risk": "high",
+        "approved": true,
+        "why": "moves data toward the reference"
+      }
+    ],
+    "coverage_refusals": 0,
+    "model_turns": 18
+  },
+  "corrections": 12,
+  "planted": 12,
+  "damaged_rows": 0,
+  "damaged_cells": 0,
+  "cleaned_available": true,
+  "system": "datasage-m3",
+  "dataset": "sales-test",
+  "question": "What is the total revenue per month?",
+  "reference_answer": {
+    "2026-01": 4102.0,
+    "2026-02": 4325.0,
+    "2026-03": 3356.0,
+    "2026-04": 2981.0,
+    "2026-05": 5129.0,
+    "2026-06": 6668.0
+  },
+  "issues_reported": [
+    [
+      "cross_column",
+      "Revenue"
+    ],
+    [
+      "duplicates",
+      "*"
+    ],
+    [
+      "label_variant",
+      "Category"
+    ],
+    [
+      "label_variant",
+      "Region"
+    ],
+    [
+      "missing",
+      "Region"
+    ],
+    [
+      "negative",
+      "Quantity"
+    ],
+    [
+      "out_of_range",
+      "Quantity"
+    ]
+  ]
+}
