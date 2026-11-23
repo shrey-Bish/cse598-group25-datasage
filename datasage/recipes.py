@@ -251,25 +251,28 @@ def load_recipe(path: str | Path) -> Recipe:
 
 _INPUT_LINE = re.compile(r"^- Input: `(?P<path>[^`]*)`\s*$", re.MULTILINE)
 _CHANGE_COLUMNS = ("Version", "Fix", "Risk", "Approval")
+_CELL_SPLIT = re.compile(r"(?<!\\)\|")  # a pipe that is not escaped as \|
 
 
 def _table_cells(line: str, width: int | None = None) -> list[str]:
     inner = line.strip()
     inner = inner[1:] if inner.startswith("|") else inner
-    inner = inner[:-1] if inner.endswith("|") else inner
-    raw = inner.split("|")
-    if width is not None and len(raw) > width:  # "|" inside the last cell: join it back
+    inner = inner[:-1] if inner.endswith("|") and not inner.endswith("\\|") else inner
+    raw = _CELL_SPLIT.split(inner)
+    if width is not None and len(raw) > width:  # an unescaped "|" inside the last cell: join it back
         raw = raw[:width - 1] + ["|".join(raw[width - 1:])]
-    return [cell.strip() for cell in raw]
+    return [cell.strip().replace("\\|", "|") for cell in raw]
 
 
 def parse_changes(report_md: str) -> list[dict[str, str]]:
     """Rows of a report's Changes table, as {header name: cell}.
 
-    Columns are found by header name. Reason is the last column and may contain "|" (report.py does not
-    escape it), so extra cells are joined back into it; a "|" in What changed shifts text into Reason
-    but leaves Version, Fix, Risk and Approval intact. The table ends at its first non-table line, so
-    the "Date changes in v{N}" lists below it are not rows. Rejected fixes keep Version "-".
+    Columns are found by header name. A pipe escaped as "\\|" stays inside its cell and is read back as
+    "|", as in app/report_view.py. Reason is the last column and may contain an unescaped "|" (report.py
+    does not escape it), so extra cells are joined back into it; an unescaped "|" in What changed shifts
+    text into Reason but leaves Version, Fix, Risk and Approval intact. The table ends at its first
+    non-table line, so the "Date changes in v{N}" lists below it are not rows. Rejected fixes keep
+    Version "-".
     """
     lines = report_md.splitlines()
     try:

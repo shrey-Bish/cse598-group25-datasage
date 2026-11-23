@@ -223,6 +223,30 @@ def test_changes_table_ends_before_the_date_change_lists(sales_run):
     assert rows[-1]["Fix"] == "exclude_rows" and rows[-1]["Approval"] == "rejected"
 
 
+def test_escaped_pipes_are_read_back_in_changes_cells(sales_run):
+    report = "\n".join([
+        "## Changes", "",
+        "| Version | Fix | Risk | Approval | What changed | Reason |",
+        "|---|---|---|---|---|---|",
+        r"| v1 | normalize_labels | low | auto | Category: a \| b merged | Merge \| case variants |",
+        "| v2 | trim_whitespace | low | auto | Region: trimmed 1 values | Unescaped | stays in Reason |",
+        r"| - | exclude_rows | high | rejected | excluded 1 row(s): [6] (not applied) | Ends with a pipe \| |",
+    ])
+    rows = recipes.parse_changes(report)
+    assert rows[0]["What changed"] == "Category: a | b merged" and rows[0]["Reason"] == "Merge | case variants"
+    assert rows[1]["Reason"] == "Unescaped | stays in Reason"
+    assert rows[2]["Version"] == "-" and rows[2]["Reason"] == "Ends with a pipe |"
+
+    # A run's report with escaped pipes still pairs with its trace.
+    _edit(sales_run / "report.md", "Misspelling | the allowed label", r"Misspelling \| the allowed label")
+    _edit(sales_run / "report.md", "Category: merged 1 label variant(s), 1 cells | Misspelling",
+          r"Category: merged 1 label variant(s)\|1 cells | Misspelling")
+    rows = recipes.parse_changes((sales_run / "report.md").read_text())
+    assert rows[2]["What changed"] == "Category: merged 1 label variant(s)|1 cells"
+    assert rows[2]["Reason"] == "Misspelling | the allowed label is Accessories."
+    assert len(recipes.build_recipe(sales_run, JAN, RULES_FILE).steps) == 8
+
+
 def test_unpaired_records_are_an_error(tmp_path, sales_run):
     other = shutil.copytree(sales_run, tmp_path / "copy")
     report = sales_run / "report.md"
