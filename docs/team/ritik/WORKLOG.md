@@ -7,6 +7,44 @@ interfaces each change touches, and what to know before pulling it. Newest entry
 
 ## Log
 
+### November 22, 2026: recipe build and replay (`ritik/recipes-replay`)
+
+Task R1 in `docs/TEAM_HANDOFF.md` (item 7). What changed (`datasage/recipes.py` grows; no other file in
+`datasage/` is edited):
+
+- `check_schema(recipe, df)` (R6) compares a table's columns and kinds with the recipe. A missing column
+  stops a replay; an extra column or a changed kind is a warning.
+- `build_recipe(run_dir, input_path, rules_path=None, no_rules=False)` (R7) builds a recipe from a run
+  folder. A fix becomes a step only when its trace record says it was applied and the Changes row with the
+  same version has the same fix, risk and approval. It stops when the two don't pair up, when the input's
+  name differs from the report's Input line, or when the rules file doesn't match what the run's
+  `lookup_rules` returned. `parse_changes` reads the Changes table by header name and stops where the table
+  ends, so the "Date changes in v{N}" lists below it are not read as rows.
+- `apply_recipe(recipe, input_path, out_dir)` (R8) replays the column-level fixes (`trim_whitespace`,
+  `normalize_labels`, `parse_dates`, `cast_numeric`) on a new file without the model. Each one is dry-run,
+  its risk is recomputed with `risk_of` on the new file, and it is applied only if it is low risk and the
+  validator accepts it. Everything else goes to "needs review". It then re-runs the checks for the recipe's
+  columns, writes `cleaned.csv` and `recipe_run.md`, and never changes the input.
+- `python -m datasage.recipes save ...` and `python -m datasage.recipes apply ...` (R9): the command line.
+- `tests/test_recipes.py` and `tests/fixtures/recipes/`: synthetic fixtures; test runs go through the real
+  agent loop with a scripted client in place of the model. The handoff's "done when" test builds a recipe
+  from `docs/final/demo` and replays it on `examples/demo/monthly/orders_2026-09.csv`, reading both only.
+
+Interfaces: `datasage/recipes.py` calls `checks`, `fixes`, `session`, `tools` and `validator` only through
+its `_ds_*` adapter functions, and none of them changed. It reads the trace records and the Changes table
+as `agent.py` and `report.py` write them today, including `parse_dates`' `date_order` and the date-change
+lists from M1.
+
+Before pulling: nothing new to install. Good to know:
+
+- Steps keep `parse_dates`' `date_order` as the trace recorded it. Without it, `parse_dates` leaves
+  ambiguous dates alone, so a replay can apply it and lists any ambiguous date as an issue left; with it,
+  a file with an ambiguous date sends the step to review.
+- A recipe names its rules file but does not contain it, so a replay does not re-run the checks that need
+  rules (allowed labels, ranges, refunds).
+- Item 7's page is Shrey's browser app (`app/web/`); my Streamlit page is dropped. Nothing in `app/web/`
+  uses recipes yet.
+
 ### November 7, 2026: item 7 scaffold (`ritik/item7-scaffold`)
 
 What changed (all new files; no existing file is edited):

@@ -7,13 +7,20 @@ kinds `load_table` produces.
 
 This module only imports from datasage/; it never changes the agent, the tools or the fixes. Every call
 into datasage/ goes through the adapter functions below (named `_ds_*`).
+
+Command line (no model or API key needed):
+
+    python -m datasage.recipes save --run RUN_DIR --input RAW.csv [--rules RULES.json | --no-rules] --out recipe.json
+    python -m datasage.recipes apply --recipe recipe.json --input NEW.csv --out OUT_DIR
 """
 
 from __future__ import annotations
 
+import argparse
 import hashlib
 import json
 import re
+import sys
 import warnings
 from dataclasses import asdict, dataclass, field
 from datetime import datetime, timezone
@@ -634,3 +641,68 @@ def apply_recipe(recipe: Recipe | str | Path, input_path: str | Path, out_dir: s
                           cleaned_path=cleaned_path, report_path=report_path)
     report_path.write_text(_replay_report(recipe, result), encoding="utf-8")
     return result
+
+
+# Command line
+
+def _parser() -> argparse.ArgumentParser:
+    parser = argparse.ArgumentParser(prog="python -m datasage.recipes",
+                                     description="Save a cleaning recipe from a DataSage run, or replay one on a new "
+                                                 "file with the same columns. No model or API key is needed.")
+    commands = parser.add_subparsers(dest="command", required=True)
+    save = commands.add_parser("save", help="build a recipe from a run folder and the raw input that run cleaned")
+    save.add_argument("--run", required=True, help="the run folder (it holds report.md and trace.jsonl)")
+    save.add_argument("--input", required=True, help="the raw input file the run cleaned")
+    rules = save.add_mutually_exclusive_group()
+    rules.add_argument("--rules", help="the rules file the run used")
+    rules.add_argument("--no-rules", action="store_true", help="confirm the run had no rules file")
+    save.add_argument("--out", required=True, help="where to write the recipe (a .json file)")
+    replay = commands.add_parser("apply", help="replay a recipe on a new file with the same columns")
+    replay.add_argument("--recipe", required=True, help="a recipe saved with the save command")
+    replay.add_argument("--input", required=True, help="the new file; it is only read")
+    replay.add_argument("--out", required=True, help="folder for cleaned.csv and recipe_run.md")
+    return parser
+
+
+def _save_command(args) -> None:
+    recipe = build_recipe(args.run, args.input, args.rules, no_rules=args.no_rules)
+    path = save_recipe(recipe, args.out)
+    portable = sum(s.portable for s in recipe.steps)
+    rules = f"rules file {recipe.rules.name}" if recipe.rules else "no rules file"
+    print(f"Saved {path}: {len(recipe.steps)} step(s) from {recipe.source.name} ({rules}); {portable} can be replayed "
+          f"on a new file, the others go to review.")
+    for number, step in enumerate(recipe.steps, start=1):
+        note = "" if step.portable else ", not replayed"
+        print(f"  {number}. {step.fix} {json.dumps(step.args, ensure_ascii=False)} ({step.risk}, {step.approved_by}{note})")
+
+
+def _apply_command(args) -> None:
+    result = apply_recipe(args.recipe, args.input, args.out)
+    for line in result.schema.warnings():
+        print(f"warning: {line}", file=sys.stderr)
+    counts = ", ".join(f"{len(result.with_status(s))} {s}" for s in (APPLIED, NEEDS_REVIEW, NOT_NEEDED))
+    print(f"Replayed {Path(args.recipe).name} on {result.input_name}: {counts}.")
+    for step in result.steps:
+        print(f"  {step.step}. {step.fix}: {step.status} ({step.detail})")
+    if result.new_issues:
+        print(f"{len(result.new_issues)} issue(s) left after the replay; see {result.report_path.name}.")
+    print(f"Wrote {result.cleaned_path} and {result.report_path}. {result.input_name} was not changed.")
+
+
+def main(argv: list[str] | None = None) -> int:
+    args = _parser().parse_args(argv)
+    code = 0
+    with warnings.catch_warnings(record=True) as caught:
+        warnings.simplefilter("always", RecipeWarning)
+        try:
+            (_save_command if args.command == "save" else _apply_command)(args)
+        except (ValueError, OSError) as err:  # RecipeError is a ValueError; load_recipe raises ValueError too
+            print(f"error: {err}", file=sys.stderr)
+            code = 2
+    for warning in caught:
+        print(f"warning: {warning.message}", file=sys.stderr)
+    return code
+
+
+if __name__ == "__main__":
+    raise SystemExit(main())

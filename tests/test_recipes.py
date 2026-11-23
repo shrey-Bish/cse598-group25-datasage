@@ -7,6 +7,8 @@ of the model, so the parser is always tested against what report.py and the trac
 import hashlib
 import json
 import shutil
+import subprocess
+import sys
 import types
 from pathlib import Path
 
@@ -487,3 +489,48 @@ def test_recipe_from_the_demo_run_replays_on_another_table_with_the_same_columns
     assert "accessories" not in set(cleaned["Category"]) and len(cleaned) == result.rows_in
     assert {i["check"] for i in result.new_issues} == {"label_variant", "duplicates"}  # left for review
     assert _hashes(read_only) == before  # nothing in the repository was changed
+
+
+# R9: command line
+
+def test_cli_save_then_apply(tmp_path, sales_run, capsys):
+    recipe = tmp_path / "recipe.json"
+    assert recipes.main(["save", "--run", str(sales_run), "--input", str(JAN), "--rules", str(RULES_FILE),
+                         "--out", str(recipe)]) == 0
+    assert "8 step(s) from sales_jan.csv (rules file sales_rules.json); 6 can be replayed" in capsys.readouterr().out
+    assert recipes.load_recipe(recipe).steps[0].fix == "trim_whitespace"
+
+    out_dir = tmp_path / "out"
+    assert recipes.main(["apply", "--recipe", str(recipe), "--input", str(FEB), "--out", str(out_dir)]) == 0
+    printed = capsys.readouterr().out
+    assert "Replayed recipe.json on sales_feb.csv: 4 applied, 4 needs review, 0 not needed." in printed
+    assert "sales_feb.csv was not changed." in printed
+    assert (out_dir / "cleaned.csv").is_file() and (out_dir / "recipe_run.md").is_file()
+
+
+def test_cli_prints_errors_and_warnings(tmp_path, sales_run, capsys):
+    recipe = tmp_path / "recipe.json"
+    assert recipes.main(["save", "--run", str(sales_run), "--input", str(JAN), "--out", str(recipe)]) == 2
+    assert "error: the run used a rules file" in capsys.readouterr().err
+    assert not recipe.exists()
+
+    with pytest.raises(SystemExit):  # --rules and --no-rules exclude each other
+        recipes.main(["save", "--run", str(sales_run), "--input", str(JAN), "--rules", str(RULES_FILE), "--no-rules",
+                      "--out", str(recipe)])
+    capsys.readouterr()
+
+    line = next(line for line in (sales_run / "report.md").read_text().splitlines() if line.startswith("- Input:"))
+    _edit(sales_run / "report.md", line + "\n", "")
+    assert recipes.main(["save", "--run", str(sales_run), "--input", str(JAN), "--rules", str(RULES_FILE),
+                         "--out", str(recipe)]) == 0
+    assert "warning: report.md has no Input line" in capsys.readouterr().err
+
+    narrow = tmp_path / "narrow.csv"
+    narrow.write_text("Order_ID,Date\n1,2026-03-01\n")
+    assert recipes.main(["apply", "--recipe", str(recipe), "--input", str(narrow), "--out", str(tmp_path / "out")]) == 2
+    assert "lacks the recipe's column(s) Category, Region, Quantity, Price" in capsys.readouterr().err
+
+
+def test_cli_runs_as_a_module():
+    done = subprocess.run([sys.executable, "-m", "datasage.recipes", "--help"], capture_output=True, text=True, cwd=ROOT)
+    assert done.returncode == 0 and "{save,apply}" in done.stdout

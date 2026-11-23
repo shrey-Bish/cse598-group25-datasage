@@ -4,7 +4,7 @@ Ritik Agarwal, November 7, 2026. Reviewer: Arsha Jindal (comments on the PR only
 
 ## Goal
 
-**Status:** in progress; only the recipe file format is built.
+**Status:** recipes are built (format, build, replay and a command line); the page is Shrey's browser app.
 
 Item 7 (Milestone 2 report, Table 9) covers two deliverables Vyshanth agreed to on October 28:
 cleaning recipes that replay a run's approved fixes on next month's file without the model, and a
@@ -12,7 +12,8 @@ Streamlit demo page. Done when both are shown at Demo Day with the replay script
 
 ## File ownership
 
-**Status:** proposed in the Nov 6 sprint plan.
+**Status:** as proposed in the Nov 6 sprint plan, except that Ritik's three `app/` files were not built (see
+"The Streamlit page").
 
 One owner per file; ask the owner for changes. In `datasage/`, item 7 only adds `recipes.py`.
 
@@ -23,7 +24,7 @@ One owner per file; ask the owner for changes. In `datasage/`, item 7 only adds 
 
 ## Contract: the report view
 
-**Status:** planned (Arsha's A2 to A4), not on `main` yet.
+**Status:** implemented by Arsha in `app/report_view.py` (PR #2, merged).
 
 ```python
 # app/report_view.py  (owner: Arsha; Ritik's Streamlit page will import render_report)
@@ -51,7 +52,7 @@ def render_report(run_dir: Path) -> None: ...   # imports streamlit inside the f
 
 ## Recipe file
 
-**Status:** implemented in R5 (PR #5) on `ritik/recipes`, not merged yet.
+**Status:** implemented in R5 (PR #5, merged).
 
 A JSON file with `recipe_version` 1; `created_at` (UTC); `source`: `name`, `sha256` and `rows` of the
 raw input, read with `load_table` (never `cleaned.csv`); `schema`: `columns`, `dtypes` (`number` or
@@ -59,9 +60,10 @@ raw input, read with `load_table` (never `cleaned.csv`); `schema`: `columns`, `d
 `steps` in version order, each with `fix`, `args` (without `reason`), `risk`, `approved_by` (`auto` or
 `approved`) and `portable`. Files are recorded by name, never by a local path.
 
-## Building a recipe: `build_recipe(run_dir, input_path, rules_path=None)`
+## Building a recipe: `build_recipe(run_dir, input_path, rules_path=None, no_rules=False)`
 
-**Status:** planned (R7), not built.
+**Status:** implemented in R7 on `ritik/recipes-replay`; `no_rules=True` confirms a run without a rules file
+when its trace has no `lookup_rules` record.
 
 - A fix is a step only if its trace record has `output.applied: true` and the Changes row
   `v{output.version}` has the same Fix, Risk and Approval. Rejected fixes never match.
@@ -75,7 +77,8 @@ raw input, read with `load_table` (never `cleaned.csv`); `schema`: `columns`, `d
 
 ## Replaying a recipe: `apply_recipe(recipe, input_path, out_dir)`
 
-**Status:** planned (R6 schema check, R8 replay), not built.
+**Status:** implemented in R6 (schema check) and R8 (replay) on `ritik/recipes-replay`, with the command line
+`python -m datasage.recipes save` / `apply` (R9).
 
 1. Load the new file with `load_table`; it is never changed. A missing recipe column: refuse. An
    extra column or a changed type: a warning.
@@ -88,7 +91,8 @@ raw input, read with `load_table` (never `cleaned.csv`); `schema`: `columns`, `d
 
 ## The Streamlit page
 
-**Status:** planned (after Nov 8), not built; two questions for Shrey are open on this PR.
+**Status:** replaced by Shrey's browser app (`app/web/`, PRs #10-#19); not built. The plan below is kept
+for the record.
 
 `run_controller.py` runs the agent in a background thread, `browser_approver.py` (an `Approver`
 subclass) waits for the page's answer, and `streamlit_app.py` calls `render_report`. `agent.py`
