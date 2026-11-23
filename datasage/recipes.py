@@ -16,6 +16,7 @@ import json
 from dataclasses import asdict, dataclass, field
 from datetime import datetime, timezone
 from pathlib import Path
+from typing import NamedTuple
 
 import pandas as pd
 
@@ -105,6 +106,34 @@ def describe_input(path: str | Path) -> tuple[Source, Schema]:
     path = Path(path)
     df = _ds_load_table(path)
     return Source(name=path.name, sha256=file_sha256(path), rows=len(df)), schema_of(df)
+
+
+class SchemaCheck(NamedTuple):
+    """How a new table's columns compare with the recipe's schema. Unpacks as (missing, extra, type_changed)."""
+
+    missing: list[str]                        # recipe columns the table lacks: replay refuses
+    extra: list[str]                          # table columns the recipe does not know: a warning
+    type_changed: dict[str, tuple[str, str]]  # column -> (kind in the recipe, kind in the table): a warning
+
+    @property
+    def ok(self) -> bool:
+        """True when replay may go ahead: every recipe column is present."""
+        return not self.missing
+
+    def warnings(self) -> list[str]:
+        out = [f"extra column '{c}' is not in the recipe; it is left as it is" for c in self.extra]
+        out += [f"column '{c}' was {old} in the recipe's input and is {new} here" for c, (old, new) in self.type_changed.items()]
+        return out
+
+
+def check_schema(recipe: Recipe, df: pd.DataFrame) -> SchemaCheck:
+    """Compare a table (as read by load_table) with the recipe's schema. Column order does not matter."""
+    kinds = column_kinds(df)
+    expected = recipe.schema.dtypes
+    missing = [c for c in recipe.schema.columns if c not in kinds]
+    extra = [c for c in kinds if c not in expected]
+    type_changed = {c: (expected[c], kinds[c]) for c in recipe.schema.columns if c in kinds and kinds[c] != expected[c]}
+    return SchemaCheck(missing, extra, type_changed)
 
 
 def rules_ref(path: str | Path | None) -> RulesRef | None:

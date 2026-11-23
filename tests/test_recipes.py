@@ -87,3 +87,34 @@ def test_load_refuses_unknown_version_and_broken_files(tmp_path, month1):
     path.write_text(json.dumps(data))
     with pytest.raises(ValueError, match="not a valid recipe"):
         recipes.load_recipe(path)
+
+
+# R6: schema check before a replay
+
+def test_check_schema_accepts_the_same_columns_in_any_order(month1):
+    recipe = _recipe(month1)
+    df = recipes._ds_load_table(month1)
+    result = recipes.check_schema(recipe, df[list(reversed(df.columns))])
+    assert result == ([], [], {})
+    assert result.ok and result.warnings() == []
+
+
+def test_check_schema_missing_column_blocks_replay(month1):
+    result = recipes.check_schema(_recipe(month1), recipes._ds_load_table(month1).drop(columns=["Category"]))
+    missing, extra, type_changed = result
+    assert (missing, extra, type_changed) == (["Category"], [], {})
+    assert not result.ok
+
+
+def test_check_schema_extra_column_and_type_change_are_warnings(tmp_path, month1):
+    recipe = _recipe(month1)
+    feb = tmp_path / "month2.csv"
+    # Quantity now holds text ("two"), and a new Region column appears.
+    feb.write_text("Order_ID,Date,Category,Quantity,Price,Region\n4,2026-09-01,Electronics,two,$1.00,West\n")
+    result = recipes.check_schema(recipe, recipes._ds_load_table(feb))
+    assert result.missing == []
+    assert result.extra == ["Region"]
+    assert result.type_changed == {"Quantity": ("number", "text")}
+    assert result.ok
+    assert result.warnings() == ["extra column 'Region' is not in the recipe; it is left as it is",
+                                 "column 'Quantity' was number in the recipe's input and is text here"]
