@@ -104,3 +104,22 @@ whole file takes about 8 s.
   before any run. I approved it. Every decision is listed in the doc.
 
 **Before pulling:** documentation and data files only; no code changes.
+
+### 2026-11-23: Stakeholder ratings (A1)
+
+**Ratings** (branch `arsha/ratings`)
+- New `docs/final/ratings.md`: Vyshanth's ratings of 10 DataSage reports. Means out of 5: correctness 5.0,
+  clarity 4.4 and trust 4.6.
+  - The team proposed the scores, each with a reason, and Vyshanth reviewed and confirmed them without
+    changes.
+  - The summary quotes the comment he allowed us to quote, with his name.
+  - It also records his acceptance of the A2 result and the approval policy.
+- The reports: P1, P3 and P5 (procurement ledger), S1, S3 and S5 (support register) and H1–H4 (held-out
+  sales and penguin tables). They came from the same policy-approved runs as the acceptance test.
+- New `docs/final/checks/ratings/`: the 10 rated reports, byte-identical to what he reviewed.
+- New `docs/final/checks/acceptance/README.md`: identifies the two data folders as synthetic examples,
+  published with his permission.
+- Main weakness found: a report's summary can misdescribe a rejected fix even when the answer is right
+  (S5). This is for the final report's limitations.
+
+**Before pulling:** documentation only; no code changes.
