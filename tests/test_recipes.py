@@ -451,3 +451,39 @@ def test_apply_reads_a_saved_recipe_and_never_overwrites_the_input(tmp_path, mon
     inside = tmp_path / "out" / "cleaned.csv"
     with pytest.raises(recipes.RecipeError, match="would overwrite the input file"):
         recipes.apply_recipe(path, inside, tmp_path / "out")
+
+
+# End to end: the handoff's "done when" for R1, on files already in the repository (read only)
+
+ROOT = Path(__file__).resolve().parents[1]
+DEMO_RUN = ROOT / "docs" / "final" / "demo"            # a recorded DataSage run on messy_sales.csv
+DEMO_INPUT = ROOT / "baseline" / "examples" / "messy_sales.csv"
+DEMO_RULES = ROOT / "examples" / "messy_sales_rules.json"
+NEXT_TABLE = ROOT / "examples" / "demo" / "monthly" / "orders_2026-09.csv"  # same columns, another month
+
+
+def _hashes(paths):
+    return {p: recipes.file_sha256(p) for p in paths}
+
+
+def test_recipe_from_the_demo_run_replays_on_another_table_with_the_same_columns(tmp_path):
+    read_only = [*sorted(p for p in DEMO_RUN.iterdir() if p.is_file()), DEMO_INPUT, DEMO_RULES, NEXT_TABLE]
+    before = _hashes(read_only)
+
+    recipe = recipes.build_recipe(DEMO_RUN, DEMO_INPUT, DEMO_RULES)
+    assert [(s.fix, s.risk, s.approved_by, s.portable) for s in recipe.steps] == [
+        ("drop_duplicates", "medium", "approved", False),
+        ("normalize_labels", "low", "auto", True),
+    ]  # the run's rejected exclude_rows and set_missing are not steps
+    assert recipe.rules.name == "messy_sales_rules.json"
+    saved = recipes.save_recipe(recipe, tmp_path / "recipe.json")
+
+    result = recipes.apply_recipe(saved, NEXT_TABLE, tmp_path / "replay")
+
+    assert result.schema == ([], [], {})  # the same columns and kinds as messy_sales.csv
+    assert _statuses(result) == [(1, "drop_duplicates", "needs review"), (2, "normalize_labels", "applied")]
+    assert result.steps[1].args["mapping"] == {"accessories": "Accessories"}  # "electronics" is not in this file
+    cleaned = pd.read_csv(result.cleaned_path, index_col="row")
+    assert "accessories" not in set(cleaned["Category"]) and len(cleaned) == result.rows_in
+    assert {i["check"] for i in result.new_issues} == {"label_variant", "duplicates"}  # left for review
+    assert _hashes(read_only) == before  # nothing in the repository was changed
