@@ -69,7 +69,7 @@
 <div style="position:relative;border:6px solid oklch(0.5 0.15 150);background:#fff;padding:28px 44px;display:grid;grid-template-columns:minmax(0,1fr) 560px;gap:56px;align-items:center">
 <div style="position:absolute;right:-13px;bottom:-13px;width:20px;height:20px;background:oklch(0.5 0.15 150);border:3px solid #fff"></div>
 <div style="position:absolute;top:-38px;left:-6px;background:oklch(0.5 0.15 150);color:#fff;font-family:'IBM Plex Mono',monospace;font-size:22px;padding:4px 14px">Headline</div>
-<p style="margin:0;font-family:'IBM Plex Sans Condensed',sans-serif;font-weight:600;font-size:52px;line-height:1.12;text-wrap:pretty">An LLM agent that checks, fixes and asks before it answers gets <span style="color:oklch(0.45 0.15 150)">95.5%</span> of 200 unseen questions on messy tables right, against <span style="color:oklch(0.52 0.17 28)">46.5%</span> for a single LLM call, and never damaged a valid cell.</p>
+<p style="margin:0;font-family:'IBM Plex Sans Condensed',sans-serif;font-weight:600;font-size:52px;line-height:1.12;text-wrap:pretty">An LLM agent that checks, fixes and asks before it answers gets <span style="color:oklch(0.45 0.15 150)">95.5%</span> of 200 questions on messy tables right, against <span style="color:oklch(0.52 0.17 28)">46.5%</span> for a single LLM call, and never damaged a valid cell.</p>
 <div style="display:grid;grid-template-columns:1fr;border:2px solid oklch(0.8 0.01 250);font-family:'IBM Plex Mono',monospace">
 <div style="display:flex;justify-content:space-between;align-items:baseline;padding:12px 24px;border-bottom:2px solid oklch(0.8 0.01 250);background:oklch(0.95 0.04 150)"><span style="font-size:24px">DataSage</span><span style="font-size:64px;font-weight:600;color:oklch(0.42 0.14 150);line-height:1">95.5%</span></div>
 <div style="display:flex;justify-content:space-between;align-items:baseline;padding:12px 24px;border-bottom:2px solid oklch(0.8 0.01 250)"><span style="font-size:24px">Single LLM call</span><span style="font-size:64px;font-weight:600;color:oklch(0.5 0.17 28);line-height:1">46.5%</span></div>
@@ -206,7 +206,7 @@
 <td style="border:3px solid oklch(0.45 0.14 150);padding:0;position:relative"><div style="position:absolute;left:0;top:0;bottom:0;width:100%;background:oklch(0.88 0.08 150)"></div><div style="position:relative;padding:7px 16px">100%*</div></td>
 </tr>
 </table>
-<div style="font-size:26px;line-height:1.4;text-wrap:pretty">200 unseen questions on sales and penguin tables [3]; 40 hard ones on 343–1,935 rows. DataSage: 95% range 92.0–98.5 [6], <strong>0</strong> cells damaged. *With the grouping fix; 90% before.</div>
+<div style="font-size:26px;line-height:1.4;text-wrap:pretty">200 questions on sales and penguin tables [3]; 40 hard ones on 343–1,935 rows. DataSage: 95% range 92.0–98.5 [6], <strong>0</strong> cells damaged. *With the grouping fix; 90% before.</div>
 </div>
 <div style="display:flex;flex-direction:column;gap:18px">
 <table style="border-collapse:collapse;width:100%;background:#fff;font-family:'IBM Plex Mono',monospace;font-size:27px;line-height:1.2">
@@ -229,7 +229,7 @@
 <div style="display:flex;flex-direction:column;gap:0;border:2px solid oklch(0.8 0.01 250);background:#fff">
 <div style="display:grid;grid-template-columns:70px minmax(0,1fr);border-bottom:2px solid oklch(0.8 0.01 250)"><div style="font-family:'IBM Plex Mono',monospace;font-size:28px;color:oklch(0.42 0.14 150);padding:11px 0;text-align:center;border-right:2px solid oklch(0.8 0.01 250)">✓</div><div style="padding:11px 26px;font-size:30px;line-height:1.35">Approvals and full history carry the system.</div></div>
 <div style="display:grid;grid-template-columns:70px minmax(0,1fr);border-bottom:2px solid oklch(0.8 0.01 250)"><div style="font-family:'IBM Plex Mono',monospace;font-size:28px;color:oklch(0.42 0.14 150);padding:11px 0;text-align:center;border-right:2px solid oklch(0.8 0.01 250)">✓</div><div style="padding:11px 26px;font-size:30px;line-height:1.35">It holds on bigger tables.</div></div>
-<div style="display:grid;grid-template-columns:70px minmax(0,1fr);border-bottom:2px solid oklch(0.8 0.01 250)"><div style="font-family:'IBM Plex Mono',monospace;font-size:28px;color:oklch(0.42 0.14 150);padding:11px 0;text-align:center;border-right:2px solid oklch(0.8 0.01 250)">✓</div><div style="padding:11px 26px;font-size:30px;line-height:1.35">Across 41 models, the agent design adds a median 20 points over a single call.</div></div>
+<div style="display:grid;grid-template-columns:70px minmax(0,1fr);border-bottom:2px solid oklch(0.8 0.01 250)"><div style="font-family:'IBM Plex Mono',monospace;font-size:28px;color:oklch(0.42 0.14 150);padding:11px 0;text-align:center;border-right:2px solid oklch(0.8 0.01 250)">✓</div><div style="padding:11px 26px;font-size:30px;line-height:1.35">Across 32 models, the agent design adds a median 19 points over a single call.</div></div>
 <div style="display:grid;grid-template-columns:70px minmax(0,1fr)"><div style="font-family:'IBM Plex Mono',monospace;font-size:28px;color:oklch(0.42 0.11 70);padding:11px 0;text-align:center;border-right:2px solid oklch(0.8 0.01 250)">!</div><div style="padding:11px 26px;font-size:30px;line-height:1.35">Main limitation: rule-breaking rows in columns the question doesn't use.</div></div>
 </div>
 </div>

@@ -23,7 +23,7 @@ Where each number comes from:
 |---|---|
 | 95.5% of 200 questions, the 95% range 92.0–98.5, B0/B1/B2 on 200, every ablation row | `eval/results/study_scale_ablations.json`, `docs/final/findings_scale_and_ablations.md` |
 | 40 hard questions: B1 10%, B2 55%, DataSage 100% with the grouping fix (90% before) | `eval/results/summary.md` (`sales-hard`, `penguins-hard`), `eval/results/fix_groupby/`, `docs/final/findings_hard.md` sections 3 and 10 |
-| 41 models, a median 20 points over a single call | `eval/results/study_models.json`, `docs/final/findings_models.md` |
+| 32 models (of 41) with a single-call comparison, a median 19 points (19.4) over a single call | `eval/results/study_models.json`, `docs/final/findings_models.md` |
 | Example table and its answers (raw: 4 groups; cleaned: Electronics 2,245, Accessories 830) | `baseline/examples/messy_sales.csv` with `examples/messy_sales_rules.json` |
 
 ## Changing it
