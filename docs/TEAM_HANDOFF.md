@@ -10,8 +10,14 @@ and PR authorship, so **each task should end in its own merged PR** under your o
 
 | Task | Status |
 |---|---|
-| A3 poster check (Arsha) | Open: check the redesigned poster and sign off to Shrey by Nov 22; Shrey submits Nov 23, 2 PM |
-| A1 ratings, A2 acceptance test (Arsha) | Not on `main` yet (`docs/final/ratings.md`, `docs/final/acceptance_test.md`) |
+| A1 ratings, A2 acceptance test (Arsha) | Not on `main` yet (`docs/final/ratings.md`, `docs/final/acceptance_test.md`). A2 due Nov 25 |
+| Demo Day plan (Shrey) | `docs/final/demo_script.md`, by Nov 30 |
+
+**Done on November 23:** the poster is submitted on Canvas. Arsha's check (A3, PR #47) found two claims
+that did not match the results; both were fixed in PR #49 before submitting ("Across 32 models … a median
+19 points"; "200 questions", no longer "unseen"). Arsha also added tests that check the frozen results,
+demo replay and report view still match their code (PR #48), and Ritik noted the later owner changes in
+the Oct 28 meeting notes (PR #46).
 
 **For the final report (found by V2, `docs/final/real_files.md`):**
 
@@ -34,10 +40,10 @@ and PR authorship, so **each task should end in its own merged PR** under your o
   10 row ids); extra tool arguments no longer fail a call; the coverage check now also requires the
   metric's formula check. A no-regression re-run on held-out and test after these changes gave 74/80,
   the same as recorded.
-- **Testing:** 112 unit tests run on GitHub for every PR (CI). `python scripts/smoke_e2e.py` is an
+- **Testing:** 191 unit tests run on GitHub for every PR (CI). `python scripts/smoke_e2e.py` is an
   end-to-end check with the real model (123 checks, a few minutes). There is also a Dockerfile.
 - **Research studies, all merged** (write-ups in `docs/final/findings_*.md`, charts on the app's `/results` page):
-  - *Scale and ablations* (`findings_scale_and_ablations.md`): 95.5% of 200 unseen questions (95% range 92.0 to
+  - *Scale and ablations* (`findings_scale_and_ablations.md`): 95.5% of 200 questions (95% range 92.0 to
     98.5; 4 runs between 94.0% and 96.0%), against 49.0% for B1 and 46.5% for B2. Turning parts off: no approvals
     12.0%, short memory 86.0%, no coverage check 91.5%; the validator and the merge rule showed no clear effect.
   - *Hard benchmark* (`findings_hard.md`): tables of 343 to 1,935 rows. DataSage 30B 90.0% (seed 404: 85.0%),
@@ -46,8 +52,8 @@ and PR authorship, so **each task should end in its own merged PR** under your o
   - *Auto mode* (`findings_auto_mode.md`): 113/120 right against 114/120 with a careful approver. Auto now
     pauses and asks before dropping rows that are blank only in the risky column.
   - *Model comparison* (`findings_models.md`): 41 models fully run as the planner. The 30B default ranks 4th
-    (93.8%) and is among the fastest; with DataSage around it a model answers a median 20 points more than
-    in one call. No model damaged clean data; the weakest fail on tool-call format.
+    (93.8%) and is among the fastest. For the 32 models with a complete single-call comparison, DataSage
+    answers a median 19 points (19.4) more than one call. No model damaged clean data; the weakest fail on tool-call format.
 - **Decided at the Nov 20 review** (`docs/meetings/2026-11-20-review.md`): keep checking only the question's columns, keep the recorded results, keep the 30B default. Background: 36 of the 39 misses over 4 runs of the 200 questions are rows breaking a
   rule in a column the question does not use (60.9% right on those questions, 99.6% on the rest), which
   is the question-columns-only scope Vyshanth chose. On the hard split, every Qwen miss came from
@@ -60,7 +66,7 @@ and PR authorship, so **each task should end in its own merged PR** under your o
 |---|---|
 | Nov 16 to 20 | Vyshanth rates 10 DataSage reports (ratings week) |
 | **Nov 20, 2:00 PM MST, Zoom** | Review with Vyshanth |
-| **Nov 23, 2:00 PM (hard)** | Poster PDF due on Canvas (24 × 36 in portrait, `Group25_Poster.pdf`). No printing if late |
+| ~~Nov 23, 2:00 PM~~ | Poster PDF submitted on Canvas (Nov 23, after the fixes in PR #49) |
 | Nov 27 | All code PRs open, so there is time to merge and re-run before the final report |
 | **Dec 2, class time** | Poster session in person. Everyone attends |
 | TBD (check Canvas) | Final report |
@@ -75,7 +81,7 @@ and PR authorship, so **each task should end in its own merged PR** under your o
 | All results | `eval/results/summary.md`; final system is `datasage-m3` |
 | Report view (Arsha) and recipe format (Ritik) | `app/report_view.py`, `app/preview_report.py`, `datasage/recipes.py` |
 | Item 7 design note | `docs/design/item7_recipes_ui.md` |
-| Poster (print-ready PDF and source) | `docs/final/poster/`: `poster.html` is the source (redesigned Nov 18 from a Claude Design export), `Group25_Poster.pdf` the export; the README lists the source of every number. The earlier version is in `previous/`. |
+| Poster (print-ready PDF and source) | `docs/final/poster/`: `poster.html` is the source (redesigned Nov 18 from a Claude Design export), `Group25_Poster.pdf` the submitted export; the README lists the source of every number, and `docs/final/checks/poster_verification.md` records Arsha's check. The earlier version is in `previous/`. |
 | Demo run with the 30B default | `docs/final/demo/` (13 s, same answer as the Milestone 2 demo) |
 | Hosted app (Vercel) | https://cse598-group25-datasage.vercel.app, from `app/web/hosted.py`; redeploys on every merge to `main` |
 | Browser app (item 7 page) | `app/web/`; run `python -m app.web.server` and open http://127.0.0.1:8501 (README, "Run DataSage in the browser") |
@@ -103,11 +109,12 @@ Every task ends in a PR into `main`. Put a short note of what you did in `docs/t
 
 ### Arsha
 
+A3 poster check is done (PR #47); the frozen-results tests are merged too (PR #48). Two tasks remain:
+
 | # | Task | Done when | Due |
 |---|---|---|---|
 | A1 | **Ratings packet (item 6).** Run DataSage on 10 questions (the browser app in *Ask me* mode is easiest; each run's report has a View and Download button): Vyshanth's two files plus questions from the held-out tables. Send him the 10 `report.md` files and a short form (correct? clear? would you trust it? each 1 to 5, plus a comment). Collect his answers. | His ratings are summarised in `docs/final/ratings.md` (scores and quotes, no copy of his files). | Send Nov 17, collect Nov 20 |
 | A2 | **Acceptance test (item 6).** 3 files (Vyshanth's two plus one test-split table), each with questions and expected answers. Pass = at least 90% correct and no valid cell changed. | `docs/final/acceptance_test.md` with the command, each question, expected and actual answer, pass or fail. | Nov 25 |
-| A3 | **Poster check.** The poster was redesigned on Nov 18 (`docs/final/poster/Group25_Poster.pdf`; the earlier version is in `previous/`). Check every number on it against the sources listed in `docs/final/poster/README.md`, including the example table's answers and the six references. Collect team edits, make them in `poster.html`, re-export (steps in `docs/final/poster/README.md`) and check it is still one 24 × 36 in page. Then message Shrey "poster verified". **Shrey submits it on Canvas.** | Your sign-off to Shrey, and a PR with any corrections. | Sign off by Nov 22 |
 
 ### Ritik
 
@@ -123,7 +130,7 @@ No open tasks: V1 (PR #35) and V2 (PR #36) are done.
 
 ### Shrey
 
-Owns the browser app (`app/web/`), the research studies (`docs/final/findings_*.md`), **submits the poster on Canvas** after Arsha's sign-off (by Nov 23, 2 PM), and the Demo Day plan (a 3-minute walk-through for the poster session plus a backup screen recording, in `docs/final/demo_script.md`, by Nov 30). Also reviews and merges every PR and assembles the final report. Each of you writes the final-report paragraph for your own tasks.
+Owns the browser app (`app/web/`), the research studies (`docs/final/findings_*.md`), and the Demo Day plan (a 3-minute walk-through for the poster session plus a backup screen recording, in `docs/final/demo_script.md`, by Nov 30). Also reviews and merges every PR and assembles the final report. Each of you writes the final-report paragraph for your own tasks.
 
 ## Setup (about 5 minutes)
 
@@ -135,7 +142,7 @@ cd cse598-group25-datasage
 python3 -m venv .venv
 source .venv/bin/activate
 pip install -r requirements.txt
-python -m pytest -q tests                          # 112 tests, no API key needed
+python -m pytest -q tests                          # 191 tests, no API key needed
 python -m eval.summarize                           # prints the results tables
 python -m app.web.server                           # the browser app at http://127.0.0.1:8501 (needs the key)
 ```
