@@ -243,7 +243,9 @@ def auto_needs_person(tool: str, preview: dict, session) -> str | None:
     """
     if tool == "parse_dates" and preview.get("ambiguous_dates"):
         return "Auto paused: these dates have more than one valid interpretation. Confirm the proposed date order."
-    if tool not in ("exclude_rows", "exclude_where") or session is None:
+    if tool != "exclude_rows" or session is None:
+        # exclude_where removes only rows outside a range rule, so every row it drops breaks a rule. Its rows
+        # cannot be matched to recorded findings anyway: a check lists at most 10 row ids, the fix can drop more.
         return None
     rows = [int(r) for r in (preview.get("rows_removed") or [])]
     weak = []

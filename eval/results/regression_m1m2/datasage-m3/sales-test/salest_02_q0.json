@@ -1,0 +1,228 @@
+{
+  "task_id": "salest_02_q0",
+  "analysis_correct": true,
+  "completed": true,
+  "detect_tp": 6,
+  "detect_fp": 1,
+  "detect_fn": 0,
+  "tool_calls": 16,
+  "tool_errors": 0,
+  "recovered_errors": 0,
+  "approvals_asked": 5,
+  "seconds": 25.74,
+  "tokens": 87435,
+  "stop_reason": "finish",
+  "note": "",
+  "answer": {
+    "Accessories": 32.5,
+    "Electronics": 275.7143,
+    "Furniture": 191.0526,
+    "Office Supplies": 11.3684
+  },
+  "extra": {
+    "final_summary": "The average unit price by category is: Accessories: $32.50, Electronics: $275.71, Furniture: $191.05, Office Supplies: $11.37. Problems found and fixed: 1 duplicate row (row 5) removed; two misspelled category labels ('Furnture', 'Office Suplies') corrected; three whitespace variants in Region (' West', ' South', 'West ') normalized; two missing Region values set to missing; three negative Quantity values (rows 1, 34, 51) excluded as they violate the rule that Quantity must be \u22651; one incorrect Revenue value (row 64) corrected using the formula Quantity * Price. All data used in the analysis is now clean and consistent with the rules.",
+    "changes": [
+      {
+        "version": 1,
+        "tool": "drop_duplicates",
+        "args": {
+          "reason": "Found one exact duplicate row (row 5) that is a copy of row 0; removing the duplicate to avoid double-counting."
+        },
+        "reason": "Found one exact duplicate row (row 5) that is a copy of row 0; removing the duplicate to avoid double-counting.",
+        "risk": "medium",
+        "approval": "approved",
+        "rows_removed": [
+          5
+        ],
+        "cells_changed": 0,
+        "summary": "removed 1 exact duplicate row(s)",
+        "code": "df = df.drop_duplicates(keep='first')",
+        "cell_changes": []
+      },
+      {
+        "version": 2,
+        "tool": "normalize_labels",
+        "args": {
+          "column": "Category",
+          "mapping": {
+            "Furnture": "Furniture",
+            "Office Suplies": "Office Supplies"
+          },
+          "reason": "Corrected misspellings: 'Furnture' to 'Furniture' and 'Office Suplies' to 'Office Supplies' to match the allowed values in the rules."
+        },
+        "reason": "Corrected misspellings: 'Furnture' to 'Furniture' and 'Office Suplies' to 'Office Supplies' to match the allowed values in the rules.",
+        "risk": "high",
+        "approval": "approved",
+        "rows_removed": [],
+        "cells_changed": 2,
+        "summary": "Category: merged 2 label variant(s), 2 cells",
+        "code": "df['Category'] = df['Category'].replace({'Furnture': 'Furniture', 'Office Suplies': 'Office Supplies'})",
+        "cell_changes": []
+      },
+      {
+        "version": 3,
+        "tool": "normalize_labels",
+        "args": {
+          "column": "Region",
+          "mapping": {
+            " South": "South",
+            " West": "West",
+            "West ": "West"
+          },
+          "reason": "Corrected whitespace variants in Region: ' West' \u2192 'West', ' South' \u2192 'South', 'West ' \u2192 'West' to match the allowed values in the rules."
+        },
+        "reason": "Corrected whitespace variants in Region: ' West' \u2192 'West', ' South' \u2192 'South', 'West ' \u2192 'West' to match the allowed values in the rules.",
+        "risk": "low",
+        "approval": "auto",
+        "rows_removed": [],
+        "cells_changed": 3,
+        "summary": "Region: merged 3 label variant(s), 3 cells",
+        "code": "df['Region'] = df['Region'].replace({' South': 'South', ' West': 'West', 'West ': 'West'})",
+        "cell_changes": []
+      },
+      {
+        "version": 4,
+        "tool": "set_missing",
+        "args": {
+          "column": "Region",
+          "rows": [
+            0,
+            24
+          ],
+          "reason": "Region is missing for two rows; marking as missing since no valid value can be inferred."
+        },
+        "reason": "Region is missing for two rows; marking as missing since no valid value can be inferred.",
+        "risk": "high",
+        "approval": "approved",
+        "rows_removed": [],
+        "cells_changed": 0,
+        "summary": "Region: set 2 value(s) to missing",
+        "code": "df.loc[[0, 24], 'Region'] = pd.NA",
+        "cell_changes": []
+      },
+      {
+        "version": 5,
+        "tool": "exclude_rows",
+        "args": {
+          "rows": [
+            1,
+            34,
+            51
+          ],
+          "reason": "Quantity is negative in these rows (e.g., -8, -6, -2), but rules require Quantity to be at least 1. These are likely refunds or errors and should be excluded from the average unit price calculation."
+        },
+        "reason": "Quantity is negative in these rows (e.g., -8, -6, -2), but rules require Quantity to be at least 1. These are likely refunds or errors and should be excluded from the average unit price calculation.",
+        "risk": "high",
+        "approval": "approved",
+        "rows_removed": [
+          1,
+          34,
+          51
+        ],
+        "cells_changed": 0,
+        "summary": "excluded 3 row(s): [1, 34, 51]",
+        "code": "df = df.drop(index=[1, 34, 51])",
+        "cell_changes": []
+      },
+      {
+        "version": 6,
+        "tool": "recompute_column",
+        "args": {
+          "column": "Revenue",
+          "expression": "Quantity * Price",
+          "rows": [
+            64
+          ],
+          "reason": "Revenue is incorrect in row 64: it should be Quantity (15) * Price (500) = 7500, but it is recorded as 7505. Correcting this to match the formula."
+        },
+        "reason": "Revenue is incorrect in row 64: it should be Quantity (15) * Price (500) = 7500, but it is recorded as 7505. Correcting this to match the formula.",
+        "risk": "high",
+        "approval": "approved",
+        "rows_removed": [],
+        "cells_changed": 1,
+        "summary": "Revenue: recomputed as Quantity * Price on 1 row(s)",
+        "code": "df.loc[[64], 'Revenue'] = pd.Series([75.0], index=[64])  # Revenue = Quantity * Price",
+        "cell_changes": []
+      }
+    ],
+    "rejected": [],
+    "oracle_decisions": [
+      {
+        "tool": "drop_duplicates",
+        "risk": "medium",
+        "approved": true,
+        "why": "moves data toward the reference"
+      },
+      {
+        "tool": "normalize_labels",
+        "risk": "high",
+        "approved": true,
+        "why": "moves data toward the reference"
+      },
+      {
+        "tool": "set_missing",
+        "risk": "high",
+        "approved": true,
+        "why": "moves data toward the reference"
+      },
+      {
+        "tool": "exclude_rows",
+        "risk": "high",
+        "approved": true,
+        "why": "moves data toward the reference"
+      },
+      {
+        "tool": "recompute_column",
+        "risk": "high",
+        "approved": true,
+        "why": "moves data toward the reference"
+      }
+    ],
+    "coverage_refusals": 0,
+    "model_turns": 16
+  },
+  "corrections": 12,
+  "planted": 12,
+  "damaged_rows": 0,
+  "damaged_cells": 0,
+  "cleaned_available": true,
+  "system": "datasage-m3",
+  "dataset": "sales-test",
+  "question": "What is the average unit price in each category?",
+  "reference_answer": {
+    "Accessories": 32.5,
+    "Electronics": 275.7143,
+    "Furniture": 191.0526,
+    "Office Supplies": 11.3684
+  },
+  "issues_reported": [
+    [
+      "cross_column",
+      "Revenue"
+    ],
+    [
+      "duplicates",
+      "*"
+    ],
+    [
+      "label_variant",
+      "Category"
+    ],
+    [
+      "label_variant",
+      "Region"
+    ],
+    [
+      "missing",
+      "Region"
+    ],
+    [
+      "negative",
+      "Quantity"
+    ],
+    [
+      "out_of_range",
+      "Quantity"
+    ]
+  ]
+}

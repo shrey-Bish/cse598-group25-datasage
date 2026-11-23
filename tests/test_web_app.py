@@ -357,3 +357,26 @@ def test_auto_pauses_before_dropping_rows_that_are_only_blank(tmp_path):
     worker.join(2)
     assert answers == [False]
     assert BrowserApprover(run).decide("exclude_rows", {"rows": [3]}, "high", {"summary": "", "rows_removed": [3]}) is True
+
+
+def test_auto_does_not_pause_exclude_where_beyond_the_listed_rows():
+    """A range check lists only 10 row ids; exclude_where may drop more. Those rows still break the rule."""
+    import json as _json
+    from datasage.session import load_table
+    df = load_table(Path("examples/demo/inventory.csv"))
+    rules = _json.loads(Path("examples/demo/inventory_rules.json").read_text())
+    session = Session(df, "inventory.csv", "q", rules)
+    seen = []
+
+    class Capture:
+        name = "capture"
+
+        def decide(self, tool, args, risk, preview):
+            seen.append((len(preview.get("rows_removed") or []), runner.auto_needs_person(tool, preview, session)))
+            return True
+
+    d = Dispatcher(session, Capture())
+    d.call("check_out_of_range", _json.dumps({"column": "Units", "minimum": 0, "maximum": None}))
+    d.call("exclude_where", _json.dumps({"column": "Units", "minimum": 0, "reason": "negative units"}))
+    assert seen == [(18, None)]
+

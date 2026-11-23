@@ -156,7 +156,9 @@ model is not deterministic, so small differences between the two systems can com
 ## Follow-up (done)
 
 The recommendation is now built into the app's Auto mode (`auto_needs_person` in `app/web/runner.py`): a row
-drop (`exclude_rows` or `exclude_where`) is not auto-approved when any dropped row has no recorded problem or
-only blank or unreadable values (missing, invalid date). Auto pauses, says why on the card, and waits for
+drop by row id (`exclude_rows`) is not auto-approved when any dropped row has no recorded problem or
+only blank or unreadable values (missing, invalid date). `exclude_where` is not paused: it removes only rows
+outside a range rule, so every row it drops breaks a rule (until Nov 22 it was paused too, which wrongly
+stopped Auto whenever it dropped more rows than the check had listed, see `docs/final/regression_check.md`). Auto pauses, says why on the card, and waits for
 Keep or Apply. Rows that break a rule (negative, out of range, formula mismatch) are still dropped at once.
 This would have stopped the one bad auto-approval found above (`salest_00_q1`).

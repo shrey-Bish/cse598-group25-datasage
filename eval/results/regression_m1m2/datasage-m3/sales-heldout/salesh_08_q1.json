@@ -1,0 +1,179 @@
+{
+  "task_id": "salesh_08_q1",
+  "analysis_correct": true,
+  "completed": true,
+  "detect_tp": 4,
+  "detect_fp": 0,
+  "detect_fn": 0,
+  "tool_calls": 14,
+  "tool_errors": 0,
+  "recovered_errors": 0,
+  "approvals_asked": 3,
+  "seconds": 19.86,
+  "tokens": 74216,
+  "stop_reason": "finish",
+  "note": "",
+  "answer": {
+    "2026-01": 6680.0,
+    "2026-02": 4424.0,
+    "2026-03": 7202.0,
+    "2026-04": 5260.0,
+    "2026-05": 14196.0,
+    "2026-06": 3640.0
+  },
+  "extra": {
+    "final_summary": "The data had several issues that were resolved: 1 exact duplicate row (row 23) was removed; 'Furnture' in the Category column was corrected to 'Furniture'; whitespace variants in the Region column (' East ', ' West ', ' North ') were normalized; and the missing Region value in row 47 was marked as missing. All dates were in valid ISO format and required no change. The Revenue column was verified to match Quantity \u00d7 Price, so no recalculation was needed. The total revenue per month was then calculated using the cleaned data. The final result shows monthly revenue from January to June 2026.",
+    "changes": [
+      {
+        "version": 1,
+        "tool": "drop_duplicates",
+        "args": {
+          "reason": "Found one exact duplicate row (row 23), which is likely a data entry error. Removing it to avoid double-counting in analysis."
+        },
+        "reason": "Found one exact duplicate row (row 23), which is likely a data entry error. Removing it to avoid double-counting in analysis.",
+        "risk": "medium",
+        "approval": "approved",
+        "rows_removed": [
+          23
+        ],
+        "cells_changed": 0,
+        "summary": "removed 1 exact duplicate row(s)",
+        "code": "df = df.drop_duplicates(keep='first')",
+        "cell_changes": []
+      },
+      {
+        "version": 2,
+        "tool": "normalize_labels",
+        "args": {
+          "column": "Category",
+          "mapping": {
+            "Furnture": "Furniture"
+          },
+          "reason": "Row 36 and 38 have 'Furnture' which is a misspelling of 'Furniture'. This is a valid label variant and should be merged into the correct category."
+        },
+        "reason": "Row 36 and 38 have 'Furnture' which is a misspelling of 'Furniture'. This is a valid label variant and should be merged into the correct category.",
+        "risk": "high",
+        "approval": "approved",
+        "rows_removed": [],
+        "cells_changed": 2,
+        "summary": "Category: merged 1 label variant(s), 2 cells",
+        "code": "df['Category'] = df['Category'].replace({'Furnture': 'Furniture'})",
+        "cell_changes": []
+      },
+      {
+        "version": 3,
+        "tool": "normalize_labels",
+        "args": {
+          "column": "Region",
+          "mapping": {
+            " North": "North",
+            "East ": "East",
+            "West ": "West"
+          },
+          "reason": "Rows 26, 28, and 31 have extra spaces in the Region field (e.g., 'East ', 'West ', ' North'). These are case and space variants of valid region labels and should be normalized."
+        },
+        "reason": "Rows 26, 28, and 31 have extra spaces in the Region field (e.g., 'East ', 'West ', ' North'). These are case and space variants of valid region labels and should be normalized.",
+        "risk": "low",
+        "approval": "auto",
+        "rows_removed": [],
+        "cells_changed": 3,
+        "summary": "Region: merged 3 label variant(s), 3 cells",
+        "code": "df['Region'] = df['Region'].replace({' North': 'North', 'East ': 'East', 'West ': 'West'})",
+        "cell_changes": []
+      },
+      {
+        "version": 4,
+        "tool": "set_missing",
+        "args": {
+          "column": "Region",
+          "rows": [
+            47
+          ],
+          "reason": "Row 47 has a missing Region value. This is a valid row otherwise, so we mark it as missing rather than excluding it."
+        },
+        "reason": "Row 47 has a missing Region value. This is a valid row otherwise, so we mark it as missing rather than excluding it.",
+        "risk": "high",
+        "approval": "approved",
+        "rows_removed": [],
+        "cells_changed": 0,
+        "summary": "Region: set 1 value(s) to missing",
+        "code": "df.loc[[47], 'Region'] = pd.NA",
+        "cell_changes": []
+      },
+      {
+        "version": 5,
+        "tool": "parse_dates",
+        "args": {
+          "column": "Date",
+          "reason": "All dates are in ISO format (YYYY-MM-DD), so they can be safely normalized without ambiguity.",
+          "date_order": null
+        },
+        "reason": "All dates are in ISO format (YYYY-MM-DD), so they can be safely normalized without ambiguity.",
+        "risk": "low",
+        "approval": "auto",
+        "rows_removed": [],
+        "cells_changed": 0,
+        "summary": "Date: converted 0 date(s), 0 invalid date(s) set to missing; 0 ambiguous date(s) left unchanged",
+        "code": "df['Date'] = df['Date'].astype(object)",
+        "cell_changes": []
+      }
+    ],
+    "rejected": [],
+    "oracle_decisions": [
+      {
+        "tool": "drop_duplicates",
+        "risk": "medium",
+        "approved": true,
+        "why": "moves data toward the reference"
+      },
+      {
+        "tool": "normalize_labels",
+        "risk": "high",
+        "approved": true,
+        "why": "moves data toward the reference"
+      },
+      {
+        "tool": "set_missing",
+        "risk": "high",
+        "approved": true,
+        "why": "moves data toward the reference"
+      }
+    ],
+    "coverage_refusals": 0,
+    "model_turns": 14
+  },
+  "corrections": 7,
+  "planted": 7,
+  "damaged_rows": 0,
+  "damaged_cells": 0,
+  "cleaned_available": true,
+  "system": "datasage-m3",
+  "dataset": "sales-heldout",
+  "question": "What is the total revenue per month?",
+  "reference_answer": {
+    "2026-01": 6680.0,
+    "2026-02": 4424.0,
+    "2026-03": 7202.0,
+    "2026-04": 5260.0,
+    "2026-05": 14196.0,
+    "2026-06": 3640.0
+  },
+  "issues_reported": [
+    [
+      "duplicates",
+      "*"
+    ],
+    [
+      "label_variant",
+      "Category"
+    ],
+    [
+      "label_variant",
+      "Region"
+    ],
+    [
+      "missing",
+      "Region"
+    ]
+  ]
+}
