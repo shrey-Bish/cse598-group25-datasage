@@ -88,3 +88,19 @@ python -m pytest -q tests/test_frozen_artifacts.py
 **Before pulling:** only a new test file and this entry; no code changes. On Windows the first test is slow
 when the 9,557 result files it reads are not in the file cache (25 s or more); with a warm cache the
 whole file takes about 8 s.
+
+### 2026-11-23: Acceptance test (A2)
+
+**Acceptance test** (branch `arsha/acceptance-test`)
+- New `docs/final/acceptance_test.md`. DataSage (the 30B default) answered 12 questions on three files:
+  - Vyshanth's fictional procurement ledger (P1–P5);
+  - his fictional support register (S1–S5);
+  - the test-split table `sales-test/salest_00` (T1–T2).
+- Result: **PASS**, with 12 of 12 answers correct, 0 valid cells changed and 0 valid rows lost.
+- New `docs/final/checks/acceptance/procurement_ledger/` and `.../support_register/`: the two input files
+  and their rules, published as synthetic data with Vyshanth's permission. His answer keys and reference
+  tables are not committed.
+- Approvals followed a decision policy, written from his business rules and the table's `rules.json`
+  before any run. I approved it. Every decision is listed in the doc.
+
+**Before pulling:** documentation and data files only; no code changes.

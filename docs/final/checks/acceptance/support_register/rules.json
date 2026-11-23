@@ -1,0 +1,33 @@
+{
+  "TicketID": {
+    "description": "One row is one resolved support ticket."
+  },
+  "OpenedDate": {
+    "format": "YYYY-MM-DD"
+  },
+  "Team": {
+    "allowed": [
+      "Accounts",
+      "Applications",
+      "Operations"
+    ]
+  },
+  "Priority": {
+    "allowed": [
+      "High",
+      "Normal",
+      "Low"
+    ]
+  },
+  "Channel": {
+    "allowed": [
+      "Email",
+      "Phone",
+      "Portal"
+    ]
+  },
+  "ResolutionMinutes": {
+    "min": 0,
+    "description": "Elapsed resolution time in minutes."
+  }
+}

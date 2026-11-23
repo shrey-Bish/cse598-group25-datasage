@@ -1,0 +1,40 @@
+{
+  "OrderID": {
+    "description": "One row is one purchase order line; IDs identify distinct lines."
+  },
+  "OrderDate": {
+    "format": "YYYY-MM-DD"
+  },
+  "Department": {
+    "allowed": [
+      "Facilities",
+      "Finance",
+      "Research",
+      "Technology"
+    ]
+  },
+  "Supplier": {
+    "allowed": [
+      "Cedar Office",
+      "Mesa Equipment",
+      "Valley Components"
+    ]
+  },
+  "ItemCategory": {
+    "allowed": [
+      "Consumables",
+      "Equipment",
+      "Office Supplies"
+    ]
+  },
+  "Quantity": {
+    "min": 1
+  },
+  "UnitCost": {
+    "min": 0
+  },
+  "LineTotal": {
+    "min": 0,
+    "formula": "LineTotal = Quantity * UnitCost"
+  }
+}
