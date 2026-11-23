@@ -22,9 +22,11 @@ from typing import NamedTuple
 
 import pandas as pd
 
+from . import checks as _ds_checks
 from . import fixes as _ds_fixes
 from . import session as _ds_session
 from . import tools as _ds_tools
+from . import validator as _ds_validator
 
 RECIPE_VERSION = 1
 
@@ -66,6 +68,39 @@ def _ds_fix_arg_names(fix: str) -> set[str]:
     """Arguments a fix takes, as the dispatcher filters a model's call, without "reason"."""
     model, _ = _ds_tools.FIX_TOOLS[fix]
     return set(model.model_fields) - {"reason"}
+
+
+def _ds_run_fix(fix: str, df: pd.DataFrame, args: dict):
+    """Dry run: the fix works on a copy and returns a FixResult; `df` is not changed."""
+    return _ds_fixes.FIXES[fix](df, **args)
+
+
+def _ds_risk_of(fix: str, args: dict, result) -> str:
+    return _ds_fixes.risk_of(fix, args, result)
+
+
+def _ds_validate(before: pd.DataFrame, fix: str, args: dict, result) -> dict:
+    return _ds_validator.validate(before, fix, args, result)
+
+
+def _ds_check_missing(df: pd.DataFrame, column: str) -> dict:
+    return _ds_checks.check_missing(df, column)
+
+
+def _ds_check_label_variants(df: pd.DataFrame, column: str) -> dict:
+    return _ds_checks.check_label_variants(df, column)
+
+
+def _ds_check_dates(df: pd.DataFrame, column: str) -> dict:
+    return _ds_checks.check_dates(df, column)
+
+
+def _ds_check_numeric(df: pd.DataFrame, column: str) -> dict:
+    return _ds_checks.check_numeric(df, column)
+
+
+def _ds_check_duplicates(df: pd.DataFrame) -> dict:
+    return _ds_checks.check_duplicates(df)
 
 
 @dataclass
@@ -393,3 +428,209 @@ def build_recipe(run_dir: str | Path, input_path: str | Path, rules_path: str | 
     steps = _steps(events, parse_changes(report_md))
     source, schema = describe_input(input_path)
     return Recipe(source=source, schema=schema, rules=rules, steps=steps)
+
+
+# Replaying a recipe on a new file
+
+APPLIED, NEEDS_REVIEW, NOT_NEEDED = "applied", "needs review", "not needed"
+
+# Why each non-portable fix is never replayed on a new file.
+_NOT_PORTABLE = {
+    "drop_duplicates": "it removes rows",
+    "exclude_rows": "it removes rows by row ids from the original file",
+    "exclude_where": "it removes rows by a range rule",
+    "set_missing": "it uses row ids from the original file",
+    "recompute_column": "it uses row ids from the original file",
+    "fill_missing": "it fills in values that were approved only for the original file",
+}
+
+
+@dataclass
+class StepOutcome:
+    step: int           # position in the recipe, from 1
+    fix: str
+    args: dict          # the arguments used here (normalize_labels keeps only labels present in this file)
+    recipe_risk: str    # risk in the run the recipe came from
+    risk: str | None    # risk on this file from risk_of after a dry run; None when the step was not dry-run
+    status: str         # APPLIED, NEEDS_REVIEW or NOT_NEEDED
+    detail: str
+
+
+@dataclass
+class ReplayResult:
+    input_name: str
+    input_sha256: str
+    rows_in: int
+    rows_out: int
+    schema: SchemaCheck
+    steps: list[StepOutcome]
+    new_issues: list[dict]   # {"check", "column", "count", "rows", "detail"} for each check that still finds something
+    cleaned_path: Path
+    report_path: Path
+
+    def with_status(self, status: str) -> list[StepOutcome]:
+        return [s for s in self.steps if s.status == status]
+
+
+def _changes_nothing(fix: str, df: pd.DataFrame, result) -> bool:
+    if result.rows_removed:
+        return False
+    if fix == "cast_numeric":  # cells_changed counts changed numbers, so "$5.00" -> 5.0 counts as none
+        return all(pd.api.types.is_numeric_dtype(df[c]) for c in result.touched_columns)
+    return result.cells_changed == 0
+
+
+def _replay_step(number: int, step: Step, df: pd.DataFrame) -> tuple[pd.DataFrame, StepOutcome]:
+    """Dry-run one step on `df`. Returns the table after the step (unchanged unless applied) and the outcome."""
+    def outcome(status, detail, args=step.args, risk=None):
+        return StepOutcome(number, step.fix, dict(args), step.risk, risk, status, detail)
+
+    if not (step.portable and step.fix in PORTABLE_FIXES):
+        why = _NOT_PORTABLE.get(step.fix, "it is not a column-wide fix")
+        return df, outcome(NEEDS_REVIEW, f"not replayed, because {why}; decide it on this file")
+
+    args = dict(step.args)
+    if step.fix == "normalize_labels":
+        column = args.get("column")
+        present = set(df[column].dropna().astype(str)) if column in df.columns else set()
+        mapping = {k: v for k, v in dict(args.get("mapping") or {}).items() if k in present}
+        if not mapping:
+            return df, outcome(NOT_NEEDED, f"none of the labels {sorted(args.get('mapping') or {})} appear in this file")
+        args["mapping"] = mapping
+    try:
+        result = _ds_run_fix(step.fix, df, args)
+    except (ValueError, KeyError, TypeError) as err:
+        return df, outcome(NEEDS_REVIEW, f"could not run on this file: {err}", args)
+    if _changes_nothing(step.fix, df, result):
+        return df, outcome(NOT_NEEDED, "nothing to change in this file", args)
+    risk = _ds_risk_of(step.fix, args, result)
+    if risk != "low":
+        return df, outcome(NEEDS_REVIEW, f"risk is {risk} on this file (it was {step.risk} in the original run): "
+                                         f"{result.summary}", args, risk)
+    verdict = _ds_validate(df, step.fix, args, result)
+    if not verdict["ok"]:
+        return df, outcome(NEEDS_REVIEW, f"the validator rejected it: {'; '.join(verdict['problems'])}", args, risk)
+    return result.df, outcome(APPLIED, result.summary, args, risk)
+
+
+def _issue(check: str, column: str, count: int, rows: list, detail: str) -> dict:
+    return {"check": check, "column": column, "count": int(count), "rows": list(rows), "detail": detail}
+
+
+def _new_issues(recipe: Recipe, df: pd.DataFrame) -> list[dict]:
+    """Re-run, on the replayed table, the checks for the columns the recipe's steps name.
+
+    Only checks that need no rules file run here: a recipe names its rules file but does not contain it,
+    so allowed labels, ranges and refunds are not checked.
+    """
+    columns: list[str] = []
+    for step in recipe.steps:
+        column = step.args.get("column")
+        if isinstance(column, str) and column in df.columns and column not in columns:
+            columns.append(column)
+    issues = []
+    for column in columns:
+        fixes_here = {s.fix for s in recipe.steps if s.args.get("column") == column}
+        found = _ds_check_missing(df, column)
+        if found["count"]:
+            issues.append(_issue("missing", column, found["count"], found["rows"], f"{found['count']} missing value(s)"))
+        if fixes_here & {"trim_whitespace", "normalize_labels"}:
+            found = _ds_check_label_variants(df, column)
+            if found["count"]:
+                issues.append(_issue("label_variant", column, found["count"], found["rows"],
+                                     f"case or space variants {found['case_or_space_variants']}, "
+                                     f"possible misspellings {found['possible_misspellings']}"))
+        if "parse_dates" in fixes_here:
+            found = _ds_check_dates(df, column)
+            if found["count"] or found["ambiguous_count"]:
+                issues.append(_issue("invalid_date", column, found["count"], found["rows"],
+                                     f"{found['count']} value(s) not in YYYY-MM-DD form, {found['ambiguous_count']} of "
+                                     f"them ambiguous; examples {found['examples']}"))
+        if "cast_numeric" in fixes_here:
+            found = _ds_check_numeric(df, column)
+            text, other = found["text_numbers"], found["not_numbers"]
+            if text["count"] or other["count"]:
+                issues.append(_issue("numeric", column, text["count"] + other["count"], text["rows"] + other["rows"],
+                                     f"{text['count']} number(s) stored as text, {other['count']} value(s) that are "
+                                     f"not numbers"))
+    if any(s.fix == "drop_duplicates" for s in recipe.steps):
+        found = _ds_check_duplicates(df)
+        if found["count"]:
+            issues.append(_issue("duplicates", "*", found["count"], found["rows"], f"{found['count']} exact duplicate row(s)"))
+    return issues
+
+
+def _cell(value) -> str:
+    return str(value).replace("|", "\\|").replace("\n", " ")
+
+
+def _replay_report(recipe: Recipe, result: ReplayResult) -> str:
+    rules = f"`{recipe.rules.name}`" if recipe.rules else "none"
+    out = ["# Recipe replay", "",
+           f"- Recipe built from: `{recipe.source.name}` (rules file: {rules}), created {recipe.created_at}",
+           f"- Input: `{result.input_name}`, {result.rows_in} rows, SHA-256 `{result.input_sha256}`. "
+           f"The input file is only read; it is not changed.",
+           f"- Output: `{result.cleaned_path.name}`, {result.rows_out} rows. Row ids are the input's 0-based row "
+           f"positions.", "", "## Schema check", ""]
+    warnings_ = result.schema.warnings()
+    out += ["Every recipe column is present."] + ([""] + [f"- Warning: {w}" for w in warnings_] if warnings_ else [])
+    out += ["", "## Steps", "",
+            "| Step | Fix | Arguments | Risk in the run | Risk here | Result | Details |", "|---|---|---|---|---|---|---|"]
+    for s in result.steps:
+        out.append(f"| {s.step} | {s.fix} | `{_cell(json.dumps(s.args, ensure_ascii=False))}` | {s.recipe_risk} | "
+                   f"{s.risk or '-'} | {s.status} | {_cell(s.detail)} |")
+    review = result.with_status(NEEDS_REVIEW)
+    out += ["", "## Needs review", ""]
+    if review:
+        out += ["These steps were not applied. Decide them on this file, for example in a DataSage run.", ""]
+        out += [f"- Step {s.step}, {s.fix}: {s.detail}" for s in review]
+    else:
+        out.append("Nothing: every step was applied or not needed.")
+    out += ["", "## Issues left after the replay", ""]
+    if result.new_issues:
+        out += ["| Check | Column | Count | Rows (first 10) | Details |", "|---|---|---:|---|---|"]
+        out += [f"| {i['check']} | {_cell(i['column'])} | {i['count']} | {i['rows']} | {_cell(i['detail'])} |"
+                for i in result.new_issues]
+    else:
+        out.append("The re-run checks found nothing on the recipe's columns.")
+    out += ["", "Checks that need the rules file (allowed labels, ranges, refunds) are not re-run: a recipe names its "
+                "rules file but does not contain it.", ""]
+    return "\n".join(out)
+
+
+def apply_recipe(recipe: Recipe | str | Path, input_path: str | Path, out_dir: str | Path) -> ReplayResult:
+    """Replay a recipe on a new file with the same columns, without the model.
+
+    The file is read with load_table and never changed. A missing recipe column stops the replay
+    (RecipeError) before anything is written. Portable steps run in order: each is dry-run on the new
+    file, its risk is recomputed with risk_of, and only a low-risk step that the validator accepts is
+    applied. Medium- and high-risk steps and all non-portable steps go to "needs review". The checks for
+    the recipe's columns are then re-run. Writes cleaned.csv and recipe_run.md to out_dir.
+    """
+    if not isinstance(recipe, Recipe):
+        recipe = load_recipe(recipe)
+    input_path, out_dir = Path(input_path), Path(out_dir)
+    if not input_path.is_file():
+        raise RecipeError(f"input file {input_path} not found")
+    cleaned_path, report_path = out_dir / "cleaned.csv", out_dir / "recipe_run.md"
+    if input_path.resolve() in (cleaned_path.resolve(), report_path.resolve()):
+        raise RecipeError(f"writing to {out_dir} would overwrite the input file; choose another folder")
+
+    sha = file_sha256(input_path)
+    df = _ds_load_table(input_path)
+    schema = check_schema(recipe, df)
+    if not schema.ok:
+        raise RecipeError(f"'{input_path.name}' lacks the recipe's column(s) {', '.join(schema.missing)}; "
+                          f"the recipe was not replayed")
+    current, outcomes = df, []
+    for number, step in enumerate(recipe.steps, start=1):
+        current, outcome = _replay_step(number, step, current)
+        outcomes.append(outcome)
+
+    out_dir.mkdir(parents=True, exist_ok=True)
+    current.to_csv(cleaned_path, index_label="row")
+    result = ReplayResult(input_name=input_path.name, input_sha256=sha, rows_in=len(df), rows_out=len(current),
+                          schema=schema, steps=outcomes, new_issues=_new_issues(recipe, current),
+                          cleaned_path=cleaned_path, report_path=report_path)
+    report_path.write_text(_replay_report(recipe, result), encoding="utf-8")
+    return result

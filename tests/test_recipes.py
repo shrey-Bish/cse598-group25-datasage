@@ -313,3 +313,141 @@ def test_run_without_a_lookup_rules_record(tmp_path):
     with pytest.raises(recipes.RecipeError, match="no lookup_rules record"):
         recipes.build_recipe(run, JAN, RULES_FILE)
     assert recipes.build_recipe(run, JAN, no_rules=True).rules is None
+
+
+# R8: replaying a recipe on a new file
+
+def _statuses(result):
+    return [(s.step, s.fix, s.status) for s in result.steps]
+
+
+def _single_step_recipe(path, fix, args, risk="low", approved_by="auto", portable=True):
+    source, schema = recipes.describe_input(path)
+    step = recipes.Step(fix=fix, args=args, risk=risk, approved_by=approved_by, portable=portable)
+    return recipes.Recipe(source=source, schema=schema, steps=[step])
+
+
+def test_recipe_from_one_month_replays_on_the_next(tmp_path, sales_run):
+    recipe = recipes.build_recipe(sales_run, JAN, RULES_FILE)
+    before = FEB.read_bytes()
+
+    result = recipes.apply_recipe(recipe, FEB, tmp_path / "out")
+
+    assert FEB.read_bytes() == before and result.input_sha256 == hashlib.sha256(before).hexdigest()
+    assert _statuses(result) == [
+        (1, "trim_whitespace", "applied"),
+        (2, "normalize_labels", "applied"),
+        (3, "normalize_labels", "needs review"),  # a misspelling merge is high risk on any file
+        (4, "parse_dates", "applied"),            # 05/02/2026 is ambiguous, so it is left unchanged
+        (5, "parse_dates", "needs review"),       # date_order dmy would change it: medium risk
+        (6, "cast_numeric", "applied"),
+        (7, "drop_duplicates", "needs review"),   # removes rows
+        (8, "fill_missing", "needs review"),      # values approved only for January
+    ]
+    cleaned = pd.read_csv(result.cleaned_path, index_col="row", keep_default_na=False)
+    assert cleaned["Region"].tolist() == ["West", "East", "North", "South", "South"]
+    assert cleaned["Category"].tolist() == ["Electronics", "Accessories", "Acessories", "ELECTRONICS", "ELECTRONICS"]
+    assert cleaned["Date"].tolist() == ["2026-02-01", "05/02/2026", "2026-02-06", "2026-02-07", "2026-02-07"]
+    assert cleaned["Price"].tolist() == [12.0, 6.0, 3.5, 8.0, 8.0]
+    assert (result.rows_in, result.rows_out) == (5, 5)
+
+    left = {(i["check"], i["column"]): i["count"] for i in result.new_issues}
+    assert left == {("label_variant", "Category"): 1, ("invalid_date", "Date"): 1,
+                    ("missing", "Quantity"): 2, ("duplicates", "*"): 1}
+
+    report = result.report_path.read_text()
+    assert report.startswith("# Recipe replay")
+    assert "The input file is only read; it is not changed." in report
+    assert "- Step 5, parse_dates: risk is medium on this file" in report
+    assert "| invalid_date | Date | 1 | [1] |" in report
+
+
+def test_ambiguous_date_sends_parse_dates_with_a_date_order_to_review(tmp_path):
+    jan = tmp_path / "jan.csv"
+    jan.write_text("Date,Amount\n2026-01-02T00:00:00.000,1\n13/01/2026,2\n")
+    recipe = _single_step_recipe(jan, "parse_dates", {"column": "Date", "date_order": "dmy"}, "medium", "approved")
+
+    ambiguous = tmp_path / "feb.csv"
+    ambiguous.write_text("Date,Amount\n2026-02-01T00:00:00.000,1\n03/04/2026,2\n")
+    result = recipes.apply_recipe(recipe, ambiguous, tmp_path / "out1")
+    assert [(s.status, s.risk) for s in result.steps] == [("needs review", "medium")]
+    assert pd.read_csv(result.cleaned_path)["Date"].tolist() == ["2026-02-01T00:00:00.000", "03/04/2026"]
+
+    clear = tmp_path / "mar.csv"
+    clear.write_text("Date,Amount\n2026-03-01T00:00:00.000,1\n25/03/2026,2\n")
+    result = recipes.apply_recipe(recipe, clear, tmp_path / "out2")
+    assert [(s.status, s.risk) for s in result.steps] == [("applied", "low")]
+    assert pd.read_csv(result.cleaned_path)["Date"].tolist() == ["2026-03-01", "2026-03-25"]
+
+
+def test_normalize_labels_uses_only_labels_present(tmp_path):
+    jan = tmp_path / "jan.csv"
+    jan.write_text("Category\nelectronics\naccessories\nElectronics\nAccessories\n")
+    recipe = _single_step_recipe(jan, "normalize_labels", {
+        "column": "Category", "mapping": {"electronics": "Electronics", "accessories": "Accessories"}})
+
+    feb = tmp_path / "feb.csv"
+    feb.write_text("Category\nelectronics\nAccessories\n")
+    result = recipes.apply_recipe(recipe, feb, tmp_path / "out1")
+    assert result.steps[0].status == "applied"
+    assert result.steps[0].args == {"column": "Category", "mapping": {"electronics": "Electronics"}}
+
+    mar = tmp_path / "mar.csv"
+    mar.write_text("Category\nElectronics\nAccessories\n")
+    assert recipes.apply_recipe(recipe, mar, tmp_path / "out2").steps[0].status == "not needed"
+
+
+def test_risk_is_recomputed_on_the_new_file(tmp_path):
+    jan = tmp_path / "jan.csv"
+    jan.write_text("Price\n$1.00\n$2.50\n")
+    recipe = _single_step_recipe(jan, "cast_numeric", {"column": "Price"})
+
+    feb = tmp_path / "feb.csv"
+    feb.write_text("Price\n$3.00\nfive\n")  # "five" would become missing: medium risk
+    result = recipes.apply_recipe(recipe, feb, tmp_path / "out")
+    assert [(s.status, s.recipe_risk, s.risk) for s in result.steps] == [("needs review", "low", "medium")]
+    assert result.new_issues[0]["check"] == "numeric"
+
+
+def test_row_level_fixes_and_fill_missing_are_never_replayed(tmp_path):
+    jan = tmp_path / "jan.csv"
+    jan.write_text("Name,Qty,Total\na,1,1\na,1,1\nb,-2,4\nc,,3\n")
+    source, schema = recipes.describe_input(jan)
+    steps = [
+        recipes.Step(fix="drop_duplicates", args={}, risk="medium", approved_by="approved", portable=False),
+        recipes.Step(fix="exclude_rows", args={"rows": [2]}, risk="high", approved_by="approved", portable=True),
+        recipes.Step(fix="exclude_where", args={"column": "Qty", "minimum": 0}, risk="high", approved_by="approved",
+                     portable=False),
+        recipes.Step(fix="set_missing", args={"column": "Total", "rows": [2]}, risk="high", approved_by="approved",
+                     portable=False),
+        recipes.Step(fix="recompute_column", args={"column": "Total", "expression": "Qty", "rows": [0]}, risk="high",
+                     approved_by="approved", portable=False),
+        recipes.Step(fix="fill_missing", args={"column": "Qty", "value": 1}, risk="high", approved_by="approved",
+                     portable=False),
+    ]
+    recipe = recipes.Recipe(source=source, schema=schema, steps=steps)
+
+    result = recipes.apply_recipe(recipe, jan, tmp_path / "out")
+    assert [s.status for s in result.steps] == ["needs review"] * 6  # even exclude_rows marked portable by hand
+    assert all(s.risk is None for s in result.steps)
+    assert result.rows_out == 4
+    assert pd.read_csv(result.cleaned_path, index_col="row").equals(pd.read_csv(jan))
+
+
+def test_missing_column_refuses_and_writes_nothing(tmp_path, month1):
+    recipe = _recipe(month1)
+    feb = tmp_path / "month2.csv"
+    feb.write_text("Order_ID,Date,Quantity,Price\n4,2026-09-01,1,$1.00\n")
+    with pytest.raises(recipes.RecipeError, match="lacks the recipe's column\\(s\\) Category"):
+        recipes.apply_recipe(recipe, feb, tmp_path / "out")
+    assert not (tmp_path / "out").exists()
+
+
+def test_apply_reads_a_saved_recipe_and_never_overwrites_the_input(tmp_path, month1):
+    path = recipes.save_recipe(_recipe(month1), tmp_path / "recipe.json")
+    result = recipes.apply_recipe(path, month1, tmp_path / "out")
+    assert [s.status for s in result.steps] == ["applied", "needs review"]
+
+    inside = tmp_path / "out" / "cleaned.csv"
+    with pytest.raises(recipes.RecipeError, match="would overwrite the input file"):
+        recipes.apply_recipe(path, inside, tmp_path / "out")
