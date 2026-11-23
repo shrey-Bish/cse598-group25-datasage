@@ -7,12 +7,17 @@ key, and they pass on Windows and Linux: CSVs are compared by content with line 
 import csv
 import io
 import json
+import re
+import shutil
+import subprocess
+import sys
 from pathlib import Path
 
 from eval import summarize
 
 REPO = Path(__file__).resolve().parent.parent
 RESULTS = REPO / "eval" / "results"
+DEMO = REPO / "docs" / "final" / "demo"
 
 
 def _text(path: Path) -> str:
@@ -41,3 +46,19 @@ def test_results_tables_match_the_summarizer(tmp_path, monkeypatch):
     assert _text(tmp_path / "summary.md") == _text(RESULTS / "summary.md")
     assert json.loads(_text(tmp_path / "summary.json")) == json.loads(_text(RESULTS / "summary.json"))
     assert _csv_rows(tmp_path / "summary.csv") == _csv_rows(RESULTS / "summary.csv")
+
+
+def test_demo_replay_reproduces_cleaned_csv(tmp_path):
+    """The final demo's replay.py, run on a copy of the demo's input, gives the committed cleaned.csv."""
+    source = re.search(r"^- Input: `(.+)`$", _text(DEMO / "report.md"), re.M).group(1)
+    (tmp_path / source).parent.mkdir(parents=True, exist_ok=True)
+    shutil.copy(REPO / source, tmp_path / source)
+    shutil.copy(DEMO / "replay.py", tmp_path / "replay.py")
+
+    # replay.py leaves the cleaned table in `df`; write it the way write_outputs() in datasage/report.py does.
+    code = "import runpy; runpy.run_path('replay.py')['df'].to_csv('replayed.csv', index_label='row')"
+    proc = subprocess.run([sys.executable, "-c", code], cwd=tmp_path, capture_output=True, timeout=60,
+                          encoding="utf-8", errors="replace")
+    assert proc.returncode == 0, proc.stderr
+
+    assert _csv_rows(tmp_path / "replayed.csv") == _csv_rows(DEMO / "cleaned.csv")
