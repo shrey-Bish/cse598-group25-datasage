@@ -1,0 +1,18 @@
+{
+  "request": "What is the total price by category?",
+  "approvals": [true, true, true, false, true],
+  "calls": [
+    ["lookup_rules", {}],
+    ["trim_whitespace", {"column": "Region", "reason": "Trailing spaces in Region.", "note": "not a tool argument"}],
+    ["normalize_labels", {"column": "Category", "mapping": {"electronics": "Electronics"}, "reason": "Case variant of an allowed label."}],
+    ["normalize_labels", {"column": "Category", "mapping": {"Acessories": "Accessories"}, "reason": "Misspelling | the allowed label is Accessories."}],
+    ["parse_dates", {"column": "Date", "reason": "Normalize clear dates and timestamps."}],
+    ["parse_dates", {"column": "Date", "date_order": "dmy", "reason": "The user confirmed day-first dates."}],
+    ["cast_numeric", {"column": "Price", "reason": "Prices are stored as text like $10.00."}],
+    ["drop_duplicates", {"reason": "Row 5 repeats row 4."}],
+    ["exclude_rows", {"rows": [6], "reason": "Quantity -1 breaks the minimum of 1."}],
+    ["fill_missing", {"column": "Quantity", "value": 1, "reason": "The user said a blank quantity means 1."}],
+    ["analyze", {"group_by": ["Category"], "metric": "Price", "agg": "sum"}],
+    ["finish", {"summary": "Cleaned the table and answered the question."}]
+  ]
+}

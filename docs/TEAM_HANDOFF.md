@@ -1,18 +1,17 @@
 # Team handoff: final stretch
 
-For: Arsha, Ritik, Maulik and Vatsal. Last updated November 22, 2026.
+For: Arsha, Ritik, Maulik and Vatsal. Last updated November 23, 2026.
 
 Milestone 2 is submitted, items 1 and 2 of Section 6 are merged (PR #7), and the browser app for the demo
 (item 7's page) is done (PRs #10 to #19). All four research studies have landed (PRs #21 to #26). The rest of the work is split below. Individual grades draw on commit
 and PR authorship, so **each task should end in its own merged PR** under your own GitHub account.
 
-**Open tasks on November 22** (done tasks are removed from this doc; they are in git history and `docs/final/`):
+**Open tasks on November 23** (done tasks are removed from this doc; they are in git history and `docs/final/`):
 
 | Task | Status |
 |---|---|
 | A3 poster check (Arsha) | Open: check the redesigned poster and sign off to Shrey by Nov 22; Shrey submits Nov 23, 2 PM |
 | A1 ratings, A2 acceptance test (Arsha) | Not on `main` yet (`docs/final/ratings.md`, `docs/final/acceptance_test.md`) |
-| R1 recipe replay, R2 Nov 20 review notes (Ritik) | Not on `main` yet (`tests/test_recipes.py` replay test, `docs/meetings/2026-11-20-review.md`) |
 
 **For the final report (found by V2, `docs/final/real_files.md`):**
 
@@ -49,7 +48,7 @@ and PR authorship, so **each task should end in its own merged PR** under your o
   - *Model comparison* (`findings_models.md`): 41 models fully run as the planner. The 30B default ranks 4th
     (93.8%) and is among the fastest; with DataSage around it a model answers a median 20 points more than
     in one call. No model damaged clean data; the weakest fail on tool-call format.
-- **Two things for the Nov 20 review** (see R2): 36 of the 39 misses over 4 runs of the 200 questions are rows breaking a
+- **Decided at the Nov 20 review** (`docs/meetings/2026-11-20-review.md`): keep checking only the question's columns, keep the recorded results, keep the 30B default. Background: 36 of the 39 misses over 4 runs of the 200 questions are rows breaking a
   rule in a column the question does not use (60.9% right on those questions, 99.6% on the rest), which
   is the question-columns-only scope Vyshanth chose. On the hard split, every Qwen miss came from
   `analyze` grouping by the column it also filters on. That is now fixed in code (`datasage/analyze.py`):
@@ -95,8 +94,8 @@ test splits (the 200-question and hard numbers are in the bullets above and on t
 | DataSage 30B (final) | 92.5% | 92.5% | 0 | about 17 |
 
 All 6 misses here, and 36 of the 39 over 4 runs of the 200 questions, are rows that break a rule in a column the question
-doesn't use. Vyshanth chose to check only the question's columns, so we raise this at the Nov 20 review
-rather than change it.
+doesn't use. Vyshanth chose to check only the question's columns and confirmed it at the Nov 20 review, so the final
+version keeps that scope and the report states it.
 
 ## Your tasks
 
@@ -112,10 +111,7 @@ Every task ends in a PR into `main`. Put a short note of what you did in `docs/t
 
 ### Ritik
 
-| # | Task | Done when | Due |
-|---|---|---|---|
-| R1 | **Recipe replay (item 7).** Build a recipe from a run's approved fixes and replay it on a new file without the model, as planned in the design note. | Tests in `tests/test_recipes.py` show a recipe from one table replayed on another table with the same columns. | Nov 25 |
-| R2 | **Nov 20 review.** Send Vyshanth an agenda by Nov 19: results, the out-of-question-column misses (ask whether to check all columns with a rule), the hard-split grouping fix (merged; 80/80 on hard), ratings, demo plan. Take notes. | `docs/meetings/2026-11-20-review.md`, same format as the Oct 28 notes. | Nov 20 |
+No open tasks: R1 recipe replay (PR #44, `python -m datasage.recipes save|apply`) and R2 review notes (PR #43) are done.
 
 ### Maulik
 

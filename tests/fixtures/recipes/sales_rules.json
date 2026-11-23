@@ -1,0 +1,5 @@
+{
+  "Category": {"allowed": ["Electronics", "Accessories"]},
+  "Quantity": {"min": 1},
+  "Date": {"format": "YYYY-MM-DD"}
+}
