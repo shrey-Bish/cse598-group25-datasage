@@ -10,7 +10,7 @@ and PR authorship, so **each task should end in its own merged PR** under your o
 
 | Task | Status |
 |---|---|
-| A1 ratings, A2 acceptance test (Arsha) | Not on `main` yet (`docs/final/ratings.md`, `docs/final/acceptance_test.md`). A2 due Nov 25 |
+| A1 ratings (Arsha) | Not on `main` yet (`docs/final/ratings.md`). Runs H1–H4 are done; Vyshanth's ratings still to collect |
 | Demo Day plan (Shrey) | `docs/final/demo_script.md`, by Nov 30 |
 
 **Done on November 23:** the poster is submitted on Canvas. Arsha's check (A3, PR #47) found two claims
@@ -18,6 +18,11 @@ that did not match the results; both were fixed in PR #49 before submitting ("Ac
 19 points"; "200 questions", no longer "unseen"). Arsha also added tests that check the frozen results,
 demo replay and report view still match their code (PR #48), and Ritik noted the later owner changes in
 the Oct 28 meeting notes (PR #46).
+
+**Done later on November 23:** the acceptance test (A2, PR #51) passed: 12 of 12 questions correct and
+0 valid cells changed, on the default 30B model (`docs/final/acceptance_test.md`). Vyshanth's two input files
+are now in `docs/final/checks/acceptance/` (synthetic data, published with his permission). The scripts that
+ran the test are not in the repo yet, so only Arsha can rerun it.
 
 **For the final report (found by V2, `docs/final/real_files.md`):**
 
@@ -109,12 +114,11 @@ Every task ends in a PR into `main`. Put a short note of what you did in `docs/t
 
 ### Arsha
 
-A3 poster check is done (PR #47); the frozen-results tests are merged too (PR #48). Two tasks remain:
+A3 poster check (PR #47), the frozen-results tests (PR #48) and the A2 acceptance test (PR #51) are done. One task remains:
 
 | # | Task | Done when | Due |
 |---|---|---|---|
-| A1 | **Ratings packet (item 6).** Run DataSage on 10 questions (the browser app in *Ask me* mode is easiest; each run's report has a View and Download button): Vyshanth's two files plus questions from the held-out tables. Send him the 10 `report.md` files and a short form (correct? clear? would you trust it? each 1 to 5, plus a comment). Collect his answers. | His ratings are summarised in `docs/final/ratings.md` (scores and quotes, no copy of his files). | Send Nov 17, collect Nov 20 |
-| A2 | **Acceptance test (item 6).** 3 files (Vyshanth's two plus one test-split table), each with questions and expected answers. Pass = at least 90% correct and no valid cell changed. | `docs/final/acceptance_test.md` with the command, each question, expected and actual answer, pass or fail. | Nov 25 |
+| A1 | **Ratings packet (item 6).** Run DataSage on 10 questions (the browser app in *Ask me* mode is easiest; each run's report has a View and Download button): Vyshanth's two files plus questions from the held-out tables. Send him the 10 `report.md` files and a short form (correct? clear? would you trust it? each 1 to 5, plus a comment). Collect his answers. | His ratings are summarised in `docs/final/ratings.md` (scores and quotes). | Send Nov 17, collect Nov 20 |
 
 ### Ritik
 
@@ -148,7 +152,7 @@ python -m app.web.server                           # the browser app at http://1
 ```
 
 Running DataSage needs an ASU RC model key and `RC_LLM_BASE_URL` in a `.env` file (copy `.env.example`; the
-app now refuses to start without the base URL rather than fall back to OpenAI). Use your own key. A1, A2, M3,
+app now refuses to start without the base URL rather than fall back to OpenAI). Use your own key. A1, M3,
 V1 and V2 need one; check your quota before starting V1, which makes the most calls. When running many
 questions, raise `--workers` rather than starting many processes at once: one laptop crashed under ~100
 parallel Python processes.
