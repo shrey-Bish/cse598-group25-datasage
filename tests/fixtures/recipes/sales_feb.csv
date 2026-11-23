@@ -1,0 +1,6 @@
+Order_ID,Date,Category,Region,Quantity,Price
+11,2026-02-01T09:30:00,electronics,West ,2,$12.00
+12,05/02/2026,Accessories,East,1,$6.00
+13,2026-02-06,Acessories,North,2,$3.50
+14,2026-02-07,ELECTRONICS,South,,$8.00
+14,2026-02-07,ELECTRONICS,South,,$8.00

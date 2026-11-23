@@ -13,6 +13,8 @@ from __future__ import annotations
 
 import hashlib
 import json
+import re
+import warnings
 from dataclasses import asdict, dataclass, field
 from datetime import datetime, timezone
 from pathlib import Path
@@ -20,9 +22,29 @@ from typing import NamedTuple
 
 import pandas as pd
 
+from . import fixes as _ds_fixes
 from . import session as _ds_session
+from . import tools as _ds_tools
 
 RECIPE_VERSION = 1
+
+# Fixes that work on whole columns, so they can run on a new file. The others use row ids from the
+# original file, remove rows, or (fill_missing) add values nobody approved for the new file.
+PORTABLE_FIXES = ("trim_whitespace", "normalize_labels", "parse_dates", "cast_numeric")
+
+# What lookup_rules returns when a run had no rules file (datasage/tools.py, Dispatcher._other).
+NO_RULES = "no rules file was given"
+
+# The file a run with several inputs stacks them into; the report's Input line then names it.
+STACKED_INPUT = "input_stacked.csv"
+
+
+class RecipeError(ValueError):
+    """A recipe cannot be built or replayed. The message says what to change."""
+
+
+class RecipeWarning(UserWarning):
+    """Something to check that does not stop the recipe, such as a report without an Input line."""
 
 
 # Adapter: the only code in this module that calls datasage/. If a signature there changes, only these
@@ -30,6 +52,20 @@ RECIPE_VERSION = 1
 
 def _ds_load_table(path: str | Path) -> pd.DataFrame:
     return _ds_session.load_table(path)
+
+
+def _ds_load_rules(path: str | Path) -> dict:
+    return _ds_session.load_rules(path)
+
+
+def _ds_is_fix(name: str) -> bool:
+    return name in _ds_fixes.FIXES
+
+
+def _ds_fix_arg_names(fix: str) -> set[str]:
+    """Arguments a fix takes, as the dispatcher filters a model's call, without "reason"."""
+    model, _ = _ds_tools.FIX_TOOLS[fix]
+    return set(model.model_fields) - {"reason"}
 
 
 @dataclass
@@ -167,3 +203,193 @@ def load_recipe(path: str | Path) -> Recipe:
         )
     except (KeyError, TypeError) as err:
         raise ValueError(f"{path} is not a valid recipe: {type(err).__name__}: {err}") from None
+
+
+# Building a recipe from a run folder (report.md and trace.jsonl, as datasage/report.py writes them)
+
+_INPUT_LINE = re.compile(r"^- Input: `(?P<path>[^`]*)`\s*$", re.MULTILINE)
+_CHANGE_COLUMNS = ("Version", "Fix", "Risk", "Approval")
+
+
+def _table_cells(line: str, width: int | None = None) -> list[str]:
+    inner = line.strip()
+    inner = inner[1:] if inner.startswith("|") else inner
+    inner = inner[:-1] if inner.endswith("|") else inner
+    raw = inner.split("|")
+    if width is not None and len(raw) > width:  # "|" inside the last cell: join it back
+        raw = raw[:width - 1] + ["|".join(raw[width - 1:])]
+    return [cell.strip() for cell in raw]
+
+
+def parse_changes(report_md: str) -> list[dict[str, str]]:
+    """Rows of a report's Changes table, as {header name: cell}.
+
+    Columns are found by header name. Reason is the last column and may contain "|" (report.py does not
+    escape it), so extra cells are joined back into it; a "|" in What changed shifts text into Reason
+    but leaves Version, Fix, Risk and Approval intact. The table ends at its first non-table line, so
+    the "Date changes in v{N}" lists below it are not rows. Rejected fixes keep Version "-".
+    """
+    lines = report_md.splitlines()
+    try:
+        start = next(i for i, line in enumerate(lines) if line.strip() == "## Changes")
+    except StopIteration:
+        raise RecipeError("report.md has no '## Changes' section") from None
+    header_at = next((i for i in range(start + 1, len(lines)) if lines[i].lstrip().startswith("|")), None)
+    if header_at is None or any(lines[i].startswith("#") for i in range(start + 1, header_at)):
+        raise RecipeError("the '## Changes' section of report.md has no table")
+    header = _table_cells(lines[header_at])
+    absent = [name for name in (*_CHANGE_COLUMNS, "Reason") if name not in header]
+    if absent or header[-1] != "Reason":
+        raise RecipeError(f"the Changes table needs the columns {', '.join(_CHANGE_COLUMNS)} and Reason last; "
+                          f"its header is {header}")
+    rows = []
+    for line in lines[header_at + 2:]:  # skip the |---| line
+        if not line.lstrip().startswith("|"):
+            break
+        cells = _table_cells(line, width=len(header))
+        if len(cells) < len(header):
+            raise RecipeError(f"a Changes row has {len(cells)} cells, the header has {len(header)}: {line}")
+        rows.append(dict(zip(header, cells)))
+    return rows
+
+
+def _read_trace(path: Path) -> list[dict]:
+    events = []
+    for number, line in enumerate(path.read_text(encoding="utf-8").splitlines(), start=1):
+        if not line.strip():
+            continue
+        try:
+            event = json.loads(line)
+        except json.JSONDecodeError as err:
+            raise RecipeError(f"{path.name} line {number} is not JSON: {err}") from None
+        if isinstance(event, dict) and event.get("event") == "tool":
+            events.append(event)
+    return events
+
+
+def _check_input(report_md: str, input_path: Path) -> None:
+    found = _INPUT_LINE.search(report_md)
+    if not found:
+        warnings.warn("report.md has no Input line, so the input file's name could not be checked against the run",
+                      RecipeWarning, stacklevel=3)
+        return
+    recorded = found.group("path").replace("\\", "/").rsplit("/", 1)[-1]
+    if recorded != input_path.name:
+        hint = (f" That run stacked several files; pass the {STACKED_INPUT} in its run folder."
+                if recorded == STACKED_INPUT else "")
+        raise RecipeError(f"input file '{input_path.name}' is not the run's input '{recorded}' "
+                          f"(report.md, Input line).{hint}")
+
+
+def _check_rules(events: list[dict], rules_path: str | Path | None, no_rules: bool) -> RulesRef | None:
+    """Match the rules the caller names with what the run's lookup_rules returned. {} means no rules."""
+    if rules_path and no_rules:
+        raise RecipeError("give rules_path or no_rules=True, not both")
+    recorded = [e["output"]["rules"] for e in events
+                if e.get("name") == "lookup_rules" and isinstance(e.get("output"), dict) and "rules" in e["output"]]
+    if any(r != recorded[0] for r in recorded):
+        raise RecipeError("the trace's lookup_rules records disagree with each other")
+    run_rules = None if not recorded else ({} if recorded[0] in (NO_RULES, {}) else recorded[0])
+
+    if rules_path:
+        try:
+            given = _ds_load_rules(rules_path)
+        except (OSError, json.JSONDecodeError) as err:
+            raise RecipeError(f"cannot read rules file '{Path(rules_path).name}': {err}") from None
+        if run_rules is None:
+            raise RecipeError("trace.jsonl has no lookup_rules record, so the rules file cannot be checked "
+                              "against the rules the run used")
+        if given != run_rules:
+            if not run_rules:
+                raise RecipeError(f"the run had no rules file, but rules_path '{Path(rules_path).name}' has rules")
+            raise RecipeError(f"rules file '{Path(rules_path).name}' differs from the rules the run used "
+                              f"(lookup_rules in trace.jsonl)")
+        return rules_ref(rules_path) if given else None
+
+    if run_rules:
+        raise RecipeError("the run used a rules file (lookup_rules in trace.jsonl); pass the same file as rules_path")
+    if run_rules is None and not no_rules:
+        raise RecipeError("trace.jsonl has no lookup_rules record, so it does not show whether the run had a rules "
+                          "file. Pass rules_path with the run's rules file, or no_rules=True if it had none")
+    return None
+
+
+def _steps(events: list[dict], rows: list[dict[str, str]]) -> list[Step]:
+    """Pair applied fixes in the trace with Changes rows v{version}; both must agree on fix, risk and approval."""
+    applied: dict[int, dict] = {}
+    for event in events:
+        output = event.get("output")
+        if not (_ds_is_fix(event.get("name", "")) and isinstance(output, dict) and output.get("applied") is True):
+            continue
+        version = output.get("version")
+        if not isinstance(version, int):
+            raise RecipeError(f"an applied {event['name']} record in trace.jsonl has no version")
+        if version in applied:
+            raise RecipeError(f"two applied fixes in trace.jsonl have version v{version} "
+                              f"({applied[version]['name']} and {event['name']})")
+        applied[version] = event
+
+    logged: dict[int, dict[str, str]] = {}
+    for row in rows:
+        if row["Version"] == "-":  # a rejected fix: never a step
+            continue
+        match = re.fullmatch(r"v(\d+)", row["Version"])
+        if not match:
+            raise RecipeError(f"a Changes row has version '{row['Version']}'; expected v<number> or -")
+        version = int(match.group(1))
+        if version in logged:
+            raise RecipeError(f"the Changes table has two rows for v{version}")
+        logged[version] = row
+
+    only_trace, only_report = sorted(set(applied) - set(logged)), sorted(set(logged) - set(applied))
+    if only_trace or only_report:
+        parts = ([f"applied in trace.jsonl but not in the Changes table: {', '.join(f'v{v}' for v in only_trace)}"]
+                 if only_trace else [])
+        parts += ([f"in the Changes table but not applied in trace.jsonl: {', '.join(f'v{v}' for v in only_report)}"]
+                  if only_report else [])
+        raise RecipeError("trace.jsonl and report.md do not pair up: " + "; ".join(parts))
+
+    steps = []
+    for version in sorted(applied):
+        event, row = applied[version], logged[version]
+        output = event["output"]
+        in_trace = (event["name"], output.get("risk"), output.get("approval"))
+        in_report = (row["Fix"], row["Risk"], row["Approval"])
+        if in_trace != in_report:
+            raise RecipeError(f"v{version}: trace.jsonl has fix, risk, approval {in_trace} but report.md has {in_report}")
+        if output.get("approval") not in ("auto", "approved"):
+            raise RecipeError(f"v{version}: an applied fix has approval '{output.get('approval')}'")
+        args = event.get("args")
+        if not isinstance(args, dict):
+            raise RecipeError(f"v{version}: the trace's arguments for {event['name']} are not a JSON object")
+        kept = _ds_fix_arg_names(event["name"])  # drops "reason" and any argument the tool ignored
+        steps.append(Step(fix=event["name"], args={k: v for k, v in args.items() if k in kept},
+                          risk=output["risk"], approved_by=output["approval"], portable=event["name"] in PORTABLE_FIXES))
+    return steps
+
+
+def build_recipe(run_dir: str | Path, input_path: str | Path, rules_path: str | Path | None = None,
+                 no_rules: bool = False) -> Recipe:
+    """Build a recipe from a DataSage run folder and the raw input that run cleaned.
+
+    A step is a fix whose trace record has output.applied true and whose Changes row v{version} has the same
+    Fix, Risk and Approval; rejected fixes never become steps. Steps are in version order. The input's
+    name must match the report's Input line (a missing line only warns). rules_path must hold the rules
+    the run looked up; a {} file and "no rules file was given" both mean no rules. Without rules_path the
+    run must have had no rules, shown by its lookup_rules record or confirmed with no_rules=True.
+    Raises RecipeError when any of this does not hold.
+    """
+    run_dir, input_path = Path(run_dir), Path(input_path)
+    report_path, trace_path = run_dir / "report.md", run_dir / "trace.jsonl"
+    for path in (report_path, trace_path):
+        if not path.is_file():
+            raise RecipeError(f"{path} not found; pass a DataSage run folder (it holds report.md and trace.jsonl)")
+    if not input_path.is_file():
+        raise RecipeError(f"input file {input_path} not found")
+    report_md = report_path.read_text(encoding="utf-8")
+    events = _read_trace(trace_path)
+    _check_input(report_md, input_path)
+    rules = _check_rules(events, rules_path, no_rules)
+    steps = _steps(events, parse_changes(report_md))
+    source, schema = describe_input(input_path)
+    return Recipe(source=source, schema=schema, rules=rules, steps=steps)
