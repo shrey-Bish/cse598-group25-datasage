@@ -1,0 +1,51 @@
+OrderID,OrderDate,Department,Supplier,ItemCategory,Quantity,UnitCost,LineTotal
+PO-26001,2026-09-01, facilities ,Cedar Office,Consumables,6,12.50,75.00
+PO-26002,2026-10-02,Finance,Mesa Equipment,Equipment,5,49.95,249.75
+PO-26003,2026-11-03,Research,Valley Components,Office Supplies,9,$12.50,112.50
+PO-26004,2026-09-04,Technology,Cedar Office,Equipment,13,49.95,649.35
+PO-26005,2026/10/05,Facilities,Valley Components,Office Supplies,6,240.00,1440.00
+PO-26006,2026-11-06,Finanace,Cedar Office,Consumables,10,85.00,850.00
+PO-26007,2026-09-07,Research,Mesa Equipment,Office Supplies,4,129.50,518.00
+PO-26008,2026-10-08,Technology, valley components ,Consumables,3,49.95,149.85
+PO-26009,2026-11-09,Facilities,Mesa Equipment,Equipment,6,24.75,148.50
+PO-26010,2026-09-10,Finance,Valley Components,Consumables,6,85.00,510.00
+PO-26011,2026-10-11,Research,Cedar Office,Equipment,2,85.00,170.00
+PO-26012,2026-11-12,Technology,Mesa Equipment,Office Supplies,13,12.50,180.00
+PO-26013,2026-09-13,Facilities,Cedar Office,Equipment,4,49.95,199.80
+PO-26014,2026-10-14,Finance,Mesa Equipment,Office Supplies,6,24.75,148.50
+PO-26015,2026-11-15,Research,Valley Components,Consumables,8,85.00,680.00
+PO-26016,2026-09-16,Technology,Cedar Office,Office Supplies,3,85.00,255.00
+PO-26017,2026-10-17,Facilities,Valley Components,Consumables,11,12.50,137.50
+PO-26018,2026-11-18T09:30:00,Finance,Cedar Office,Equipment,8,240.00,1920.00
+PO-26019,2026-09-19,Research,Mesa Equipment,Consumables,10,129.50,1295.00
+PO-26020,2026-10-20,Technology,Valley Components,Equipment,5,$85.00,425.00
+PO-26021,2026-11-21,Facilities,Mesa Equipment,Office Supplies,4,129.50,518.00
+PO-26022,2026-09-22,Finance,Valley Components,Equipment,7,49.95,349.65
+PO-26023,2026-10-23,Research,Cedar Office,Office Supplies,14,129.50,1813.00
+PO-26024,2026-11-24,Technology,Mesa Equipment,Consumables,11,129.50,1424.50
+PO-26025,2026-09-25,Facilities,Cedar Office,Office Supplies,13,24.75,321.75
+PO-26026,2026-10-26,Finance,Mesa Equipment,Consumables,11,49.95,549.45
+PO-26027,2026-11-01,Research,Valley Components,Equipment,7,85.00,595.00
+PO-26028,2026-09-02,Technology,Cedar Office,Consumables,7,129.50,906.50
+PO-26029,2026-10-03,Facilities,Valley Components,Equipment,11,24.75,272.25
+PO-26030,2026-11-04,Finance,Cedar Office,Office Supplies,7,85.00,595.00
+PO-26031,2026-09-05,Research,Mesa Equipment,Equipment,7,129.50,1026.50
+PO-26032,2026-10-06,Technology,Valley Components,Office Supplies,6,12.50,75.00
+PO-26033,2026-11-07,Facilities,Mesa Equipment,Consumables,11,129.50,1424.50
+PO-26034,2026-09-08,Finance,Valley Components,Office Supplies,2,129.50,259.00
+PO-26035,2026-10-09,Research,Cedar Office,Consumables,9,129.50,1165.50
+PO-26036,2026-11-10,Technology,Mesa Equipment,Equipment,7,12.50,87.50
+PO-26037,2026-09-11,Facilities,Cedar Office,Consumables,4,49.95,199.80
+PO-26038,2026-10-12,Finance,Mesa Equipment,Equipment,13,12.50,162.50
+PO-26039,2026-11-13,Research,Valley Components,Office Supplies,12,85.00,1020.00
+PO-26040,2026-09-14,Technology,Cedar Office,Equipment,8,85.00,680.00
+PO-26041,2026-10-15,Facilities,Valley Components,Office Supplies,5,85.00,425.00
+PO-26042,2026-11-16,Finance,Cedar Office,Consumables,10,24.75,247.50
+PO-26043,2026-09-17,Research,Mesa Equipment,Office Supplies,7,12.50,87.50
+PO-26044,2026-10-18,Technology,Valley Components,Consumables,2,129.50,259.00
+PO-26045,2026-11-19,Facilities,Mesa Equipment,Equipment,13,49.95,649.35
+PO-26046,2026-09-20,Finance,Valley Components,Consumables,9,49.95,449.55
+PO-26047,2026-10-21,Research,Cedar Office,Equipment,7,240.00,1680.00
+PO-26048,2026-11-22,Technology,Mesa Equipment,Office Supplies,11,49.95,549.45
+PO-26004,2026-09-04,Technology,Cedar Office,Equipment,13,49.95,649.35
+PO-26023,2026-10-23,Research,Cedar Office,Office Supplies,14,129.50,1813.00

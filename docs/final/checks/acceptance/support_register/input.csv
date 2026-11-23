@@ -1,0 +1,43 @@
+TicketID,OpenedDate,Team,Priority,Channel,ResolutionMinutes
+SR-7101,2026-10-01, accounts ,High,Email,903
+SR-7102,2026-11-02,Applications,Normal,Phone,242
+SR-7103,2026/10/03,Operations,Low,Portal,1056
+SR-7104,2026-11-04,Applications,HIGH,Email,1974
+SR-7105,2026-10-05,Operatons,Normal,Portal,894
+SR-7106,2026-11-06,Accounts,Low,Email,1099
+SR-7107,2026-10-07,Operations,High, phone ,711
+SR-7108,2026-11-08,Accounts,Normal,Portal,"1,643"
+SR-7109,2026-10-09,Applications, low ,Phone,367
+SR-7110,2026-11-10,Accounts,High,,1049
+SR-7111,2026-10-11,Applications,Normal,Email,1794
+SR-7112,2026-11-12,Operations,Low,Phone,517
+SR-7113,2026-10-13,Applications,High,Email,287
+SR-7114,2026-11-14,Operations,Normal,Phone,1427
+SR-7115,2026-10-15,Accounts,Low,Portal,1863
+SR-7116,2026-11-16,Operations,High,Email,199
+SR-7117,2026-10-17,Accounts,Normal,Portal,"1,903"
+SR-7118,2026-11-18,Applications,Low,Email,778
+SR-7119,not-recorded,Accounts,High,Phone,1737
+SR-7120,2026-11-20,Applications,Normal,Portal,329
+SR-7121,2026-10-21,Operations,Low,Phone,1472
+SR-7122,2026-11-22,Applications,High,Portal,540
+SR-7123,2026-10-23,Operations,Normal,Email,2041
+SR-7124,2026-11-24,Accounts,Low,Phone,1833
+SR-7125,2026-10-25,Operations,High,Email,475
+SR-7126,2026-11-26,Accounts,Normal,Phone,1600
+SR-7127,2026-10-27,Applications,Low,Portal,1582
+SR-7128,2026-11-01,Accounts,High,Email,2103
+SR-7129,2026-10-02,Applications,Normal,Portal,695
+SR-7130,2026-11-03,Operations,Low,Email,1917
+SR-7131,2026-10-04,Applications,High,Phone,1579
+SR-7132,2026-11-05,Operations,Normal,Portal,157
+SR-7133,2026-10-06,Accounts,Low,Phone,1087
+SR-7134,2026-11-07,Operations,High,Portal,2034
+SR-7135,2026-10-08,Accounts,Normal,Email,1010
+SR-7136,2026-11-09,Applications,Low,Phone,696
+SR-7137,2026-10-10,Accounts,High,Email,2381
+SR-7138,2026-11-11,Applications,Normal,Phone,2067
+SR-7139,2026-10-12,Operations,Low,Portal,1366
+SR-7140,2026-11-13,Applications,High,Email,1890
+SR-7106,2026-11-06,Accounts,Low,Email,1099
+SR-7132,2026-11-05,Operations,Normal,Portal,157
