@@ -63,3 +63,28 @@ the existing tests).
   the preview page's arguments.
 
 **Before pulling:** still no change to any existing file. The test suite doesn't need streamlit.
+
+### 2026-11-23: Checks on the frozen results and demo files
+
+**Freeze checks** (branch `arsha/freeze-checks`)
+- New `tests/test_frozen_artifacts.py` with three tests. They read only committed files, write only to
+  `tmp_path`, make no model calls and need no API key:
+  - `test_results_tables_match_the_summarizer` runs `eval.summarize.main()` with its output sent to
+    `tmp_path` and compares `summary.md`, `summary.json` and `summary.csv` with the committed ones in
+    `eval/results/`.
+  - `test_demo_replay_reproduces_cleaned_csv` copies `docs/final/demo/replay.py` and the demo's input
+    (`baseline/examples/messy_sales.csv`, taken from the report's Input line) to `tmp_path`, runs the
+    script with `sys.executable`, and compares the table with `docs/final/demo/cleaned.csv`.
+  - `test_report_view_finds_every_change_in_the_final_demo` loads `docs/final/demo` with `load_run` and
+    checks that the change log has the 4 fixes the run's `trace.jsonl` records (2 applied, 2 rejected),
+    in the report's order and with the same reasons.
+- All three pass on main `265a6c8f`: none of the checked files differs from what its code produces.
+- CSVs are compared by content with line endings normalised, because pandas writes `\r\n` on Windows.
+
+```bash
+python -m pytest -q tests/test_frozen_artifacts.py
+```
+
+**Before pulling:** only a new test file and this entry; no code changes. On Windows the first test is slow
+when the 9,557 result files it reads are not in the file cache (25 s or more); with a warm cache the
+whole file takes about 8 s.
