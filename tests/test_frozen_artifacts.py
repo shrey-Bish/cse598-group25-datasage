@@ -1,0 +1,43 @@
+"""The frozen results and demo files still match the code that produced them.
+
+These checks only read the committed files and write only to tmp_path. They make no model calls and need no API
+key, and they pass on Windows and Linux: CSVs are compared by content with line endings normalised.
+"""
+
+import csv
+import io
+import json
+from pathlib import Path
+
+from eval import summarize
+
+REPO = Path(__file__).resolve().parent.parent
+RESULTS = REPO / "eval" / "results"
+
+
+def _text(path: Path) -> str:
+    return path.read_text(encoding="utf-8").replace("\r\n", "\n")
+
+
+def _csv_rows(path: Path) -> list[list[str]]:
+    return list(csv.reader(io.StringIO(_text(path))))
+
+
+class _SplitResults:
+    """Stands in for summarize.RESULTS: summary.* paths go to `out`, everything else is read from eval/results."""
+
+    def __init__(self, out: Path):
+        self.out = out
+
+    def __truediv__(self, name: str) -> Path:
+        return (self.out if str(name).startswith("summary.") else RESULTS) / name
+
+
+def test_results_tables_match_the_summarizer(tmp_path, monkeypatch):
+    """eval/results/summary.md, .json and .csv are what `python -m eval.summarize` builds from the per-task files."""
+    monkeypatch.setattr(summarize, "RESULTS", _SplitResults(tmp_path))  # main() writes into RESULTS
+    summarize.main()
+
+    assert _text(tmp_path / "summary.md") == _text(RESULTS / "summary.md")
+    assert json.loads(_text(tmp_path / "summary.json")) == json.loads(_text(RESULTS / "summary.json"))
+    assert _csv_rows(tmp_path / "summary.csv") == _csv_rows(RESULTS / "summary.csv")
