@@ -102,8 +102,15 @@ whole file takes about 8 s.
   tables are not committed.
 - Approvals followed a decision policy, written from his business rules and the table's `rules.json`
   before any run. I approved it. Every decision is listed in the doc.
+- Follow-up (same day): the policy and the approver used for the runs are published as
+  `docs/final/checks/acceptance/decision_policy.md` and `policy_approver.py`.
+  - The approver plugs into DataSage's `Approver.decide` interface and runs DataSage as
+    `python -m datasage` does. The doc's "Rerun" section has the exact commands.
+  - `tests/test_acceptance_policy.py` (63 tests, no model or API key) checks every policy rule on
+    synthetic tables, that decisions are logged, and that the approver finds the repo root.
 
-**Before pulling:** documentation and data files only; no code changes.
+**Before pulling:** no change to `datasage/`, `app/` or `eval/`. The only code is the approver script in
+`docs/final/checks/acceptance/` and its offline test.
 
 ### 2026-11-23: Stakeholder ratings (A1)
 
