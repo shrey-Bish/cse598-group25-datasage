@@ -1,6 +1,6 @@
 """Fill docs/final/findings_models.md from eval/model_study_findings.txt and eval/results/study_models.json, so every
 number in the write-up comes from the result files. Usage: python -m eval.model_study_doc (after aggregate)."""
-import glob, json, os, subprocess, sys
+import glob, json, os, statistics, subprocess, sys
 
 REPO = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 PY = sys.executable
@@ -55,7 +55,7 @@ think_out = ", ".join(f"{M[t]['model']} {100 * beh(t)['tasks_checking_a_column_t
                       for i, t in think)
 gains = [(M[s]["agent_minus_single_call"], s) for s in full if "agent_minus_single_call" in M[s]]
 pos = [g for g, _ in gains if g > 0]
-gmed = sorted(g for g, _ in gains)[len(gains) // 2]
+gmed = statistics.median(g for g, _ in gains)
 gain_sentence = (f"The column is filled only where the single call answered all 80 questions with no API timeout "
                  f"(a timeout counts as a wrong answer, which would flatter the agent). For those {len(gains)} models "
                  f"the agent is better for "

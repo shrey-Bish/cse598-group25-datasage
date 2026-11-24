@@ -6,12 +6,13 @@ Milestone 2 is submitted, items 1 and 2 of Section 6 are merged (PR #7), and the
 (item 7's page) is done (PRs #10 to #19). All four research studies have landed (PRs #21 to #26). The rest of the work is split below. Individual grades draw on commit
 and PR authorship, so **each task should end in its own merged PR** under your own GitHub account.
 
-**Open tasks on November 23** (done tasks are removed from this doc; they are in git history and `docs/final/`):
+**All teammate tasks are done (November 23).** What is left (done tasks are removed from this doc; they are in
+git history and `docs/final/`):
 
 | Task | Status |
 |---|---|
-| A1 ratings (Arsha) | Not on `main` yet (`docs/final/ratings.md`). Runs H1–H4 are done; Vyshanth's ratings still to collect |
 | Demo Day plan (Shrey) | `docs/final/demo_script.md`, by Nov 30 |
+| Final report (Shrey assembles) | Each of you writes the paragraph for your own tasks when Shrey asks |
 
 **Done on November 23:** the poster is submitted on Canvas. Arsha's check (A3, PR #47) found two claims
 that did not match the results; both were fixed in PR #49 before submitting ("Across 32 models … a median
@@ -20,9 +21,14 @@ demo replay and report view still match their code (PR #48), and Ritik noted the
 the Oct 28 meeting notes (PR #46).
 
 **Done later on November 23:** the acceptance test (A2, PR #51) passed: 12 of 12 questions correct and
-0 valid cells changed, on the default 30B model (`docs/final/acceptance_test.md`). Vyshanth's two input files
-are now in `docs/final/checks/acceptance/` (synthetic data, published with his permission). The scripts that
-ran the test are not in the repo yet, so only Arsha can rerun it.
+0 valid cells changed, on the default 30B model (`docs/final/acceptance_test.md`). The approval policy and the
+script that ran it are published with offline tests (PR #53), so anyone with a key can rerun it. Vyshanth's
+ratings (A1, PR #54, `docs/final/ratings.md`): correctness 5.0, clarity 4.4, trust 4.6 out of 5, on 10 reports.
+The team proposed the scores and he confirmed them without changes. He also allowed his two fictional files to
+stay in the repo as synthetic examples (`docs/final/checks/acceptance/`).
+
+- **For the final report (found by A1):** a report's summary can misdescribe a rejected fix even when the
+  answer is right (S5); the change log itself is accurate.
 
 **For the final report (found by V2, `docs/final/real_files.md`):**
 
@@ -114,11 +120,8 @@ Every task ends in a PR into `main`. Put a short note of what you did in `docs/t
 
 ### Arsha
 
-A3 poster check (PR #47), the frozen-results tests (PR #48) and the A2 acceptance test (PR #51) are done. One task remains:
-
-| # | Task | Done when | Due |
-|---|---|---|---|
-| A1 | **Ratings packet (item 6).** Run DataSage on 10 questions (the browser app in *Ask me* mode is easiest; each run's report has a View and Download button): Vyshanth's two files plus questions from the held-out tables. Send him the 10 `report.md` files and a short form (correct? clear? would you trust it? each 1 to 5, plus a comment). Collect his answers. | His ratings are summarised in `docs/final/ratings.md` (scores and quotes). | Send Nov 17, collect Nov 20 |
+No open tasks: A1 ratings (PR #54), A2 acceptance test (PRs #51, #53), A3 poster check (PR #47) and the
+frozen-results tests (PR #48) are done.
 
 ### Ritik
 
@@ -146,14 +149,14 @@ cd cse598-group25-datasage
 python3 -m venv .venv
 source .venv/bin/activate
 pip install -r requirements.txt
-python -m pytest -q tests                          # 191 tests, no API key needed
+python -m pytest -q tests                          # 254 tests, no API key needed
 python -m eval.summarize                           # prints the results tables
 python -m app.web.server                           # the browser app at http://127.0.0.1:8501 (needs the key)
 ```
 
 Running DataSage needs an ASU RC model key and `RC_LLM_BASE_URL` in a `.env` file (copy `.env.example`; the
-app now refuses to start without the base URL rather than fall back to OpenAI). Use your own key. A1, M3,
-V1 and V2 need one; check your quota before starting V1, which makes the most calls. When running many
+app now refuses to start without the base URL rather than fall back to OpenAI). Use your own key. Rerunning
+the studies or the acceptance test needs one; check your quota first. When running many
 questions, raise `--workers` rather than starting many processes at once: one laptop crashed under ~100
 parallel Python processes.
 
@@ -184,8 +187,8 @@ Then open a pull request into `main` and ask Shrey to review it.
 Rules:
 
 - Never commit `.env` or any API key. The repo is public.
-- Never commit Vyshanth's two sample files or their outputs. He allowed sending them to the ASU model
-  service, not publishing them. Summaries and scores are fine.
+- Vyshanth's two fictional files and their rules are in `docs/final/checks/acceptance/` with his permission
+  (Nov 23). His answer keys and reference tables stay private: never commit them.
 - Do not edit files in `eval/results/` by hand. They come from `eval/run_eval.py`.
 - Small, clear commits are better than one large one.
 

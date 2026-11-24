@@ -12,7 +12,7 @@ DataSage is an agent that takes a messy CSV or Excel file and a question about i
 
 | | Right answers | Damaged cells |
 |---|---|---|
-| **DataSage (Qwen3-30B, the default)** on 200 unseen questions | **95.5%** (95% range 92.0 to 98.5; 4 runs: 94.0 to 96.0) | **0** |
+| **DataSage (Qwen3-30B, the default)** on 200 questions | **95.5%** (95% range 92.0 to 98.5; 4 runs: 94.0 to 96.0) | **0** |
 | One LLM call, no tools | 46.5% | 119 |
 | A fixed cleaning script | 49.0% | 0 |
 | The stakeholder's rule-based script | 6.0% | 0 |
@@ -23,9 +23,20 @@ DataSage is an agent that takes a messy CSV or Excel file and a question about i
 - Almost every remaining miss is a row that breaks a rule in a column the question does not use (the
   question-columns-only scope chosen with the stakeholder).
 - *Auto* approval mode costs about one question in 120 against a careful approver.
-- Swapping the planner across 41 models on the ASU API: with DataSage around it, a model answers a median
-  20 points more than in one call; the Qwen3-30B default ranks 4th (93.8%) and is among the fastest.
+- Swapping the planner across 41 models on the ASU API: for the 32 models with a single-call comparison,
+  DataSage adds a median 19 points over one call; the Qwen3-30B default ranks 4th (93.8%) and is among the fastest.
   No model damaged clean data; the weakest fail because they cannot produce valid tool calls.
+
+## Stakeholder acceptance
+
+- **Acceptance test:** 12 of 12 questions correct and 0 valid cells changed, on the stakeholder's two
+  fictional files and one test-split table, with the default model. The agreed bar was at least 90% correct
+  and no damage. See [docs/final/acceptance_test.md](docs/final/acceptance_test.md); the approval policy
+  and the script that ran it are in [docs/final/checks/acceptance/](docs/final/checks/acceptance/).
+- **Ratings:** the stakeholder confirmed scores for 10 DataSage reports (proposed by the team, each with a
+  reason): correctness 5.0, clarity 4.4, trust 4.6 out of 5. See [docs/final/ratings.md](docs/final/ratings.md).
+- **Known limitation:** a report's summary can misdescribe a rejected fix even when the answer is right;
+  the change log itself is accurate.
 
 Write-ups: [scale, variance and ablations](docs/final/findings_scale_and_ablations.md) ·
 [hard benchmark](docs/final/findings_hard.md) · [Auto mode](docs/final/findings_auto_mode.md) · [model comparison](docs/final/findings_models.md).
@@ -57,9 +68,23 @@ eval/         benchmark generator, scoring, approval oracle, evaluation runner, 
   datasets/   generated tables: messy.csv, clean.csv, reference.csv, planted.json, rules.json, tasks.json
   results/    one JSON per task per system, traces, and summary.md / summary.csv
 examples/     rules file for the stakeholder's messy_sales.csv, and a 1,208-row demo table with its generator
+scripts/      smoke_e2e.py, an end-to-end check of the browser app with the real model
 tests/        unit tests for the deterministic parts (no model calls)
-docs/         milestone reports; docs/milestone2/demo/ holds the recorded demo run
+docs/         reports, findings, meeting notes and team worklogs (see Documents below)
 ```
+
+## Documents
+
+| What | Where |
+|---|---|
+| Milestone 1 (discovery) and Milestone 2 (working system) reports | [docs/milestone1/](docs/milestone1/), [docs/milestone2/](docs/milestone2/) |
+| Final poster (PDF and source) | [docs/final/poster/](docs/final/poster/) |
+| Acceptance test and stakeholder ratings | [docs/final/acceptance_test.md](docs/final/acceptance_test.md), [docs/final/ratings.md](docs/final/ratings.md) |
+| Studies: scale and ablations, hard split, Auto mode, model comparison | [docs/final/](docs/final/) (`findings_*.md`) |
+| Team checks: repeated runs, real messy files, regression run, poster check | [docs/final/](docs/final/) (`repeated_runs.md`, `real_files.md`, `regression_check.md`, `checks/`) |
+| Recorded demo run (30B model) | [docs/final/demo/](docs/final/demo/) |
+| Stakeholder meeting notes | [docs/meetings/](docs/meetings/) |
+| Team tasks and each member's worklog | [docs/TEAM_HANDOFF.md](docs/TEAM_HANDOFF.md), [docs/team/](docs/team/) |
 
 ## Setup
 
@@ -275,4 +300,5 @@ python smoke_test.py
 - Commit under your own GitHub account. Individual grades use commit and pull request authorship.
 - Work on a branch and open a pull request into `main`. Ask one teammate to review before merging.
 - Never commit API keys. Put them in a local `.env` file, which git already ignores.
-- Keep any stakeholder data that is not public out of this repository.
+- Keep any stakeholder data that is not public out of this repository. The two fictional files in
+  `docs/final/checks/acceptance/` are published as synthetic examples with the stakeholder's permission.
