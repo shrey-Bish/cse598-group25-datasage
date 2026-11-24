@@ -46,7 +46,7 @@
 
 33 risky fixes were proposed across the 12 runs: 27 approved and 6 rejected (6 of them as not covered by the policy). Low-risk fixes (trimming spaces, case-only label merges, clear dates, number casts that lose no value) are applied by DataSage without asking and appear as `auto` in each report.
 
-**Policy** (one row per fix that can need approval; anything not covered is rejected):
+**Policy** (one row per fix that can need approval; anything not covered is rejected). The full text, with every rule it cites, is in `docs/final/checks/acceptance/decision_policy.md`; `tests/test_acceptance_policy.py` checks it offline:
 
 | Fix | Approved only if | Source |
 |---|---|---|
@@ -114,7 +114,7 @@ Every rejection was a fix that would have changed nothing: the agent asked to bl
 
 ## Commands
 
-Every command from the run log, in order, with its exit code. They were run from the repository root by `run_cases.py`. `policy_approver.py` runs DataSage exactly as `python -m datasage` does (`run_agent`, then `write_outputs`), with the policy as the approver through DataSage's `Approver.decide` interface; no DataSage code was changed. Both scripts are in the approver's local workspace (`.arsha-local/`), not in this repository. The packet paths under `.arsha-local/` hold the same input files published above (same sha256). H1–H4 are A1 (ratings) runs, not part of this test.
+Every command from the run log, in order, with its exit code. They were run from the repository root by `run_cases.py`. `policy_approver.py` runs DataSage exactly as `python -m datasage` does (`run_agent`, then `write_outputs`), with the policy as the approver through DataSage's `Approver.decide` interface; no DataSage code was changed. That approver is published as `docs/final/checks/acceptance/policy_approver.py`; the published copy differs only in the path it uses to find the repository root, so it runs from there (see "Rerun" below). `run_cases.py`, which only loops over the cases, stayed in the approver's local workspace (`.arsha-local/`). The packet paths under `.arsha-local/` hold the same input files published above (same sha256). H1–H4 are A1 (ratings) runs, not part of this test.
 
 ```text
 2026-11-23T14:11:38  P1  attempt 1  .venv\Scripts\python.exe -X utf8 .arsha-local\vyshanth\policy_approver.py --case P1 --profile procurement --input .arsha-local\vyshanth\packet_2026-11-23\stakeholder_agent_handoff\agent_inputs\procurement_ledger\input.csv --rules .arsha-local\vyshanth\packet_2026-11-23\stakeholder_agent_handoff\agent_inputs\procurement_ledger\rules.json --request "What is the total procurement spend by department?" --out .arsha-local\runs\P1
@@ -149,4 +149,29 @@ Every command from the run log, in order, with its exit code. They were run from
 2026-11-23T14:17:07  H3  attempt 1  exit 0
 2026-11-23T14:17:07  H4  attempt 1  .venv\Scripts\python.exe -X utf8 .arsha-local\vyshanth\policy_approver.py --case H4 --profile penguins_table --input eval\datasets\penguins-heldout\penguinsh_01\messy.csv --rules eval\datasets\penguins-heldout\penguinsh_01\rules.json --request "How many penguins were measured on each island?" --out .arsha-local\runs\H4
 2026-11-23T14:17:24  H4  attempt 1  exit 0
+```
+
+## Rerun
+
+The approver used for these runs is published with its policy in `docs/final/checks/acceptance/`. To rerun the 12 questions, start from the repository root. Set up the model key as for any DataSage run (a `.env` with `RC_LLM_API_KEY` and `RC_LLM_BASE_URL`, see `.env.example`). Each command is one run from the original file. It writes DataSage's usual outputs to `outputs/acceptance/<case>/` (ignored by git), plus `decisions.jsonl` (every approval decision, with its rule) and `result.json` (the answer). `-X utf8` is needed on Windows and harmless elsewhere.
+
+```bash
+python -X utf8 docs/final/checks/acceptance/policy_approver.py --case P1 --profile procurement --input docs/final/checks/acceptance/procurement_ledger/input.csv --rules docs/final/checks/acceptance/procurement_ledger/rules.json --request "What is the total procurement spend by department?" --out outputs/acceptance/P1
+python -X utf8 docs/final/checks/acceptance/policy_approver.py --case P2 --profile procurement --input docs/final/checks/acceptance/procurement_ledger/input.csv --rules docs/final/checks/acceptance/procurement_ledger/rules.json --request "What is the total procurement spend by supplier?" --out outputs/acceptance/P2
+python -X utf8 docs/final/checks/acceptance/policy_approver.py --case P3 --profile procurement --input docs/final/checks/acceptance/procurement_ledger/input.csv --rules docs/final/checks/acceptance/procurement_ledger/rules.json --request "What is the average unit cost in each item category?" --out outputs/acceptance/P3
+python -X utf8 docs/final/checks/acceptance/policy_approver.py --case P4 --profile procurement --input docs/final/checks/acceptance/procurement_ledger/input.csv --rules docs/final/checks/acceptance/procurement_ledger/rules.json --request "How many units were purchased in each item category?" --out outputs/acceptance/P4
+python -X utf8 docs/final/checks/acceptance/policy_approver.py --case P5 --profile procurement --input docs/final/checks/acceptance/procurement_ledger/input.csv --rules docs/final/checks/acceptance/procurement_ledger/rules.json --request "What is the total procurement spend per month?" --out outputs/acceptance/P5
+python -X utf8 docs/final/checks/acceptance/policy_approver.py --case S1 --profile support --input docs/final/checks/acceptance/support_register/input.csv --rules docs/final/checks/acceptance/support_register/rules.json --request "How many resolved tickets belong to each team?" --out outputs/acceptance/S1
+python -X utf8 docs/final/checks/acceptance/policy_approver.py --case S2 --profile support --input docs/final/checks/acceptance/support_register/input.csv --rules docs/final/checks/acceptance/support_register/rules.json --request "What is the average resolution time in minutes for each priority?" --out outputs/acceptance/S2
+python -X utf8 docs/final/checks/acceptance/policy_approver.py --case S3 --profile support --input docs/final/checks/acceptance/support_register/input.csv --rules docs/final/checks/acceptance/support_register/rules.json --request "How many resolved tickets arrived through each channel?" --out outputs/acceptance/S3
+python -X utf8 docs/final/checks/acceptance/policy_approver.py --case S4 --profile support --input docs/final/checks/acceptance/support_register/input.csv --rules docs/final/checks/acceptance/support_register/rules.json --request "For High-priority tickets, what is the average resolution time in minutes by team?" --out outputs/acceptance/S4
+python -X utf8 docs/final/checks/acceptance/policy_approver.py --case S5 --profile support --input docs/final/checks/acceptance/support_register/input.csv --rules docs/final/checks/acceptance/support_register/rules.json --request "How many resolved tickets were opened in each month?" --out outputs/acceptance/S5
+python -X utf8 docs/final/checks/acceptance/policy_approver.py --case T1 --profile sales_table --input eval/datasets/sales-test/salest_00/messy.csv --rules eval/datasets/sales-test/salest_00/rules.json --request "What is the average unit price in each category?" --out outputs/acceptance/T1
+python -X utf8 docs/final/checks/acceptance/policy_approver.py --case T2 --profile sales_table --input eval/datasets/sales-test/salest_00/messy.csv --rules eval/datasets/sales-test/salest_00/rules.json --request "What is the total revenue per month?" --out outputs/acceptance/T2
+```
+
+Compare each `result.json` answer with the Questions table above. The model can choose a different sequence of checks and fixes on another run; the policy decides each proposed fix the same way. To check the policy itself without the model:
+
+```bash
+python -m pytest -q tests/test_acceptance_policy.py
 ```
