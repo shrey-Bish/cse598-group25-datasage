@@ -226,7 +226,7 @@ table, not against earlier runs.
 ## What DataSage adds over a single call
 
 The "Agent minus B2" column compares each model's agent with the same model's single call on the same 80 questions.
-The column is filled only where the single call answered all 80 questions with no API timeout (a timeout counts as a wrong answer, which would flatter the agent). For those 32 models the agent is better for 29, by a median of 20.0 points (from -35.0 to +80.0). The single call also damages clean data: the B2 rows above do not show it, but summing
+The column is filled only where the single call answered all 80 questions with no API timeout (a timeout counts as a wrong answer, which would flatter the agent). For those 32 models the agent is better for 29, by a median of 19.4 points (from -35.0 to +80.0). The single call also damages clean data: the B2 rows above do not show it, but summing
 `damaged_rows + damaged_cells` gives 353 for `qwen3-30b-a3b-instruct-2507`, 70 for `qwen3-235b-a22b-instruct-2507`, 174 for `glm-5-3`, 24 for `gpt-oss-120b`, while every agent row has 0.
 
 Some reasoning models write such long single replies that most of their single calls ran past the 180 s
